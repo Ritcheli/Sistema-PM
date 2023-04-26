@@ -52,7 +52,5 @@
             </form>
         </div> 
     </section>
-    <section class="teste">
-    </section>
 </body>
 </html>

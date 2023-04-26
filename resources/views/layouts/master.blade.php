@@ -8,6 +8,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
+    <x-sidebar :user="'Moranguinha'"></x-sidebar>
+    <x-navbar> </x-navbar>
+
     
 </body>
 </html>
