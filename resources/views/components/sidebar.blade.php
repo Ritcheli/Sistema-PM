@@ -7,7 +7,7 @@
 
             <div class="sidebar-text-CM header-text-CM">
                 <span class="name-CM"> Polícia Militar - SC</span>
-                <span class="user-CM"> {{ $user }} </span>
+                <span class="user-CM"> {{ $usuario }} </span>
             </div>
         </div>
 
