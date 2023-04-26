@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OcorrenciaController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,8 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get("/", function () {
+    return view("welcome");
 });
 
-Route::get('/cad-usuario', [UsuarioController::class, 'show']);
+Route::get("/cad-usuario", [UsuarioController::class, "show"]); 
+Route::get("/cad-ocorrencia", [OcorrenciaController::class, "show"]);

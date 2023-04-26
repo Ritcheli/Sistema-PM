@@ -1,15 +1,11 @@
 <x-layout>
-    <x-slot:title>
-        teste
-    </x-slot:title>
+    <x-slot:title> Cadastro de usuários </x-slot:title>
 
-    <x-slot:usuario>
-        Ritcheli
-    </x-slot:usuario>
+    <x-slot:user> Ritcheli </x-slot:user>
 
     <x-slot:container_form>
         <div class="container-fluid">
-            <form>
+            <form method="POST">
                 <div class="title">Novo usuário</div> 
                 <div class="form-row">
                     <div class="form-group col-md-12">

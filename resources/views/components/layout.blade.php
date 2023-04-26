@@ -8,7 +8,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-    <x-sidebar :usuario="$usuario"></x-sidebar>
+    <x-sidebar :user="$user"></x-sidebar>
     <x-navbar></x-navbar>
 
     <section class="content"> 

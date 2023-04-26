@@ -7,7 +7,7 @@
 
             <div class="sidebar-text-CM header-text-CM">
                 <span class="name-CM"> Polícia Militar - SC</span>
-                <span class="user-CM"> {{ $usuario }} </span>
+                <span class="user-CM"> {{ $user }} </span>
             </div>
         </div>
 
@@ -25,7 +25,7 @@
             <div class="menu-CM">
                 <ul class="menu-links-CM">
                     <li class="nav-link-CM">
-                        <a href="#"> 
+                        <a href="/"> 
                             <i class='bx bxs-home icon-CM'></i>
                             <span class="sidebar-text-CM"> Dashboard </span>
                         </a>
@@ -33,13 +33,13 @@
                     <div class="links-CM">
                         <li class="icon-link-CM">
                             <a href="#"> 
-                                <i class='bx bxl-graphql icon-CM'></i>
+                                <i class='bx bxs-notepad icon-CM'></i>
                                 <span class="sidebar-text-CM"> Ocorrências </span>
                             </a>
                             <i class='bx bx-chevron-down arrow-link-CM'></i>
                         </li>
                         <ul class="sub-menu-CM close-CM"> 
-                            <li> <a href="#"> Suboption1 </a> </li>
+                            <li> <a href="/cad-ocorrencia"> Cadastro</a> </li>
                             <li> <a href="#"> Suboption2 </a> </li>
                             <li> <a href="#"> Suboption3 </a> </li>
                         </ul>
