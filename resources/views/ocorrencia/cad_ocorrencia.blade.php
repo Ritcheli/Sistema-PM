@@ -5,7 +5,7 @@
 
     <x-slot:container_form>
         <div class="container-fluid px-0 ">
-            <div class="container-fluid CM mb-5 rounded">
+            <div class="container-fluid CM mb-5">
                 <form>
                     <div class="title-CM">Nova ocorrência</div> 
                     <div class="form-row">
@@ -40,7 +40,7 @@
                     </div>
                 </form>
             </div> 
-            <div class="container-fluid CM mb-5 rounded">
+            <div class="container-fluid CM mb-6">
                 <form>
                     <div class="title-CM">Nova ocorrência</div> 
                     <div class="form-row">
@@ -79,7 +79,6 @@
                     </div>
                 </form>
             </div> 
-            <div class="container-fluid h-25"> </div>
         </div>
     </x-slot:container_form>
 </x-layout>

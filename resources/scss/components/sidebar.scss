@@ -186,16 +186,18 @@ header .image-text-CM .header-text-CM{
     font-size: 30px;
     border: solid 3.2px $sidebar-color;
     cursor: pointer;
-    transition: var(--tran-05);
+    transition: $tran-05;
     box-shadow: 5px 0px 8px -2px $shadow-color;
 }
 
 .sidebar-CM header .toggle-CM:hover{
-    transform: translateY(-50%) scale(1.15);
+    transform: translateY(-50%) scale(1.1);
+    transition: $tran-05;
 }
 
 .sidebar-CM.close-CM header .toggle-CM:hover{
-    transform: translateY(-50%) rotate(180deg) scale(1.15);
+    transform: translateY(-50%) rotate(180deg) scale(1.1);
+    transition: $tran-05;
 }
 
 .sidebar-CM.close-CM header .toggle-CM{

@@ -1,6 +1,5 @@
 .content-CM{
-    display: flex;
-    position: fixed;    
+    position: fixed;
     top: 70px;
     left: $sidebar-open-width;
     width: calc(100% - $sidebar-open-width); 
