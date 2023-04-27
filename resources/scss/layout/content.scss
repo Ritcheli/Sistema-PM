@@ -1,0 +1,16 @@
+.content-CM{
+    display: flex;
+    position: fixed;    
+    top: 70px;
+    left: $sidebar-open-width;
+    width: calc(100% - $sidebar-open-width); 
+    transition: $tran-05; 
+    background: $background-color;
+    justify-content: center;
+    overflow-y: scroll;
+    height: 100%;
+}
+
+.content-CM::-webkit-scrollbar{
+    display: none;
+}

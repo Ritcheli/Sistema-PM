@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+// Colors
+$primary-color: #009640;
+$primary-color-strong: #00903f;
+$primary-color-weak: #01b951;
+$second-color: #CB333B;
+$second-color-strong: #ad3137;
+$second-color-weak: #d83c44;
+$third-color: #2e638b;
+$third-color-strong: #254f70;
+$third-color-weak: #3777a8;
+$sidebar-color: #004b21;
+$navbar-color: #f7f7f7;
+$background-color: #d7d7d7;
+$white-text-color: #f6f1f1;
+$gray-text-color: #3d3c3c;
+$shadow-color: #5d5a5a;
+
+// Transitions time
+$tran-02: all 0.2s ease;
+$tran-03: all 0.3s ease;
+$tran-04: all 0.4s ease;
+$tran-05: all 0.5s ease;
+
+// Sidebar general configs
+$sidebar-open-width: 270px;
+$sidebar-close-width: 88px;
+$sidebar-menu-font-size: 15px;
+
+// General configs
+$border-radius: 6px;
+
+// Fonts
+$font-family: 'Poppins', sans-serif;

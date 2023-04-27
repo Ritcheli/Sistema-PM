@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title }}</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 <body>
     <x-sidebar :user="$user"></x-sidebar>
     <x-navbar></x-navbar>
 
-    <section class="content"> 
+    <section class="content-CM p-5"> 
         {{ $container_form }}
     </section>
 </body>

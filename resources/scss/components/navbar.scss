@@ -1,0 +1,43 @@
+.navbar-CM{
+    display: flex;
+    position: fixed;
+    top: 0;
+    height: 70px;
+    left: $sidebar-open-width;
+    width: calc(100% - $sidebar-open-width);
+    background: $navbar-color;
+    transition: $tran-05; 
+    padding: 8px 10px;
+    box-shadow: 0px 5px 8px -5px var(--shadow-color);
+    z-index: 90;
+    align-items: center;
+    justify-content: right;
+}
+
+.navbar-CM a{
+    text-decoration: none;
+    margin-right: 10px;
+    margin-left: 10px;
+    color: $gray-text-color;
+    display: flex;
+    align-items: center;
+    transition: $tran-05;
+    transform: scale(0.96);
+}
+
+.navbar-CM a:hover{
+    color: $primary-color;
+    transition: $tran-05;
+    transform: scale(1);
+}
+
+.navbar-CM a .icon-CM{
+    font-size: 27px;
+    padding: 0px 0px;
+    margin-right: 3px;
+    color: $primary-color;
+}
+
+.navbar-CM a .navbar-text-CM{
+    font-size: 20px;
+}

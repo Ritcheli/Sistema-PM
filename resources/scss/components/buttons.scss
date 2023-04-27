@@ -1,0 +1,49 @@
+.btn.CM{
+    height: 50px;
+    width: 200px;
+    outline: none;
+    color: $white-text-color;
+    border: none;
+    border-radius: $border-radius;
+    margin: 5px 0px 10px 15px;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    box-shadow: 5px 5px 8px -5px $shadow-color;
+    transition: $tran-02;
+}
+
+.btn.CM.save-CM{
+    background: $primary-color;
+}
+
+.btn.CM.cancel-CM{
+    background: $third-color;
+}
+
+.btn.CM:hover{
+    transform: scale(1.03);
+    box-shadow: 8px 8px 8px -5px $shadow-color;
+    color: $white-text-color;
+}
+
+.btn.CM.save-CM:hover{
+    background: $primary-color-weak;
+}
+
+.btn.CM.cancel-CM:hover{
+    background: $third-color-weak;
+}
+
+.btn.CM:active{
+    box-shadow: 5px 5px 8px -5px $shadow-color;
+    transform: scale(0.97);
+}
+
+.btn.CM.save-CM:active{
+    background: $primary-color-strong;
+}
+
+.btn.CM.cancel-CM:active{
+    background: $third-color-strong;
+}
