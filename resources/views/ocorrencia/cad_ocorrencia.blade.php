@@ -1,4 +1,53 @@
 <x-layout>
+    <x-slot:modal>
+        <div class="modal fade" id="standart-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header border-0 mb-0">
+                  <div class="modal-title title-CM mb-0" id="exampleModalLabel"> Pessoas </div>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <table class="table table-bordered CM mb-3">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Nome</th>
+                                    <th scope="col">Last</th>
+                                    <th scope="col">Handle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">2</th>
+                                    <td>Jacob</td>
+                                    <td>Thornton</td>
+                                    <td>@fat</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">3</th>
+                                    <td>Larry</td>
+                                    <td>the Bird</td>
+                                    <td>@twitter</td>
+                                  </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </x-slot:modal>
+
     <x-slot:title> Cadastro de ocorrências </x-slot:title>
     
     <x-slot:user> Ritcheli </x-slot:user>
@@ -16,18 +65,19 @@
                                     <input type="text" class="form-control CM" id="input_buscar" placeholder="Digite o nome do envolvido">
                                 </div> 
                                 <div class="form-group col-auto d-none d-block d-md-none">
-                                    <button type="reset" class="btn CM medium search-CM shadow-none">
+                                    <button type="reset" class="btn CM medium search-CM shadow-none" data-toggle="modal" data-target="#standart-modal">
                                         <i class='bx bx-search'> </i>
                                     </button>
                                 </div>
-                                <div class="form-group col-auto d-none d-md-block">
+                                <div class="form-group col-auto d-none d-md-block" data-toggle="modal" data-target="#standart-modal">
                                     <button type="reset" class="btn CM medium search-CM shadow-none pl-4 pr-4">
                                         Buscar
                                     </button>
                                 </div>
                             </div>
+
                             <div class="form-row">
-                                <table class="table table-bordered CM">
+                                <table class="table table-bordered CM mx-1 mb-3 ">
                                     <thead>
                                         <tr>
                                             <th scope="col">Id</th>
@@ -104,3 +154,4 @@
         </div>
     </x-slot:container_form>
 </x-layout>
+

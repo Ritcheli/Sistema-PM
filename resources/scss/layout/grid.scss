@@ -10,21 +10,3 @@
 .container-fluid.CM::-webkit-scrollbar{
     display: none;
 }
-
-.container-fluid.CM .title-CM{
-    font-size: 25px;
-    font-weight: 500;
-    margin-bottom: 20px;
-    position: relative;
-    color: $gray-text-color;
-}
-
-.container-fluid.CM .title-CM::before{
-    content: '';
-    position: absolute;
-    height: 3px;
-    width: 40px;
-    left: 0;
-    bottom: 0;
-    background: $primary-color;
-}

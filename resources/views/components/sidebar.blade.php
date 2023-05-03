@@ -13,7 +13,6 @@
 
         <i class='bx bx-chevron-left toggle-CM'></i>
     </header>
-
     <div class="menu-bar-CM">
         <div class="top-content-CM">
             <li class="search-box-CM">

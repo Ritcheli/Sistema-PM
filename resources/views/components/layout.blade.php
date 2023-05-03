@@ -8,6 +8,10 @@
     @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 <body>
+    <section>
+        {{ $modal }} 
+    </section>
+
     <x-sidebar :user="$user"></x-sidebar>
     <x-navbar></x-navbar>
 
