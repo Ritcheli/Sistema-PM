@@ -1,0 +1,17 @@
+.table.CM{
+    border-radius: $border-radius;
+    overflow: hidden;
+}
+
+.table.CM thead{
+    background: $primary-color-strong; 
+    color: $white-text-color;
+}
+
+.table.CM tbody{
+    background: $background-table-color;
+}
+
+.table.CM tbody tr:hover{
+    background: $primary-color-weak;
+}
