@@ -1,5 +1,5 @@
 // Bootstrap
-@import '/node_modules/bootstrap/scss/bootstrap.scss';
+@import '/node_modules/bootstrap/scss/bootstrap';
 
 // Variables
 @import 'utilities/variables';
@@ -11,10 +11,16 @@
 // Layout
 @import 'layout/forms',
         'layout/content',
-        'layout/grid.scss';
+        'layout/grid';
+
+// Theme
+@import 'theme/theme';
 
 // Components
 @import 'components/buttons',
         'components/sidebar',
-        'components/navbar.scss',
-        'components/table.scss';
+        'components/navbar',
+        'components/table';
+
+// Pages
+@import 'pages/login';

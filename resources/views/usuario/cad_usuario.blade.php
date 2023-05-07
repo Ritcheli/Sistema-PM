@@ -1,4 +1,6 @@
 <x-layout>
+    <x-slot:modal></x-slot:modal>
+
     <x-slot:title> Cadastro de usuários </x-slot:title>
 
     <x-slot:user> Ritcheli </x-slot:user>
@@ -6,7 +8,7 @@
     <x-slot:container_form>
         <div class="container-fluid CM rounded">
             <form>
-                <div class="title">Novo usuário</div> 
+                <div class="title-CM">Novo usuário</div> 
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <laber class="text-nowrap">Nome completo</laber class="text-nowrap">
