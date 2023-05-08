@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OcorrenciaController;
-use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +17,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get("/",[AuthController::class, "index"]);
-Route::get("/cad-usuario", [UsuarioController::class, "cad_usuario"]);
+Route::get("/",[AuthController::class, "show_login"])->name("show_Login");
+Route::post("/", [AuthController::class, "login"])->name("login");
+Route::get("/cad-usuario", [AuthController::class, "show_Cad_Usuario"])->name("show_Cad_Usuario");
+Route::post("/cad-usuario", [AuthController::class, "novo_Usuario"])->name("novo_Usuario");
 
-Route::get("/cad-ocorrencia", [OcorrenciaController::class, "show"]);
+Route::get("/dashboard", [DashboardController::class, "show_Dashboard"])->name("show_Dashboard");
+
+Route::get("/cad-ocorrencia", [OcorrenciaController::class, "show_Cad_Ocorrencia"]);

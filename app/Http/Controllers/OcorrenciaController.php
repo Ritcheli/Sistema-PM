@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 
 class OcorrenciaController extends Controller
 {
-    public function show(){
+    public function show_Cad_Ocorrencia(){
         return view('ocorrencia.cad_ocorrencia');
     }
 
