@@ -1,0 +1,13 @@
+.img-preview{
+    border: 2px dashed $gray-color;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.img-list{
+    height: 190px;
+    width: 167px;
+}

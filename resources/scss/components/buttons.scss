@@ -5,7 +5,7 @@
     border-radius: $border-radius;
     font-weight: 500;
     letter-spacing: 1px;
-    box-shadow: 5px 5px 8px -5px $shadow-color;
+    box-shadow: 5px 5px 8px -5px $shadow-color !important;
     transition: $tran-02;
 }
 
@@ -25,7 +25,8 @@
     background: $primary-color;
 }
 
-.btn.CM.cancel-CM{
+.btn.CM.cancel-CM,
+.btn.CM.add-CM{
     background: $third-color;
 }
 
@@ -40,7 +41,8 @@
     background: $primary-color-weak;
 }
 
-.btn.CM.cancel-CM:hover{
+.btn.CM.cancel-CM:hover,
+.btn.CM.add-CM:hover{
     background: $third-color-weak;
 }
 
@@ -54,6 +56,28 @@
     background: $primary-color-strong;
 }
 
-.btn.CM.cancel-CM:active{
+.btn.CM.cancel-CM:active,
+.btn.CM.add-CM:active{
     background: $third-color-strong;
+}
+
+.btn-icon-CM{
+    font-size: 15px; 
+    font-weight: 600;
+}
+
+.btn-upl-icon-CM{
+    font-size: 21px; 
+    vertical-align: middle;
+}
+
+.btn-upl-CM{
+    color: $gray-text-color;
+    background: $gray-weak-color;
+    border-radius: $border-radius!important;
+    transition: $tran-05;
+}
+
+.btn-upl-CM:hover{
+    background: $gray-color;
 }

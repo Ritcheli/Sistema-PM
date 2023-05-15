@@ -12,7 +12,7 @@
         {{ $modal }} 
     </section>
 
-    <x-sidebar :user="$user"></x-sidebar>
+    <x-sidebar></x-sidebar>
     <x-navbar></x-navbar>
 
     <section class="content-CM p-5"> 

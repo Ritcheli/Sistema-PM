@@ -3,7 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OcorrenciaController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,9 +19,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get("/",[AuthController::class, "show_login"])->name("show_Login");
 Route::post("/", [AuthController::class, "login"])->name("login");
-Route::get("/cad-usuario", [AuthController::class, "show_Cad_Usuario"])->name("show_Cad_Usuario");
-Route::post("/cad-usuario", [AuthController::class, "novo_Usuario"])->name("novo_Usuario");
+Route::get("logout", [AuthController::class, "logout"])->name("logout");
 
-Route::get("/dashboard", [DashboardController::class, "show_Dashboard"])->name("show_Dashboard");
+Route::middleware('auth')->group(function(){
+    Route::get("/cad-usuario", [UsuarioController::class, "show_Cad_Usuario"])->name("show_Cad_Usuario");
+    Route::post("/cad-usuario", [UsuarioController::class, "novo_Usuario"])->name("novo_Usuario");
 
-Route::get("/cad-ocorrencia", [OcorrenciaController::class, "show_Cad_Ocorrencia"]);
+    Route::get("/dashboard", [DashboardController::class, "show_Dashboard"])->name("show_Dashboard");
+
+    Route::get("/cad-ocorrencia", [OcorrenciaController::class, "show_Cad_Ocorrencia"]);
+});
+

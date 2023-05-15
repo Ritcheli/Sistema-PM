@@ -4,9 +4,14 @@
 // Variables
 @import 'utilities/variables';
 
+// Vendors-extensions
+@import 'vendors-extensions/bootstrapp',
+        'vendors-extensions/ck_editor';
+
 // Bases
 @import 'base/maps', 
-        'base/typography';
+        'base/typography',
+        'base/general';
 
 // Layout
 @import 'layout/forms',
@@ -20,6 +25,7 @@
 @import 'components/buttons',
         'components/sidebar',
         'components/navbar',
+        'components/input_img_file.scss',
         'components/table';
 
 // Pages

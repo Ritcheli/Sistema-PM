@@ -1,0 +1,22 @@
+.was-validated .form-control:invalid:focus, 
+.form-control.is-invalid:focus{
+    border-color: $second-color;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(239, 117, 104, 0.6);
+    outline: 0 none !important;
+}
+
+.was-validated .form-control:valid:focus, 
+.form-control.is-valid:focus{
+    border-color: $primary-color-strong;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(88, 221, 75, 0.6);
+    outline: 0 none !important;
+}
+
+.invalid-feedback{
+    font-weight: 100;
+}
+
+.input-group{
+    border: 1px solid #ced4da;
+    border-radius: $border-radius;
+}

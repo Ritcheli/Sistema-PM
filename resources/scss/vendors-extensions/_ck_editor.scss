@@ -1,0 +1,39 @@
+.ck.ck-content ul,
+.ck.ck-content ul li {
+  list-style-type: inherit;
+}
+
+.ck.ck-content ul {
+  /* Default user agent stylesheet, you can change it to your needs. */
+  padding-left: 40px;
+}
+
+.ck.ck-content ol,
+.ck.ck-content ol li {
+  list-style-type: decimal;
+}
+.ck.ck-content ol {
+  /* Default user agent stylesheet, you can change it to your needs. */
+  padding-left: 40px;
+}
+
+.ck-rounded-corners{
+  border-bottom-right-radius: $border-radius!important;
+  border-bottom-left-radius: $border-radius!important;
+}
+
+.ck-toolbar{
+  border-top-right-radius: $border-radius!important;
+  border-top-left-radius: $border-radius!important;
+}
+
+.ck-content:focus{
+  border-color: $primary-color!important;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6)!important;
+    outline: 0 none !important;
+}
+
+.ck-editor__editable {
+  min-height: 150px;
+}
+

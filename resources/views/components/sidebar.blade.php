@@ -7,7 +7,7 @@
 
             <div class="sidebar-text-CM header-text-CM">
                 <span class="name-CM"> Polícia Militar - SC</span>
-                <span class="user-CM"> {{ $user }} </span>
+                <span class="user-CM"> {{ Auth::user()->nome_usuario }} </span>
             </div>
         </div>
 
@@ -24,7 +24,7 @@
             <div class="menu-CM">
                 <ul class="menu-links-CM">
                     <li class="nav-link-CM">
-                        <a href="/"> 
+                        <a href={{ route("show_Dashboard") }}> 
                             <i class='bx bxs-home icon-CM'></i>
                             <span class="sidebar-text-CM"> Dashboard </span>
                         </a>
@@ -96,7 +96,7 @@
         </div>
         <div class="">
             <li class="bottom-content-CM">
-                <a href="#"> 
+                <a href={{ route("logout") }}> 
                     <i class='bx bx-log-out icon-CM'></i>
                     <span class="sidebar-text-CM"> Logout </span>
                 </a>
