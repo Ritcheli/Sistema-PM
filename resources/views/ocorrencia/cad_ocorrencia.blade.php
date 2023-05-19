@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot:modal>
-        {{-- <x-modal-busca-pessoas></x-modal-busca-pessoas> --}}
+        <x-modal-busca-pessoas></x-modal-busca-pessoas>
         <x-modal-cad-pessoas></x-modal-cad-pessoas>
     </x-slot:modal>
 

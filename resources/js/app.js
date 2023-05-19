@@ -1,18 +1,19 @@
 // CDN
 import 'https://cdn.ckeditor.com/ckeditor5/37.1.0/super-build/ckeditor.js';
 
+// Node modules
+import 'bootstrap';
+import $ from 'jquery';
+
 // Pages
 import './pages/cad_ocorrencia';
-
-// Components
-import './components/sidebar';
-import './components/input_img_file';
 
 // Vendors
 import './vendors-extensions/bootstrap';
 
-// Node modules
-import 'bootstrap';
-import $ from 'jquery';
+// Components
+import './components/sidebar';
+import './components/input_img_file';
+import './components/modal_cad_pessoa';
 
 window.jQuery = window.$ = $;

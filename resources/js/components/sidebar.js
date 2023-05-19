@@ -28,4 +28,3 @@ for (var i = 0; i < arrow_link.length; i++){
 search.addEventListener("click", ()=>{
   sidebar.classList.remove("close-CM");
 });
-

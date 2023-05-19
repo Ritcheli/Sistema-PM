@@ -5,24 +5,28 @@ let array_img        = [],
     input            = document.getElementById('upload'),
     label_upl        = document.getElementById('label-upl');
 
-clear_input_img_file();
 
-input.addEventListener("change", ()=>{
-    const files = input.files;
+if (input != null){
+    clear_input_img_file();
 
-    if (files.length > 1) {
-        label_upl.innerHTML = files[0].name + ' mais ' + (files.length - 1) + ' foto(s)';
-    } else {
-        label_upl.innerHTML = files[0].name;
-    }
-    
-    for (let i = 0; i < files.length; i++){
-        array_img.push(files[i]);
-    }
+    input.addEventListener("change", ()=>{
+        const files = input.files;
 
-    display_img(files);
+        if (files.length > 1) {
+            label_upl.innerHTML = files[0].name + ' mais ' + (files.length - 1) + ' foto(s)';
+        } else {
+            label_upl.innerHTML = files[0].name;
+        }
+        
+        for (let i = 0; i < files.length; i++){
+            array_img.push(files[i]);
+        }
 
-});
+        display_img(files);
+
+    });
+}
+
 
 function display_img(images){
     

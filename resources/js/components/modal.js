@@ -14,7 +14,11 @@ export function clearModal(name_modal, CKEditor_element_name, editors){
                 editors[CKEditor_element_name].setData('');
             }
             
+            // Limpa o componente de upload de imagens
             clear_input_img_file();
+
+            // Remove as tags de validação
+            $(".is-invalid").removeClass("is-invalid");
         })
     }, false);
 }

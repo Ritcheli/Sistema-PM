@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OcorrenciaController;
+use App\Http\Controllers\PessoasController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,8 @@ Route::get("logout", [AuthController::class, "logout"])->name("logout");
 Route::middleware('auth')->group(function(){
     Route::get("/cad-usuario", [UsuarioController::class, "show_Cad_Usuario"])->name("show_Cad_Usuario");
     Route::post("/cad-usuario", [UsuarioController::class, "novo_Usuario"])->name("novo_Usuario");
+
+    Route::post("/cad-ocorrencia", [PessoasController::class, "nova_Pessoa_Ocorr"])->name("nova_Pessoa_Ocorr");
 
     Route::get("/dashboard", [DashboardController::class, "show_Dashboard"])->name("show_Dashboard");
 
