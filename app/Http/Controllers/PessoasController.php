@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Nette\Utils\Image;
 
 class PessoasController extends Controller
 {
@@ -16,7 +17,8 @@ class PessoasController extends Controller
             'telefone'          => ['max:15'],
             'CPF_RG'            => ['max:11'],
             'alcunha'           => ['max:60'],
-            'observacao_pessoa' => ['max:65535']
+            'observacao_pessoa' => ['max:65535'],
+            'files.*'           => ['mimes:jpg,jpeg,png'],
         ]);     
 
         if ($validator->fails()) {
@@ -24,10 +26,27 @@ class PessoasController extends Controller
         }
 
         $data = $request->only('nome', 'telefone', 'CPF_RG', 'data_nascimento', 'alcunha', 'observacao_pessoa');
-        
-        Log::debug($data);
 
-        $this->create($data);
+        $pessoa = $this->create($data);
+
+        if ($request->hasFile('files')){
+            foreach ($request->file('files') as $file) {
+                $name = time().'_'.$file->getClientOriginalName().'.'.$file->extension();
+                $caminho_img = public_path('uploads\fotos_pessoas') . '/' . $name;
+
+                // Redimensionando a imagem
+                $new_img = Image::fromFile($file->path());
+                $new_img->resize(250, 250);
+                $new_img->save($caminho_img);
+
+                $dado_foto = [
+                    'caminho_servidor' => $caminho_img,
+                    'id_pessoa'        => $pessoa->id_pessoa
+                ];
+
+                (new FotosPessoasController)->create($dado_foto);
+            }           
+        }
     }
 
     public function create(array $data){

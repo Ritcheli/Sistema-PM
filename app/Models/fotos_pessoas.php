@@ -8,7 +8,7 @@ class fotos_pessoas extends Model
 {
     protected $table = 'fotos_pessoas';
     
-    protected $fillable = [
+    protected $fillable = [ 
         'caminho_servidor',
         'id_pessoa'
     ];

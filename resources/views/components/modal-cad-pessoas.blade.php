@@ -9,7 +9,7 @@
         </div>
         <div class="modal-body mx-3">
             <div class="alert alert-danger" style="display:none"></div>
-            <form method="POST" action="{{ route('nova_Pessoa_Ocorr') }}" id="form">
+            <form method="POST" action="{{ route('nova_Pessoa_Ocorr') }}" id="form-pessoas">
                 @csrf
                 <div class="form-row mb-3">
                     <label class="text-nowrap">Nome</label>
@@ -42,9 +42,9 @@
                 <div class="form-row">
                     <div class="form-group col">
                         <label class="text-nowrap">Fotos</label>
-                        <div class="input-group">
+                        <div class="input-group" id="foto">
                             <label id="label-upl" for="upload" class="pl-2 ml-1 pt-2 mt-1 text-muted"></label>
-                            <input type="file" class="form-control" accept="image/png, image/jpg, image/jpeg" id="upload" name="fotos_pessoa" multiple>
+                            <input type="file" class="form-control" accept="image/png, image/jpg, image/jpeg" id="upload" name="upload" multiple>
                             <div class="input-group-append">    
                                 <label for="upload" class="btn btn-upl-CM m-1"> 
                                     <i class='bx bxs-cloud-upload btn-upl-icon-CM'></i>
@@ -52,6 +52,7 @@
                                 </label>
                             </div>
                         </div>
+                        <span class="invalid-feedback" role="alert" id="foto-invalido"></span>
                     </div>
                 </div>
                 <div class="form-row">

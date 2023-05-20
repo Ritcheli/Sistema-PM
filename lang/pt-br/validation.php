@@ -94,7 +94,7 @@ return [
         'string' => 'O campo :attribute não pode ter mais de :max caracteres',
     ],
     'max_digits' => 'The :attribute field must not have more than :max digits.',
-    'mimes' => 'The :attribute field must be a file of type: :values.',
+    'mimes' => 'O campo foto precisa ser do tipo: :values.',
     'mimetypes' => 'The :attribute field must be a file of type: :values.',
     'min' => [
         'array' => 'The :attribute field must have at least :min items.',
@@ -185,7 +185,7 @@ return [
         'nome_usuario' => 'nome de usuário',  
         'CPF_RG' => 'CPF ou RG',
         'data_nasc' => 'data de nascimento',
-        'confirma_senha' => 'confirmar senha'
+        'confirma_senha' => 'confirmar senha',
     ],
 
 ];
