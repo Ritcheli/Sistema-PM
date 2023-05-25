@@ -20,16 +20,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::get("/",[AuthController::class, "show_login"])->name("show_Login");
 Route::post("/", [AuthController::class, "login"])->name("login");
-Route::get("logout", [AuthController::class, "logout"])->name("logout");
+Route::get("/logout", [AuthController::class, "logout"])->name("logout");
 
 Route::middleware('auth')->group(function(){
     Route::get("/cad-usuario", [UsuarioController::class, "show_Cad_Usuario"])->name("show_Cad_Usuario");
     Route::post("/cad-usuario", [UsuarioController::class, "novo_Usuario"])->name("novo_Usuario");
 
+    Route::get("/cad-ocorrencia", [OcorrenciaController::class, "show_Cad_Ocorrencia"])->name("show_Cad_Ocorrencia");
     Route::post("/cad-ocorrencia", [PessoasController::class, "nova_Pessoa_Ocorr"])->name("nova_Pessoa_Ocorr");
+
+    Route::post("/buscar-pessoa", [PessoasController::class, "buscar_Pessoa_Ocorr"])->name("buscar_Pessoa_Ocorr");
 
     Route::get("/dashboard", [DashboardController::class, "show_Dashboard"])->name("show_Dashboard");
 
-    Route::get("/cad-ocorrencia", [OcorrenciaController::class, "show_Cad_Ocorrencia"]);
+
 });
 

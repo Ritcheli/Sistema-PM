@@ -57,7 +57,7 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col">
-                        <div class="rounded img-preview p-3"> </div>
+                        <div class="rounded img-preview p-3"></div>
                     </div>
                 </div>
                 <div class="form-row">

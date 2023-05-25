@@ -38,7 +38,7 @@
                             <i class='bx bx-chevron-down arrow-link-CM'></i>
                         </li>
                         <ul class="sub-menu-CM close-CM"> 
-                            <li> <a href="/cad-ocorrencia"> Cadastro</a> </li>
+                            <li> <a href="{{ route("show_Cad_Ocorrencia") }}"> Cadastro</a> </li>
                             <li> <a href="#"> Suboption2 </a> </li>
                             <li> <a href="#"> Suboption3 </a> </li>
                         </ul>

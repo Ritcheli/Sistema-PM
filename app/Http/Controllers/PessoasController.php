@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\pessoas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Nette\Utils\Image;
@@ -47,6 +48,21 @@ class PessoasController extends Controller
                 (new FotosPessoasController)->create($dado_foto);
             }           
         }
+        return response()->json([
+            'pessoa' => $pessoa,
+        ]);
+    }
+
+    public function buscar_Pessoa_Ocorr(Request $request){
+        $pessoas = DB::table('pessoas')
+                     ->select('id_pessoa', 'nome', 'RG_CPF')
+                     ->where('nome', 'like', '%' . $request->nome . '%')->get();
+
+        Log::debug($request->nome);
+
+        return response()->json([
+            'pessoas' => $pessoas,
+        ]);
     }
 
     public function create(array $data){

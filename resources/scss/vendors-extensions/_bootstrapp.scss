@@ -20,3 +20,29 @@
     border: 1px solid #ced4da;
     border-radius: $border-radius;
 }
+
+.close{
+    opacity: 1;
+    text-shadow: 1px 0 #fff, -1px 0 #fff, 0 1px #fff, 0 -1px #fff;
+}
+
+// Width
+.w-5{
+    width: 5%;
+}
+
+.w-10{
+    width: 10%;
+}
+
+.w-15{
+    width: 15%;
+}
+
+.w-30{
+    width: 30%;
+}
+
+.w-45{
+    width: 45%;
+}

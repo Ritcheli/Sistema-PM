@@ -20,13 +20,11 @@
     transform: scale(1.03);
 }
 
-.btn.CM.save-CM,
-.btn.CM.search-CM{
+.btn.CM.save-CM{
     background: $primary-color;
 }
 
-.btn.CM.cancel-CM,
-.btn.CM.add-CM{
+.btn.CM.cancel-CM{
     background: $third-color;
 }
 
@@ -36,13 +34,11 @@
     color: $white-text-color;
 }
 
-.btn.CM.save-CM:hover,
-.btn.CM.search-CM:hover{
+.btn.CM.save-CM:hover{
     background: $primary-color-weak;
 }
 
-.btn.CM.cancel-CM:hover,
-.btn.CM.add-CM:hover{
+.btn.CM.cancel-CM:hover{
     background: $third-color-weak;
 }
 
@@ -51,19 +47,30 @@
     transform: scale(0.97);
 }
 
-.btn.CM.save-CM:active,
-.btn.CM.search-CM:active{
+.btn.CM.save-CM:active{
     background: $primary-color-strong;
 }
 
-.btn.CM.cancel-CM:active,
-.btn.CM.add-CM:active{
+.btn.CM.cancel-CM:active{
     background: $third-color-strong;
+}
+
+.btn.CM.add-CM{
+    background: $primary-color;
+}
+
+.btn.CM.add-CM:hover{
+    background: $primary-color-weak;
+}
+
+.btn.CM.add-CM:active{
+    background: $primary-color-strong;
 }
 
 .btn-icon-CM{
     font-size: 15px; 
     font-weight: 600;
+    vertical-align: middle;
 }
 
 .btn-upl-icon-CM{
@@ -80,4 +87,71 @@
 
 .btn-upl-CM:hover{
     background: $gray-color;
+}
+
+.btn.CM.search-CM{
+    background: $third-color;
+}
+
+.btn.CM.search-CM:hover{
+    background: $third-color-weak;
+}
+
+.btn.CM.search-CM:active{
+    background: $third-color-strong;
+}
+
+.btn-table-icon-CM{
+    font-size: 18px; 
+    vertical-align: middle;
+    text-align: center;
+}
+
+.btn-table-remove,
+.btn-table-edit{
+    outline: none;
+    color: $white-text-color;
+    border: none;
+    border-radius: $border-radius;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: $tran-02;
+    box-shadow: none !important;
+}
+
+.btn-table-edit{
+    background: $fourth-color;
+}
+
+.btn-table-edit:hover{
+    color: $white-text-color;
+    background: $fourth-color-weak;
+    transform: scale(1.03);
+}
+
+.btn-table-edit:active{
+    background: $fourth-color-strong;
+    transform: scale(0.97);
+}
+
+.btn-table-remove{
+    background: $second-color;
+}
+
+.btn-table-remove:hover{
+    color: $white-text-color;
+    background: $second-color-weak;
+    transform: scale(1.03);
+}
+
+.btn-table-remove:active{
+    background: $second-color-strong;
+    transform: scale(0.97);
+}
+
+.btn-remove-img{
+    position: absolute; 
+    z-index: 101; 
+    right: 10px; 
+    top: 5px;
 }

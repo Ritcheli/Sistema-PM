@@ -14,9 +14,8 @@ let tag_nome_invalido       = document.getElementById('nome-invalido');
 let tag_telefone_invalido   = document.getElementById('telefone-invalido')
 let tag_CPF_RG_invalido     = document.getElementById('CPF_RG-invalido');
 let tag_alcunha_invalido    = document.getElementById('alcunha-invalido');
-let tag_obs_pessoa_invalido = document.getElementById('observacao_pessoa-invalido');
+let tag_obs_pessoa_invalido = document.getElementById('observacao_pessoa-in valido');
 let tag_foto                = document.getElementById('foto-invalido');
-
 
 if (modal_cad_pessoa != null){
     let editor = {};
@@ -26,7 +25,7 @@ if (modal_cad_pessoa != null){
     // Função para limpar o modal, argumentos(nome do modal, nome do CKEditor (areatext) caso exista, instância do objeto criada)
     clearModal('#modal-cad-pessoas', 'observacao_pessoa', editor);
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {        
         var url = $('#form-pessoas').attr('action');
 
         $("#form-pessoas").on("submit", function(e){
@@ -86,6 +85,7 @@ if (modal_cad_pessoa != null){
                                     tag_telefone_invalido.innerHTML = '<strong>' + value + '</strong>';
                                     break;
                                 case 'CPF_RG':
+
                                     input_CPF_RG.classList.add('is-invalid');
                                     tag_CPF_RG_invalido.innerHTML = '<strong>' + value + '</strong>';
                                     break;    
@@ -102,6 +102,10 @@ if (modal_cad_pessoa != null){
                     }
                     else{
                         $('#modal-cad-pessoas').modal('hide');
+
+                        if ($("#table-body-pessoa").length > 0){
+                            addPEssoaToTable(result.pessoa);
+                        }
                     }
                 }
             });
@@ -109,4 +113,28 @@ if (modal_cad_pessoa != null){
     }, false);
 }
 
-
+function addPEssoaToTable(pessoa){
+    $("#table-body-pessoa").append(
+        `<tr class="envolvido">
+            <th scope="row" class="align-middle">
+                ` + pessoa.id_pessoa + `
+            </th>
+            <td class="align-middle">
+                ` + pessoa.nome + `
+            </td>
+            <td class="align-middle">
+                ` + pessoa.RG_CPF + `
+            </td>
+            <td>
+                <div class="d-flex justify-content-between">
+                    <button type="button" value="` + pessoa.id_pessoa + `" title="Editar" class="btn btn-table-edit w-45"> 
+                        <i class='bx bxs-edit btn-table-icon-CM'></i>
+                    </button>
+                    <button type="button" value="` + pessoa.id_pessoa + `" title="Remover" class="btn btn-table-remove w-45"> 
+                        <i class='bx bxs-trash btn-table-icon-CM'></i>
+                    </button>
+                </div>
+            </td>
+        </tr>`
+    );
+}

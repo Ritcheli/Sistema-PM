@@ -15,5 +15,6 @@ import './vendors-extensions/bootstrap';
 import './components/sidebar';
 import './components/input_img_file';
 import './components/modal_cad_pessoa';
+import './components/modal_busca_pessoa';
 
 window.jQuery = window.$ = $;

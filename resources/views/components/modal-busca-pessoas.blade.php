@@ -9,34 +9,15 @@
         </div>
         <div class="modal-body">
             <div class="form-row">
-                <table class="table table-bordered CM mb-3">
+                <table id="table-busca-pessoa" class="table table-bordered CM mb-3">
                     <thead>
                         <tr>
-                            <th scope="col">Id</th>
-                            <th scope="col">Nome</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
+                            <th scope="col" class="w-10">Id</th>
+                            <th scope="col" >Nome</th>
+                            <th scope="col" class="w-30">CPF ou RG</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                          </tr>
+                    <tbody id="table-body-busca-pessoa">
                     </tbody>
                 </table>
             </div>

@@ -1,4 +1,5 @@
-import { createEditor } from '/resources/js/components/textarea_CKEditor';
+import { createEditor } from '../components/textarea_CKEditor';
+import { searchPessoa } from '../components/modal_busca_pessoa';
 
 var editor = {};
 
@@ -7,10 +8,20 @@ if (document.getElementById('descricao_ocor') != null){
     editor = createEditor('descricao_ocor');
 }
 
-
-// Limpa os campos criados pelo CKEditor
 document.addEventListener('DOMContentLoaded', function () {
-    $('#cancelar_cad_ocorrencia').on('click',function(){
+    $('#cancelar-cad-ocorrencia').on('click',function(){
         editor.descricao_ocor.setData('');
+    });
+
+    $("#search-pessoa").on("click", function(e){
+        e.preventDefault();
+        
+        searchPessoa();
+    });
+
+    $(document).on("click", ".btn-table-remove", function(e){ 
+        e.preventDefault();
+        
+        $(this).parent().parent().parent().remove();
     });
 }, false);

@@ -9,7 +9,7 @@ class OcorrenciaController extends Controller
         return view('ocorrencia.cad_ocorrencia');
     }
 
-    public function buscar_pessoa(){
+    public function buscar_Pessoa(){
         
     }
 }

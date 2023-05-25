@@ -11,56 +11,37 @@
     <x-slot:container_form>
         <div class="container-fluid px-0">
             <div class="container-fluid CM mb-5">
-                <form>
+                <form method="POST" action=" {{ route('buscar_Pessoa_Ocorr') }} " id="form-envolvidos">
                     <div class="title-CM">Envolvidos</div> 
                     <div class="form-row">
                         <div class="form-group col-md-12 mb-0">
                             <label class="text-nowrap">Buscar</label>
                             <div class="form-row">
                                 <div class="form-group col">
-                                    <input type="text" class="form-control CM" id="input_buscar" placeholder="Digite o nome do envolvido">
+                                    <input type="text" class="form-control CM" id="input-buscar" placeholder="Digite o nome do envolvido">
                                 </div> 
                                 <div class="form-group col-auto">
-                                    <button type="reset" class="btn CM medium search-CM shadow-none" data-toggle="modal" data-target="#modal-busca-pessoas">
+                                    <button type="submit" title="Buscar" id="search-pessoa" class="btn CM medium search-CM shadow-none">
                                         <i class='bx bx-search btn-icon-CM'> </i>
                                     </button>
                                 </div>
                                 <div class="form-group col-auto">
-                                    <button type="reset" class="btn CM medium search-CM add-CM shadow-none" data-toggle="modal" data-target="#modal-cad-pessoas">
+                                    <button type="reset" title="Cadastrar novo" class="btn CM medium add-CM shadow-none" data-toggle="modal" data-target="#modal-cad-pessoas">
                                         <i class='bx bx-plus btn-icon-CM'></i>     
                                     </button>
                                 </div>
                             </div>
-
                             <div class="form-row">
-                                <table class="table table-bordered CM mx-1 mb-3 ">
+                                <table class="table table-bordered CM mx-1 mb-3">
                                     <thead>
                                         <tr>
-                                            <th scope="col">Id</th>
-                                            <th scope="col">Nome</th>
-                                            <th scope="col">Last</th>
-                                            <th scope="col">Handle</th>
+                                            <th scope="col" class="w-5">Id</th>
+                                            <th scope="col" class="w-50">Nome</th>
+                                            <th scope="col" class="w-30">CPF ou RG</th>
+                                            <th scope="col" class="w-10">Ações</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                          </tr>
-                                          <tr>
-                                            <th scope="row">2</th>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                          </tr>
-                                          <tr>
-                                            <th scope="row">3</th>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                          </tr>
+                                    <tbody id="table-body-pessoa">
                                     </tbody>
                                 </table>
                             </div>
@@ -108,7 +89,7 @@
                         </div>
                     </div>
                     <div class="text-lg-right text-center mb-2">
-                        <button type="reset" id="cancelar_cad_ocorrencia" class="btn CM large cancel-CM ml-1 mr-1 shadow-none">Cancelar</button>
+                        <button type="reset" id="cancelar-cad-ocorrencia" class="btn CM large cancel-CM ml-1 mr-1 shadow-none">Cancelar</button>
                         <button type="submit" class="btn CM large save-CM ml-1 shadow-none">Salvar</button>
                     </div>
                 </form>
@@ -116,3 +97,4 @@
         </div>
     </x-slot:container_form>
 </x-layout>
+
