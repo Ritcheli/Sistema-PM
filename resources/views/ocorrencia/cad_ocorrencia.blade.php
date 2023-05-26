@@ -1,7 +1,7 @@
 <x-layout>
     <x-slot:modal>
         <x-modal-busca-pessoas></x-modal-busca-pessoas>
-        <x-modal-cad-pessoas></x-modal-cad-pessoas>
+        <x-modal-pessoa></x-modal-pessoa>
     </x-slot:modal>
 
     <x-slot:title> Cadastro de ocorrências </x-slot:title>
@@ -26,13 +26,13 @@
                                     </button>
                                 </div>
                                 <div class="form-group col-auto">
-                                    <button type="reset" title="Cadastrar novo" class="btn CM medium add-CM shadow-none" data-toggle="modal" data-target="#modal-cad-pessoas">
+                                    <button type="reset" title="Cadastrar novo" id="cad-pessoa" class="btn CM medium add-CM shadow-none">
                                         <i class='bx bx-plus btn-icon-CM'></i>     
                                     </button>
                                 </div>
                             </div>
                             <div class="form-row">
-                                <table class="table table-bordered CM mx-1 mb-3">
+                                <table class="table table-bordered CM mx-1 mb-3" id="table-pessoa">
                                     <thead>
                                         <tr>
                                             <th scope="col" class="w-5">Id</th>

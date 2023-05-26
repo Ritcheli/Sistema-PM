@@ -58,8 +58,6 @@ if (modal_busca_pessoa != null){
 
 export function searchPessoa(){
     var url = $('#form-envolvidos').attr('action');
-    $('#table-body-busca-pessoa').html('');
-
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -72,6 +70,8 @@ export function searchPessoa(){
             nome: $('#input-buscar').val(),
         },
         success: function(result){
+            $('#table-body-busca-pessoa').html('');
+            
             $.each(result.pessoas, function(key, value){
                 $('#table-body-busca-pessoa').append(
                     `<tr class="row-busca-pessoa">

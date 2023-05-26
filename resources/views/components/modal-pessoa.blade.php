@@ -1,8 +1,8 @@
-<div class="modal fade" id="modal-cad-pessoas" data-backdrop="static" tabindex="-1" role="dialog">
+<div class="modal fade" id="modal-pessoa" data-backdrop="static" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header border-0 mb-0">
-          <div class="modal-title title-CM mb-0 mx-2 mt-2" id="exampleModalLabel"> Cadastrar pessoas </div>
+          <div class="modal-title title-CM mb-0 mx-2 mt-2" id="modal-pessoa-title"> </div>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -39,25 +39,27 @@
                         <span class="invalid-feedback" role="alert" id="alcunha-invalido"></span>
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col">
-                        <label class="text-nowrap">Fotos</label>
-                        <div class="input-group" id="foto">
-                            <label id="label-upl" for="upload" class="pl-2 ml-1 pt-2 mt-1 text-muted"></label>
-                            <input type="file" class="form-control" accept="image/png, image/jpg, image/jpeg" id="upload" name="upload" multiple>
-                            <div class="input-group-append">    
-                                <label for="upload" class="btn btn-upl-CM m-1"> 
-                                    <i class='bx bxs-cloud-upload btn-upl-icon-CM'></i>
-                                    Escolha uma ou mais fotos
-                                </label>
+                <div class="upload-img-component">
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label class="text-nowrap">Fotos</label>
+                            <div class="input-group" id="foto">
+                                <label for="upload" class="label-foto pl-2 ml-1 pt-2 mt-1 text-muted"></label>
+                                <input type="file" class="form-control input-foto" accept="image/png, image/jpg, image/jpeg" id="upload" name="upload" multiple>
+                                <div class="input-group-append">    
+                                    <label for="upload" class="btn btn-upl-CM m-1"> 
+                                        <i class='bx bxs-cloud-upload btn-upl-icon-CM'></i>
+                                        Escolha uma ou mais fotos
+                                    </label>
+                                </div>
                             </div>
+                            <span class="invalid-feedback" role="alert" id="foto-invalido"></span>
                         </div>
-                        <span class="invalid-feedback" role="alert" id="foto-invalido"></span>
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col">
-                        <div class="rounded img-preview p-3"></div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <div class="rounded img-preview p-3"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">
@@ -71,7 +73,7 @@
                 </div>
                 <div class="text-md-right text-center mb-2 mt-1">
                     <button type="reset" data-dismiss="modal" class="btn CM large cancel-CM ml-1 mr-1 shadow-none">Cancelar</button>
-                    <button type="submit" class="btn CM large save-CM ml-1 shadow-none" id="salvar_pessoa">Salvar</button>
+                    <button type="submit" class="btn CM large save-CM ml-1 shadow-none" id="salvar-pessoa"></button>
                 </div>
             </form>
         </div>

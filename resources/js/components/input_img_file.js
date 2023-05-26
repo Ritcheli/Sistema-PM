@@ -1,78 +1,84 @@
 let html_img_preview = '<div class="text-muted"> Preview das fotos escolhidas </div>',
     html_label_upl   = 'Escolha uma ou mais fotos',
-    img_preview      = document.querySelector('.img-preview'),
-    input            = document.getElementById('upload'),
-    label_upl        = document.getElementById('label-upl'),
-    img_list         = document.getElementsByClassName('img-list');
+    input            = document.getElementsByClassName('upload-img-component');
 
 
-if (input != null){
+if (input.length > 0){
     clear_input_img_file();
 
     document.addEventListener('DOMContentLoaded', function(){
         $(document).on("click", ".btn-remove-img", function(){
-            let files = input.files;
+            let input_files = $(this).closest('.upload-img-component').find('.input-foto')[0];
             let nome_img = $(this).attr('value');
+            let label_upload = $(this).closest('.upload-img-component').find('.label-foto')[0];
+            let img_list = $(this).closest('.upload-img-component').find('.img-list');
+            let img_preview = $(this).closest('.img-preview')[0];
 
             const dt = new DataTransfer();
 
             // Atualiza o componente do input file
-            for (let i = 0; i < files.length; i++){
-                if (files[i].name != nome_img){
-                    dt.items.add(files[i]);
+            for (let i = 0; i < input_files.files.length; i++){
+                if (input_files.files[i].name != nome_img){
+                    dt.items.add(input_files.files[i]);
                 }
             }
 
-            input.files = dt.files;
+            input_files.files = dt.files;
 
-            if (input.files.length > 0){
-                update_input(input.files);
+            if (input_files.files.length > 0){
+                update_input(input_files.files, label_upload);
             } else {
-                label_upl.innerHTML = html_label_upl;
+                label_upload.innerHTML = html_label_upl;
             }
 
             // Atualiza o componente de preview de imagens
             $(this).parent().remove();
 
-            if (img_list.length == 0){
+            if (img_list.length == 1){
                 img_preview.innerHTML = html_img_preview;
             }
         });
+
+        $(document).on('change', '.input-foto', function(){
+            let files        = $(this)[0].files;
+            let label_upload = $(this).siblings('.label-foto')[0];
+            let img_preview_1 = $(this).closest('.upload-img-component').find('.img-preview').first();
+
+            update_input(files, label_upload);
+
+            display_img(files, img_preview_1[0]);            
+        });
     }, false);
-
-    input.addEventListener("change", ()=>{
-        let files = input.files;
-        
-        update_input(files);
-
-        display_img(files);
-    });
 }
 
 
-function update_input(files){
+function update_input(files, label_upload){
     if (files.length > 1) {
-        label_upl.innerHTML = files[0].name + ' mais ' + (files.length - 1) + ' foto(s)';
+        label_upload.innerHTML = files[0].name + ' mais ' + (files.length - 1) + ' foto(s)';
     } else {
-        label_upl.innerHTML = files[0].name;
+        label_upload.innerHTML = files[0].name;
     }
 }
 
-function display_img(images){
-    
-    img_preview.innerHTML = '';
+function display_img(files, img_preview_1){
+    img_preview_1.innerHTML = '';
 
-    for (let i = 0; i < images.length; i++){
-        img_preview.innerHTML += `<div class="position-relative">
-                                    <span type="button" value="${ images[i].name }" class="close btn-remove-img">&times;</span>
-                                    <img class="img-list img-fluid rounded" src="${ URL.createObjectURL(images[i])}" alt="">
+    for (let i = 0; i < files.length; i++){
+        img_preview_1.innerHTML += `<div class="position-relative">
+                                    <span type="button" value="${ files[i].name }" class="close btn-remove-img">&times;</span>
+                                    <img class="img-list img-fluid rounded" src="${ URL.createObjectURL(files[i])}" alt="">
                                   </div>`;
     }
 }
 
 export function clear_input_img_file(){
-    img_preview.innerHTML = '';
-    img_preview.innerHTML = html_img_preview;
-    label_upl.innerHTML = html_label_upl;
+    let img_preview = document.getElementsByClassName('img-preview');
+    let label_upl   = document.getElementsByClassName('label-foto');
+
+
+    for (let i = 0; i < img_preview.length; i++){
+        img_preview[i].innerHTML = html_img_preview;
+        label_upl[i].innerHTML   = html_label_upl;
+    }
 }
    
