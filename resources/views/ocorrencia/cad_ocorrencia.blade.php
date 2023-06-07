@@ -11,7 +11,7 @@
     <x-slot:container_form>
         <div class="container-fluid px-0">
             <div class="container-fluid CM mb-5">
-                <form method="POST" action=" {{ route('buscar_Pessoa_Ocorr') }} " id="form-envolvidos">
+                <form method="POST" action=" {{ route('buscar_Pessoa_Ocorr_Modal') }} " id="form-envolvidos">
                     <div class="title-CM">Envolvidos</div> 
                     <div class="form-row">
                         <div class="form-group col-md-12 mb-0">

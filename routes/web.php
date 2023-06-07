@@ -29,10 +29,10 @@ Route::middleware('auth')->group(function(){
     Route::get("/cad-ocorrencia", [OcorrenciaController::class, "show_Cad_Ocorrencia"])->name("show_Cad_Ocorrencia");
     Route::post("/cad-ocorrencia", [PessoasController::class, "nova_Pessoa_Ocorr"])->name("nova_Pessoa_Ocorr");
 
-    Route::post("/buscar-pessoa", [PessoasController::class, "buscar_Pessoa_Ocorr"])->name("buscar_Pessoa_Ocorr");
+    Route::post("/buscar-pessoa-modal", [PessoasController::class, "buscar_Pessoa_Ocorr_Modal"])->name("buscar_Pessoa_Ocorr_Modal");
+    Route::post("/editar-pessoa-modal", [PessoasController::class, "editar_Pessoa_Ocorr_Modal"])->name("editar_Pessoa_Ocorr_Modal");
+    Route::post("/salvar-edit-pessoa-modal", [PessoasController::class, "salvar_Edit_Pessoa_Ocorr_Modal"])->name("salvar_Edit_Pessoa_Ocorr_Modal");
 
     Route::get("/dashboard", [DashboardController::class, "show_Dashboard"])->name("show_Dashboard");
-
-
 });
 

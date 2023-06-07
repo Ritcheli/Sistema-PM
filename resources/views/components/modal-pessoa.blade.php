@@ -8,7 +8,6 @@
           </button>
         </div>
         <div class="modal-body mx-3">
-            <div class="alert alert-danger" style="display:none"></div>
             <form method="POST" action="{{ route('nova_Pessoa_Ocorr') }}" id="form-pessoas">
                 @csrf
                 <div class="form-row mb-3">

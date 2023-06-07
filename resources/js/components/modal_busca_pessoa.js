@@ -1,3 +1,4 @@
+import { addPessoaToTable } from './modal_pessoa'; 
 import Swal from 'sweetalert2';
 
 let modal_busca_pessoa = document.getElementById('modal-busca-pessoas');
@@ -9,7 +10,7 @@ if (modal_busca_pessoa != null){
             var nome          = e.currentTarget.cells[1].innerHTML;
             var CPF_RG        = e.currentTarget.cells[2].innerHTML;
             var id_envolvidos = document.getElementsByClassName('id-envolvido');
-    
+
             if (id_envolvidos.length > 0){
                 for (let i = 0 ; i < id_envolvidos.length; i++){
                     if (id_envolvidos[i].innerHTML.replace(/\s/g, '') == id){
@@ -27,29 +28,7 @@ if (modal_busca_pessoa != null){
                 }
             }
             
-            $("#table-body-pessoa").append(
-                `<tr class="envolvido">
-                    <th scope="row" class="align-middle id-envolvido">
-                        ` + id + `
-                    </th>
-                    <td class="align-middle">
-                        ` + nome + `
-                    </td>
-                    <td class="align-middle">
-                        ` + CPF_RG + `
-                    </td>
-                    <td>
-                        <div class="d-flex justify-content-between">
-                            <button type="button" value="` + id + `" title="Editar" class="btn btn-table-edit w-45"> 
-                                <i class='bx bxs-edit btn-table-icon-CM'></i>
-                            </button>
-                            <button type="button" title="Remover" class="btn btn-table-remove w-45"> 
-                                <i class='bx bxs-trash btn-table-icon-CM'></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>`
-            );
+            addPessoaToTable(id, nome, CPF_RG);
     
             $('#modal-busca-pessoas').modal('hide');
        });
@@ -57,7 +36,8 @@ if (modal_busca_pessoa != null){
 }
 
 export function searchPessoa(){
-    var url = $('#form-envolvidos').attr('action');
+    let url = $('#form-envolvidos').attr('action');
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')

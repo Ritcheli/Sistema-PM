@@ -9,7 +9,7 @@
     @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    <section>
+    <section>   
         {{ $modal }} 
     </section>
 

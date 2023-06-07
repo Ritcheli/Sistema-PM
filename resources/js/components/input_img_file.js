@@ -8,11 +8,11 @@ if (input.length > 0){
 
     document.addEventListener('DOMContentLoaded', function(){
         $(document).on("click", ".btn-remove-img", function(){
-            let input_files = $(this).closest('.upload-img-component').find('.input-foto')[0];
-            let nome_img = $(this).attr('value');
+            let input_files  = $(this).closest('.upload-img-component').find('.input-foto')[0];
+            let nome_img     = $(this).attr('value');
             let label_upload = $(this).closest('.upload-img-component').find('.label-foto')[0];
-            let img_list = $(this).closest('.upload-img-component').find('.img-list');
-            let img_preview = $(this).closest('.img-preview')[0];
+            let img_list     = $(this).closest('.upload-img-component').find('.img-list');
+            let img_preview  = $(this).closest('.img-preview')[0];
 
             const dt = new DataTransfer();
 
