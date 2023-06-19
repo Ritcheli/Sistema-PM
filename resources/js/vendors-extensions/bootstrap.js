@@ -1,3 +1,6 @@
+import select2 from 'select2';
+select2();
+
 // Validação de campos
 (function() {
     'use strict';

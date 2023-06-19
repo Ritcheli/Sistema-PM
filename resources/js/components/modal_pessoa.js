@@ -66,7 +66,7 @@ if (modal_cad_pessoa != null){
                     }
                 });
                 $.ajax({
-                    url: "/editar-pessoa-modal",
+                    url: "/ocorrencia/editar-pessoa-modal",
                     method: "POST",
                     data: {
                         id_pessoa: id_edit_pessoa,
@@ -129,7 +129,7 @@ if (modal_cad_pessoa != null){
                     }
                 });
                 $.ajax({
-                    url: "/salvar-edit-pessoa-modal",
+                    url: "/ocorrencia/salvar-edit-pessoa-modal",
                     method: "POST",
                     data: form_data,
                     cache: false,
@@ -153,7 +153,6 @@ if (modal_cad_pessoa != null){
                                         tag_telefone_invalido.innerHTML = '<strong>' + value + '</strong>';
                                         break;
                                     case 'CPF_RG':
-
                                         input_CPF_RG.classList.add('is-invalid');
                                         tag_CPF_RG_invalido.innerHTML = '<strong>' + value + '</strong>';
                                         break;    

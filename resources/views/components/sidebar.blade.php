@@ -39,7 +39,7 @@
                         </li>
                         <ul class="sub-menu-CM close-CM"> 
                             <li> <a href="{{ route("show_Cad_Ocorrencia") }}"> Cadastro</a> </li>
-                            <li> <a href="#"> Suboption2 </a> </li>
+                            <li> <a href="{{ route("show_Busca_Ocorrencia") }}"> Consulta </a> </li>
                             <li> <a href="#"> Suboption3 </a> </li>
                         </ul>
                     </div>

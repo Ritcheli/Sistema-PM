@@ -9,4 +9,7 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    optimizeDeps: {
+        exclude: ['bootstrap-select']
+      }
 });

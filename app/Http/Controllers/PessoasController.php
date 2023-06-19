@@ -7,12 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Nette\Utils\Image;
-
-use function PHPUnit\Framework\isEmpty;
 
 class PessoasController extends Controller
 {
@@ -45,12 +42,21 @@ class PessoasController extends Controller
     }
 
     public function buscar_Pessoa_Ocorr_Modal(Request $request){
+        $total_rows = DB::table('pessoas')
+                    ->select('id_pessoa')
+                    ->where('nome', 'like', '%' . $request->nome . '%')
+                    ->count();
+
         $pessoas = DB::table('pessoas')
                      ->select('id_pessoa', 'nome', 'RG_CPF')
-                     ->where('nome', 'like', '%' . $request->nome . '%')->get();
+                     ->where('nome', 'like', '%' . $request->nome . '%')
+                     ->skip($request->items_per_page * $request->current_page)
+                     ->take($request->items_per_page)   
+                     ->get();
 
         return response()->json([
-            'pessoas' => $pessoas,
+            'pessoas'    => $pessoas,
+            'total_rows' => $total_rows
         ]);
     }
 

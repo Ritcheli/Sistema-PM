@@ -1,7 +1,10 @@
 import { addPessoaToTable } from './modal_pessoa'; 
 import Swal from 'sweetalert2';
+import Pagination from "s-pagination";
 
 let modal_busca_pessoa = document.getElementById('modal-busca-pessoas');
+var items_per_page = 5;
+var current_page   = 0;
 
 if (modal_busca_pessoa != null){
     document.addEventListener('DOMContentLoaded', function () {
@@ -23,6 +26,7 @@ if (modal_busca_pessoa != null){
                             width: '350px',
                             iconColor: '#F4EB20'
                         })
+                        
                         return;
                     }
                 }
@@ -48,10 +52,13 @@ export function searchPessoa(){
         method: 'POST',
         data: {
             nome: $('#input-buscar').val(),
+            items_per_page: items_per_page,
+            current_page: current_page
         },
         success: function(result){
-            $('#table-body-busca-pessoa').html('');
-            
+            $('#table-body-busca-pessoa').html("");
+            $('.pag-busca-pessoa').html('');
+
             $.each(result.pessoas, function(key, value){
                 $('#table-body-busca-pessoa').append(
                     `<tr class="row-busca-pessoa">
@@ -61,6 +68,47 @@ export function searchPessoa(){
                     </tr>`
                 );
             });
+
+            $("#pagination-busca-pessoa").html("");
+
+            var pagination = new Pagination({
+                container: $("#pagination-busca-pessoa"),
+                maxVisibleElements: 10,
+                pageClickCallback: function (pageNumber) {
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url: url,
+                        method: 'POST',
+                        data: {
+                            nome: $('#input-buscar').val(),
+                            items_per_page: items_per_page,
+                            current_page: pageNumber - 1
+                        },
+                        success: function(result){
+                            $('#table-body-busca-pessoa').html("");
+
+                            $.each(result.pessoas, function(key, value){
+                                $('#table-body-busca-pessoa').append(
+                                    `<tr class="row-busca-pessoa">
+                                        <th scope="row" class="id-pessoa">` + value.id_pessoa  + `</th>
+                                        <td>` + value.nome + `</td>
+                                        <td>` + value.RG_CPF + `</td>
+                                    </tr>`
+                                );
+                            });
+                        }
+                    });
+                }
+            });
+
+            pagination.make(result.total_rows, items_per_page);
+
+            $(".pagination").removeClass('pagination-sm');
+            $(".pagination").addClass('pagination');
 
             $('#modal-busca-pessoas').modal('show');
         }

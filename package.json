@@ -9,12 +9,14 @@
         "jquery": "^3.6.4",
         "laravel-vite-plugin": "^0.7.2",
         "sass": "^1.62.1",
+        "select2": "^4.1.0-rc.0",
         "vite": "^4.0.0",
         "vite-plugin-dynamic-import": "^1.3.4"
     },
     "dependencies": {
         "bootstrap": "^4.4.1",
         "boxicons": "^2.1.4",
-        "sweetalert2": "^11.7.5"
+        "s-pagination": "^3.0.1",
+        "sweetalert2": "^11.4.8"
     }
 }

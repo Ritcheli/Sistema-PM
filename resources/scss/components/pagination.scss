@@ -1,0 +1,23 @@
+.page-link{
+    color: $gray-text-color;
+}
+
+.page-link:hover{
+    background: $primary-color;
+    color: $white-text-color;
+}
+
+.page-link:focus{
+    background: $primary-color-strong;
+    color: $white-text-color;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(88, 221, 75, 0.6) !important ;
+    outline: 0 none !important;
+}
+
+.page-item.active .page-link{
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(88, 221, 75, 0.6) !important ;
+    outline: none;
+    border-color: $primary-color-strong;
+    background: $primary-color-strong !important;
+    color: $white-text-color !important;
+}

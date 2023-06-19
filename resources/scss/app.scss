@@ -1,12 +1,14 @@
 // Bootstrap
 @import '/node_modules/bootstrap/scss/bootstrap';
+@import '/node_modules/select2/dist/css/select2.min.css';
 
 // Variables
 @import 'utilities/variables';
 
 // Vendors-extensions
 @import 'vendors-extensions/bootstrapp',
-        'vendors-extensions/ck_editor';
+        'vendors-extensions/ck_editor',
+        'vendors-extensions/select2';
 
 // Bases
 @import 'base/maps', 
@@ -25,7 +27,8 @@
 @import 'components/buttons',
         'components/sidebar',
         'components/navbar',
-        'components/input_img_file.scss',
+        'components/pagination',
+        'components/input_img_file',
         'components/table';
 
 // Pages

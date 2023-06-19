@@ -4,6 +4,7 @@ import 'https://cdn.ckeditor.com/ckeditor5/37.1.0/super-build/ckeditor.js';
 // Node modules
 import 'bootstrap';
 import $ from 'jquery';
+import 's-pagination';
 
 // Pages
 import './pages/cad_ocorrencia';
