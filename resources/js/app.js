@@ -8,6 +8,7 @@ import 's-pagination';
 
 // Pages
 import './pages/cad_ocorrencia';
+import './pages/busca_ocorrencia';
 
 // Vendors
 import './vendors-extensions/bootstrap';
@@ -17,5 +18,6 @@ import './components/sidebar';
 import './components/input_img_file';
 import './components/modal_pessoa';
 import './components/modal_busca_pessoa';
+import './components/data_range';
 
 window.jQuery = window.$ = $;

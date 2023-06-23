@@ -17,6 +17,13 @@
 
 .btn.CM.medium{
     font-size: 17px;
+    height: 40px;
+    width: 125px;
+    transform: scale(1.03);
+}
+
+.btn.CM.small{
+    font-size: 17px;
     transform: scale(1.03);
 }
 
@@ -69,7 +76,7 @@
 
 .btn-icon-CM{
     font-size: 15px; 
-    font-weight: 600;
+    font-weight: 500;
     vertical-align: middle;
 }
 
@@ -108,9 +115,10 @@
 }
 
 .btn-table-remove,
-.btn-table-edit{
+.btn-table-edit,
+.btn-table-view{
     outline: none;
-    color: $white-text-color;
+    color: $white-text-color !important;
     border: none;
     border-radius: $border-radius;
     font-weight: 500;
@@ -126,12 +134,11 @@
 .btn-table-edit:hover{
     color: $white-text-color;
     background: $fourth-color-weak;
-    transform: scale(1.03);
 }
 
 .btn-table-edit:active{
     background: $fourth-color-strong;
-    transform: scale(0.97);
+    transform: scale(0.95);
 }
 
 .btn-table-remove{
@@ -141,12 +148,25 @@
 .btn-table-remove:hover{
     color: $white-text-color;
     background: $second-color-weak;
-    transform: scale(1.03);
 }
 
 .btn-table-remove:active{
     background: $second-color-strong;
-    transform: scale(0.97);
+    transform: scale(0.95);
+}
+
+.btn-table-view{
+    background: $third-color;
+}
+
+.btn-table-view:hover{
+    color: $white-text-color;
+    background: $third-color-weak;
+}
+
+.btn-table-view:active{
+    background: $third-color-strong;
+    transform: scale(0.95);
 }
 
 .btn-remove-img{

@@ -17,10 +17,15 @@
 }
 
 .input-group{
-    border: 1px solid #ced4da;
+    border: 0px solid #ced4da;
     border-radius: $border-radius;
 }
 
+.input-group-text{
+    background: $primary-color;
+    color: $white-text-color;
+    border-color: $primary-color;
+}
 .close{
     opacity: 1;
     text-shadow: 1px 0 #fff, -1px 0 #fff, 0 1px #fff, 0 -1px #fff;
@@ -35,12 +40,28 @@
     width: 10%;
 }
 
+.w-13{
+    width: 13%;
+}
+
 .w-15{
     width: 15%;
 }
 
+.w-20{
+    width: 20%;
+}
+
+.w-25{
+    width: 25%;
+}
+
 .w-30{
     width: 30%;
+}
+
+.w-41{
+    width: 41%;
 }
 
 .w-45{

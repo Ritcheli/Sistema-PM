@@ -19,12 +19,12 @@
                                     <input type="text" class="form-control CM" id="input-buscar" placeholder="Digite o nome do envolvido">
                                 </div> 
                                 <div class="form-group col-auto">
-                                    <button type="submit" title="Buscar" id="search-pessoa" class="btn CM medium search-CM shadow-none">
+                                    <button type="submit" title="Buscar" id="search-pessoa" class="btn CM small search-CM shadow-none">
                                         <i class='bx bx-search btn-icon-CM'> </i>
                                     </button>
                                 </div>
                                 <div class="form-group col-auto">
-                                    <button type="reset" title="Cadastrar novo" id="cad-pessoa" class="btn CM medium add-CM shadow-none">
+                                    <button type="reset" title="Cadastrar novo" id="cad-pessoa" class="btn CM small add-CM shadow-none">
                                         <i class='bx bx-plus btn-icon-CM'></i>     
                                     </button>
                                 </div>
@@ -40,6 +40,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="table-body-pessoa">
+                                        
                                     </tbody>
                                 </table>
                             </div>

@@ -42,7 +42,7 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label class="text-nowrap">Fotos</label>
-                            <div class="input-group" id="foto">
+                            <div class="input-group CM" id="foto">
                                 <label for="upload" class="label-foto pl-2 ml-1 pt-2 mt-1 text-muted"></label>
                                 <input type="file" class="form-control input-foto" accept="image/png, image/jpg, image/jpeg" id="upload" name="upload" multiple>
                                 <div class="input-group-append">    
