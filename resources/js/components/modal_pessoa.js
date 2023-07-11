@@ -108,6 +108,7 @@ if (modal_cad_pessoa != null){
             let total_files = $('#upload')[0].files.length;
             var form_data = new FormData();
 
+            form_data.append('Who_Call', 'Modal_Pessoa')
             form_data.append('id_pessoa', id_edit_pessoa);
             form_data.append('nome', $('#nome').val());
             form_data.append('data_nascimento', $('#data_nascimento').val());
@@ -129,7 +130,7 @@ if (modal_cad_pessoa != null){
                     }
                 });
                 $.ajax({
-                    url: "/ocorrencia/salvar-edit-pessoa-modal",
+                    url: "/pessoa/salvar-edit-pessoa",
                     method: "POST",
                     data: form_data,
                     cache: false,
@@ -237,7 +238,7 @@ if (modal_cad_pessoa != null){
     }, false);
 }
 
-function loadURLToInputFiled(urls){
+export function loadURLToInputFiled(urls){
     dt.clearData();
 
     for (const i in urls){
@@ -286,7 +287,7 @@ export function addPessoaToTable(id_pessoa, nome , RG_CPF){
                     <button type="button" value="` + id_pessoa + `" title="Editar" class="btn btn-table-edit w-45"> 
                         <i class='bx bxs-edit btn-table-icon-CM'></i>
                     </button>
-                    <button type="button" value="` + id_pessoa + `" title="Remover" class="btn btn-table-remove w-45"> 
+                    <button type="button" value="` + id_pessoa + `" title="Remover" class="btn btn-table-remove btn-remove-pessoa-ocorr w-45"> 
                         <i class='bx bxs-trash btn-table-icon-CM'></i>
                     </button>
                 </div>

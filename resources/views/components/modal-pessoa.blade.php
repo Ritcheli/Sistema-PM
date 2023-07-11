@@ -8,7 +8,7 @@
           </button>
         </div>
         <div class="modal-body mx-3">
-            <form method="POST" action="{{ route('nova_Pessoa_Ocorr') }}" id="form-pessoas">
+            <form method="POST" action="{{ route('nova_Pessoa') }}" id="form-pessoas">
                 @csrf
                 <div class="form-row mb-3">
                     <label class="text-nowrap">Nome</label>

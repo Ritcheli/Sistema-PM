@@ -1,9 +1,6 @@
 import { createEditor } from '../components/textarea_CKEditor';
 import { searchPessoa } from '../components/modal_busca_pessoa';
-import Swal from 'sweetalert2';
-
 var editor = {};
-
 
 // Cria os elementos baseados em CKEditor
 if (document.getElementById('descricao_ocor') != null){
@@ -30,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let tag_descricao_invalida    = $('#descricao_invalida');
 
     $('#cancelar-cad-ocorrencia').on('click',function(){
-        editor.descricao_ocor.setData('');
+        window.history.back();
     });
 
     $("#search-pessoa").on("click", function(e){
@@ -53,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    $(document).on("click", ".btn-table-remove", function(e){ 
+    $(document).on("click", ".btn-remove-pessoa-ocorr", function(e){ 
         e.preventDefault();
         
         $(this).parent().parent().parent().remove();
@@ -71,6 +68,9 @@ document.addEventListener('DOMContentLoaded', function () {
         
         $('.is-invalid').removeClass('is-invalid');
 
+        if ($("#salvar_ocorr").val() != ""){
+            form_data.append('id_ocorrencia', $("#salvar_ocorr").val());
+        }
         form_data.append('num_protocol', input_num_protocol.val());
         form_data.append('data_hora', input_data_hora.val());
         form_data.append('endereco_cep', input_endereco_cep.val());
@@ -127,16 +127,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                 break;
                         }
                     });
-                } else {
-                    Swal.fire({
-                        title: 'Ocorrência cadastrada!',
-                        icon: 'success',
-                        confirmButtonText: 'Continuar',
-                        confirmButtonColor: '#009640',
-                        width: '350px'
-                    }).then(function(){
-                        location.href = result;  
-                    })
+                } 
+                else {
+                    location.href = result;  
                 }
             }
         });

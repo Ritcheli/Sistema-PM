@@ -26,9 +26,21 @@
     color: $white-text-color;
     border-color: $primary-color;
 }
+
 .close{
     opacity: 1;
     text-shadow: 1px 0 #fff, -1px 0 #fff, 0 1px #fff, 0 -1px #fff;
+}
+
+.img-thumbnail {
+    background: $navbar-color;
+    border: 2px solid #dee2e6;
+}
+
+
+// Carousel
+.carousel-inner{
+    width: $relatorio-img-width;
 }
 
 // Width

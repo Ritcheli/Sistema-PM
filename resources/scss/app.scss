@@ -8,6 +8,7 @@
 // Vendors-extensions
 @import 'vendors-extensions/bootstrapp',
         'vendors-extensions/ck_editor',
+        'vendors-extensions/sweetalert2',
         'vendors-extensions/select2';
 
 // Bases
@@ -29,6 +30,7 @@
         'components/navbar',
         'components/pagination',
         'components/input_img_file',
+        'components/images.scss',
         'components/table';
 
 // Pages

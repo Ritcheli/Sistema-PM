@@ -25,6 +25,8 @@ class AuthController extends Controller
         $credentials = $request->only('nome_usuario', 'senha');
 
         if (Auth::attempt(['nome_usuario' => $credentials['nome_usuario'], 'password' =>$credentials['senha']])) {
+            toast('Bem vindo ' . $credentials['nome_usuario'] . '!','success');
+
             return redirect()->intended('dashboard');
         }
 

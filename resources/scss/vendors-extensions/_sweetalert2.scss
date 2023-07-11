@@ -1,0 +1,15 @@
+.sweetalert2-custom-confirm-button{
+    background: $primary-color!important;
+}
+
+.sweetalert2-custom-confirm-button:hover{
+    background: $primary-color-strong!important;
+}
+
+.sweetalert2-custom-confirm-button:focus{
+    box-shadow: none !important;
+}
+
+.sweetalert2-custom-container{
+    width: 350px!important;
+}

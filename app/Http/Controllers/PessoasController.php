@@ -7,24 +7,84 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Nette\Utils\Image;
 
 class PessoasController extends Controller
 {
-    public function nova_Pessoa_Ocorr(Request $request){
-        $validator = Validator::make($request->all(), [
-            'nome'              => ['required', 'string', 'max:60'],
-            'telefone'          => ['max:15'],
-            'CPF_RG'            => ['max:11'],
-            'alcunha'           => ['max:60'],
-            'observacao_pessoa' => ['max:65535'],
-            'files.*'           => ['mimes:jpg,jpeg,png'],
-        ]);     
+    public function show_Cad_Pessoa(){
+        $Who_Call = "Cad_Pessoa";
 
-        if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()]);
+        return view('pessoa.pessoa', compact("Who_Call"));
+    }
+
+    public function show_Busca_Pessoa(Request $request){
+        $nome    = $request->input_nome;
+        $alcunha = $request->input_alcunha; 
+
+        $query = DB::table('pessoas')
+                     ->select('id_pessoa', 'nome', 'alcunha', 'RG_CPF', DB::raw('DATE_FORMAT(pessoas.data_nascimento, "%d/%m/%Y") as data_nascimento'));
+
+
+        if ($request->input_nome != null){
+            $query->where('pessoas.nome', 'like', '%' . $nome . '%');
+        }
+
+        if ($request->input_alcunha != null){
+            $query->where('pessoas.alcunha', 'like', '%' . $alcunha . '%');
+        }
+
+        $pessoas = $query->paginate(10);
+
+        return view('pessoa.busca_pessoa', compact('pessoas', 'nome', 'alcunha'));
+    }
+
+    public function show_Visualizar_Pessoa($id_pessoa){
+        $fotos_pessoas = DB::table('fotos_pessoas')
+                           ->select('id_foto_pessoa', 'caminho_servidor')
+                           ->where('id_pessoa', $id_pessoa)
+                           ->get();
+
+        $first = DB::table('fotos_pessoas')
+                   ->select( DB::raw('MIN(id_foto_pessoa) as first'))
+                   ->where('id_pessoa', $id_pessoa)
+                   ->get();
+
+        $pessoa = DB::table('pessoas')
+                     ->select('nome', 'alcunha', DB::raw('DATE_FORMAT(pessoas.data_nascimento, "%d/%m/%Y") as data_nascimento'), 'RG_CPF', 'telefone', 'observacao')
+                     ->where('id_pessoa', $id_pessoa)
+                     ->get();
+
+        return view('pessoa.visualizar_pessoa', compact('fotos_pessoas', 'first', 'pessoa'));
+    }
+
+    public function nova_Pessoa(Request $request){
+        if ($request->Who_Call == "Modal_Pessoa"){
+            $validator = Validator::make($request->all(), [
+                'nome'              => ['required', 'string', 'max:60'],
+                'telefone'          => ['max:15'],
+                'CPF_RG'            => ['max:11'],
+                'alcunha'           => ['max:60'],
+                'observacao_pessoa' => ['max:65535'],
+                'files.*'           => ['mimes:jpg,jpeg,png'],
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['errors'=>$validator->errors()]);
+            }
+        }
+
+        if ($request->Who_Call == "Pessoa"){
+            $request->validate([
+                'nome'              => ['required', 'string', 'max:60'],
+                'telefone'          => ['max:15'],
+                'CPF_RG'            => ['max:11'],
+                'alcunha'           => ['max:60'],
+                'observacao_pessoa' => ['max:65535'],
+                'files.*'          => ['mimes:jpg,jpeg,png']
+            ]);
         }
 
         $data = $request->only('nome', 'telefone', 'CPF_RG', 'data_nascimento', 'alcunha', 'observacao_pessoa');
@@ -36,9 +96,28 @@ class PessoasController extends Controller
                 $this->save_img($file, $pessoa->id_pessoa);
             }           
         }
-        return response()->json([
-            'pessoa' => $pessoa,
-        ]);
+
+        if ($request->Who_Call == "Modal_Pessoa"){
+            return response()->json([
+                'pessoa' => $pessoa,
+            ]);
+        }
+
+        if ($request->Who_Call == "Pessoa"){ 
+            alert('Sucesso','Pessoa cadastrada!', 'success')->showConfirmButton('Continuar');
+
+            return redirect(route('show_Dashboard'));
+        }
+    }
+
+    public function show_Editar_Pessoa($id_pessoa){
+        $Who_Call = "Editar_Pessoa";
+
+        $pessoa = DB::table('pessoas')
+                    ->where('id_pessoa', $id_pessoa)
+                    ->get();
+
+        return view('pessoa.pessoa', compact("pessoa" ,"Who_Call"));
     }
 
     public function buscar_Pessoa_Ocorr_Modal(Request $request){
@@ -60,18 +139,31 @@ class PessoasController extends Controller
         ]);
     }
 
-    public function salvar_Edit_Pessoa_Ocorr_Modal(Request $request){
-        $validator = Validator::make($request->all(), [
-            'nome'              => ['required', 'string', 'max:60'],
-            'telefone'          => ['max:15'],
-            'CPF_RG'            => ['max:11'],
-            'alcunha'           => ['max:60'],
-            'observacao_pessoa' => ['max:65535'],
-            'files.*'           => ['mimes:jpg,jpeg,png'],
-        ]);     
+    public function editar_Pessoa(Request $request){
+        if ($request->Who_Call == "Modal_Pessoa"){
+            $validator = Validator::make($request->all(), [
+                'nome'              => ['required', 'string', 'max:60'],
+                'telefone'          => ['max:15'],
+                'CPF_RG'            => ['max:11'],
+                'alcunha'           => ['max:60'],
+                'observacao_pessoa' => ['max:65535'],
+                'files.*'           => ['mimes:jpg,jpeg,png'],
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->errors()]);
+            if ($validator->fails()) {
+                return response()->json(['errors'=>$validator->errors()]);
+            }
+        }
+
+        if ($request->Who_Call == "Pessoa"){
+            $request->validate([
+                'nome'              => ['required', 'string', 'max:60'],
+                'telefone'          => ['max:15'],
+                'CPF_RG'            => ['max:11'],
+                'alcunha'           => ['max:60'],
+                'observacao_pessoa' => ['max:65535'],
+                'files.*'           => ['mimes:jpg,jpeg,png']
+            ]);
         }
 
         $dados = $request->only('id_pessoa', 'nome', 'telefone', 'CPF_RG', 'data_nascimento', 'alcunha', 'observacao_pessoa');
@@ -118,12 +210,43 @@ class PessoasController extends Controller
             }
         }
         
-        return response()->json([
-            'pessoa' => $pessoa
-        ]);
+        if ($request->Who_Call == "Modal_Pessoa"){
+            return response()->json([
+                'pessoa' => $pessoa,
+            ]);
+        }
+
+        if ($request->Who_Call == "Pessoa"){ 
+            alert('Sucesso','Pessoa atualizada!', 'success')->showConfirmButton('Continuar');
+
+            return redirect()->route('show_Busca_Pessoa');
+        }
     }
 
-    public function editar_Pessoa_Ocorr_Modal(Request $request){
+    public function excluir_Pessoa(Request $request){
+        if (DB::table('ocorrencias_pessoas')->where('id_pessoa', $request->id_pessoa)->doesntExist()) {
+            $fotos_pessoas = DB::table('fotos_pessoas')
+                               ->select('id_foto_pessoa', 'caminho_servidor')
+                               ->where('id_pessoa', $request->id_pessoa)
+                               ->get();
+
+            if ($fotos_pessoas->isNotEmpty()){
+                foreach ($fotos_pessoas as $foto_pessoa) {
+                    $this->delete_img($foto_pessoa);
+                }
+            }
+            
+            DB::table('pessoas')
+              ->where('id_pessoa', $request->id_pessoa)
+              ->delete();
+
+            alert('Sucesso','Pessoa foi excluída com sucesso', 'success')->showConfirmButton('Continuar');
+        } else {
+            alert('Erro!','Não é possível excluir uma pessoa relacionada a uma ocorrência', 'warning')->showConfirmButton('Continuar');
+        }        
+    }
+
+    public function show_Editar_Pessoa_Ocorr_Modal(Request $request){
         $pessoas = DB::table('pessoas')
                      ->select('nome', 'data_nascimento', 'telefone', 'RG_CPF', 'alcunha', 'observacao')
                      ->where('id_pessoa', $request->id_pessoa)

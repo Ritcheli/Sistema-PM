@@ -1,13 +1,8 @@
 import Swal from 'sweetalert2';
 
 document.addEventListener('DOMContentLoaded', function(){
-    $("#limpar_filtros").on('click', function(){
-        $('input[type=date]').attr('value', ""); 
-        $('input[type=text]').attr('value', ""); 
-    });
-
-    $(".btn-remove-ocorr").on('click', function(){
-        let id_ocorrencia = $(this).attr('value');
+    $(".btn-remove-pessoa").on('click', function(){
+        let id_pessoa = $(this).attr('value');
 
         Swal.fire({
             title: 'Tem certeza que deseja excluir esta ocorrência?',
@@ -29,10 +24,10 @@ document.addEventListener('DOMContentLoaded', function(){
                     }
                 });
                 $.ajax({
-                    url: "/ocorrencia/excluir-ocorrencia",
+                    url: "/pessoa/excluir-pessoa",
                     method: "POST",
                     data: {
-                        id_ocorrencia: id_ocorrencia
+                        id_pessoa: id_pessoa
                     },
                     success: function(){
                         location.reload();

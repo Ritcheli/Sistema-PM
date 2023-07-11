@@ -7,8 +7,10 @@ import $ from 'jquery';
 import 's-pagination';
 
 // Pages
-import './pages/cad_ocorrencia';
+import './pages/ocorrencia';
 import './pages/busca_ocorrencia';
+import './pages/pessoa';
+import './pages/busca_pessoa';
 
 // Vendors
 import './vendors-extensions/bootstrap';

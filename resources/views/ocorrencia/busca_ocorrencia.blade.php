@@ -55,18 +55,18 @@
                         </tr>
                     </thead>
                     @foreach ($ocorrencias as $ocorrencia)
-                    <tbody id="table-body-pessoa">
-                        <tr class="envolvido">
-                            <td scope="row" class="align-middle id-envolvido">
+                    <tbody id="table-body-ocorrrencia">
+                        <tr>
+                            <td scope="row" class="align-middle">
                                 {{ $ocorrencia->num_protocol }}
                             </td>
-                            <td class="align-middle nome-envolvido">
-                                {{ substr(strip_tags($ocorrencia->descricao_ocorrencia), 0, 130) }} 
+                            <td class="align-middle text-justify">
+                                {!! substr(str_replace(array('<p>', '</p>'), "", $ocorrencia->descricao_ocorrencia), 0, 130) !!} 
                             </td>
-                            <td scope="row" class="align-middle id-envolvido">
+                            <td scope="row" class="align-middle">
                                 {{ $ocorrencia->pessoas_envolvidas }}
                             </td>
-                            <td class="align-middle RG-CPF-envolvido">
+                            <td class="align-middle">
                                 {{ $ocorrencia->data_hora }}
                             </td>
                             <td class="align-middle">
@@ -74,10 +74,10 @@
                                     <a type="button" value="" title="Visualizar" class="btn btn-table-view w-30" href= {{ route('show_Visualizar_Ocorrencia', ['id_ocorrencia' => $ocorrencia->id_ocorrencia]) }}> 
                                         <i class='bx bx-show btn-table-icon-CM'></i>
                                     </a>
-                                    <a type="button" value="" title="Editar" class="btn btn-table-edit w-30"> 
+                                    <a type="button" value="" title="Editar" class="btn btn-table-edit w-30" href= {{ route('show_Editar_Ocorrencia', ['id_ocorrencia' => $ocorrencia->id_ocorrencia]) }}> 
                                         <i class='bx bxs-edit btn-table-icon-CM'></i>
                                     </a>
-                                    <a type="button" value="" title="Remover" class="btn btn-table-remove w-30"> 
+                                    <a type="button" value="{{ $ocorrencia->id_ocorrencia }}" title="Remover" class="btn btn-table-remove btn-remove-ocorr w-30"> 
                                         <i class='bx bxs-trash btn-table-icon-CM'></i>
                                     </a>
                                 </div>

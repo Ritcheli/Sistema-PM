@@ -7,7 +7,6 @@ export function createEditor(elementId) {
                 items: [
                     'heading', '|',
                     'bold', 'italic', 'underline', 'removeFormat', '|',
-                    'bulletedList', 'numberedList', '|',
                     'outdent', 'indent', '|',
                     'undo', 'redo', '|',
                     'fontSize', 'fontColor', 'highlight', 'alignment', '|',

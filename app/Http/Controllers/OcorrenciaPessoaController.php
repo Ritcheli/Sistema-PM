@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ocorrencias_pessoas;
+use Illuminate\Support\Facades\DB;
 
 class OcorrenciaPessoaController extends Controller
 {
