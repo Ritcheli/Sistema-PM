@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function(){
         let id_pessoa = $(this).attr('value');
 
         Swal.fire({
-            title: 'Tem certeza que deseja excluir esta ocorrência?',
+            title: 'Tem certeza que deseja excluir esta pessoa?',
             icon: 'warning',
             text: 'Essa ação NÃO poderá ser revertida!',
             iconColor: '#CB333B',

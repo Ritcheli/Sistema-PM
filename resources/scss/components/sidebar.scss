@@ -252,3 +252,8 @@ header .image-text-CM .header-text-CM{
     left: $sidebar-close-width;
     width: calc(100% - $sidebar-close-width);
 }
+
+.sidebar-CM.close-CM ~ .menu-collapse{
+    left: 136px;
+    width: calc(93.8% - $sidebar-close-width);
+}

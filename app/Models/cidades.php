@@ -16,5 +16,4 @@ class cidades extends Model
     protected $primaryKey = 'id_cidade';
 
     public $timestamps = false;
-    
 }

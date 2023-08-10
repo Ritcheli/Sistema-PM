@@ -6,7 +6,11 @@
     <meta name="_token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title id="page-title" >{{ $title }}</title>
-
+    @php
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+    @endphp
     @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 <body>
@@ -16,6 +20,9 @@
 
     <x-sidebar></x-sidebar>
     <x-navbar></x-navbar>
+
+
+    {{ $other_objects }}
 
     <section class="content-CM p-5"> 
         {{ $container_form }}

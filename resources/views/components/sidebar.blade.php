@@ -38,8 +38,9 @@
                             <i class='bx bx-chevron-down arrow-link-CM'></i>
                         </li>
                         <ul class="sub-menu-CM close-CM"> 
-                            <li> <a href="{{ route("show_Cad_Ocorrencia") }}"> Cadastro</a> </li>
+                            <li> <a href="{{ route("show_Cad_Ocorrencia") }}"> Cadastro </a> </li>
                             <li> <a href="{{ route("show_Busca_Ocorrencia") }}"> Consulta </a> </li>
+                            <li> <a href="{{ route("show_Importar_Ocorrencia") }}"> Importar </a> </li>
                         </ul>
                     </div>
                     <div class="links-CM">
@@ -55,40 +56,6 @@
                             <li> <a href="{{ route("show_Busca_Pessoa") }}"> Consulta </a> </li>
                         </ul>
                     </div>
-                    <div class="links-CM">
-                        <li class="icon-link-CM">
-                            <a href="#"> 
-                                <i class='bx bxl-graphql icon-CM'></i>
-                                <span class="sidebar-text-CM"> Option2 </span>
-                            </a>
-                            <i class='bx bx-chevron-down arrow-link-CM'></i>
-                        </li>
-                        <ul class="sub-menu-CM close-CM">
-                            <li> <a href="#"> Suboption1 </a> </li>
-                            <li> <a href="#"> Suboption2 </a> </li>
-                            <li> <a href="#"> Suboption3 </a> </li>
-                        </ul>
-                    </div>
-                    <div class="links-CM">
-                        <li class="icon-link-CM">
-                            <a href="#"> 
-                                <i class='bx bxl-graphql icon-CM'></i>
-                                <span class="sidebar-text-CM"> Option2 </span>
-                            </a>
-                            <i class='bx bx-chevron-down arrow-link-CM'></i>
-                        </li>
-                        <ul class="sub-menu-CM close-CM">
-                            <li> <a href="#"> Suboption1 </a> </li>
-                            <li> <a href="#"> Suboption2 </a> </li>
-                            <li> <a href="#"> Suboption3 </a> </li>
-                        </ul>
-                    </div>
-                    <li class="nav-link-CM">
-                        <a href="#"> 
-                            <i class='bx bxs-home icon-CM'></i>
-                            <span class="sidebar-text-CM"> Option1 </span>
-                        </a>
-                    </li>
                 </ul>
             </div>
         </div>

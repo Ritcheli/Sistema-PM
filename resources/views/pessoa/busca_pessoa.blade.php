@@ -3,6 +3,8 @@
 
     <x-slot:title> Busca de pessoas </x-slot:title>
 
+    <x-slot:other_objects></x-slot:other_objects>
+
     <x-slot:container_form>
         <div class="container-fluid px-0">
             <div class="container-fluid CM mb-4">

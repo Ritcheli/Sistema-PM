@@ -11,6 +11,8 @@
         <x-slot:title> Editar ocorrência </x-slot:title>
     @endif
 
+    <x-slot:other_objects></x-slot:other_objects>
+
     <x-slot:container_form>
         <div class="container-fluid px-0">
             <div class="container-fluid CM mb-5">
@@ -59,10 +61,10 @@
                                                     </td>
                                                     <td>
                                                         <div class="d-flex justify-content-between">
-                                                            <button type="button" value="{{ $pessoa->id_pessoa }}" title="Editar" class="btn btn-table-edit w-45"> 
+                                                            <button type="button" value="{{ $pessoa->id_pessoa }}" title="Editar" class="btn btn-table-edit edit-pessoa w-45"> 
                                                                 <i class='bx bxs-edit btn-table-icon-CM'></i>
                                                             </button>
-                                                            <button type="button" value="{{ $pessoa->id_pessoa }}" title="Remover" class="btn btn-table-remove btn-remove-pessoa-ocorr w-45"> 
+                                                            <button type="button" value="{{ $pessoa->id_pessoa }}" title="Remover" class="btn btn-table-remove btn-remove-from-table w-45"> 
                                                                 <i class='bx bxs-trash btn-table-icon-CM'></i>
                                                             </button>
                                                         </div>

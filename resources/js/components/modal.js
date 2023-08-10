@@ -6,10 +6,12 @@ export function clearModal(name_modal, CKEditor_element_name, editors){
             $(this)
             .find("input,textarea,select")
                 .val('')
+                .prop("disabled", false)
                 .end()
             .find("input[type=checkbox], input[type=radio]")
                 .prop("checked", "")
                 .end();
+
             if (CKEditor_element_name != '') {
                 editors[CKEditor_element_name].setData('');
             }

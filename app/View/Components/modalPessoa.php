@@ -21,6 +21,6 @@ class modalPessoa extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.modal-pessoa');
+        return view('components.modal_pessoa');
     }
 }

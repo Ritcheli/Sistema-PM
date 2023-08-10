@@ -50,12 +50,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    $(document).on("click", ".btn-remove-pessoa-ocorr", function(e){ 
-        e.preventDefault();
-        
-        $(this).parent().parent().parent().remove();
-    });
-
     $("#form_ocorrencia").on("submit", function(e){
         e.preventDefault();
         let url = $("#form_ocorrencia").attr('action')

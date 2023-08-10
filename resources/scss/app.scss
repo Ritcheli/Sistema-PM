@@ -30,8 +30,13 @@
         'components/navbar',
         'components/pagination',
         'components/input_img_file',
+        'components/input_other_files',
         'components/images.scss',
-        'components/table';
+        'components/table',
+        'components/select',
+        'components/menu_collapse';
 
 // Pages
 @import 'pages/login';
+@import 'pages/dashboard';
+@import 'pages/visualizar_ocorrencia';

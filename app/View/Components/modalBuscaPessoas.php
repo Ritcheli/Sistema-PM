@@ -21,6 +21,6 @@ class modalBuscaPessoas extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.modal-busca-pessoas');
+        return view('components.modal_busca_pessoa');
     }
 }

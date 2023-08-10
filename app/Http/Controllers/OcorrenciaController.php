@@ -22,7 +22,13 @@ class OcorrenciaController extends Controller
                                  'descricao_inicial', 'descricao_ocorrencia', 'id_bairro')
                         ->where('ocorrencias.id_ocorrencia', $id_ocorrencia)
                         ->get();
-                        
+
+        $fatos = DB::table('ocorrencias_fatos_ocorrencias')
+                   ->select(DB::raw('GROUP_CONCAT(fatos_ocorrencias.natureza SEPARATOR " - ") as natureza'))
+                   ->leftJoin('fatos_ocorrencias', 'ocorrencias_fatos_ocorrencias.id_fato_ocorrencia', 'fatos_ocorrencias.id_fato_ocorrencia')
+                   ->where('ocorrencias_fatos_ocorrencias.id_ocorrencia', $id_ocorrencia)
+                   ->get();
+
         $pessoas = DB::table('pessoas')
                      ->select('pessoas.id_pessoa', 'pessoas.nome', 'pessoas.RG_CPF', DB::raw('DATE_FORMAT(pessoas.data_nascimento, "%d/%m/%Y") as data_nascimento'), 'pessoas.telefone', 'fotos_pessoas.caminho_servidor')
                      ->leftJoin('ocorrencias_pessoas', 'pessoas.id_pessoa', "ocorrencias_pessoas.id_pessoa")
@@ -33,7 +39,7 @@ class OcorrenciaController extends Controller
 
         $endereco = $this->get_Endereco($ocorrencia[0]->id_bairro);
 
-        return view('ocorrencia.visualizar_ocorrencia', compact('ocorrencia', 'pessoas', 'endereco'));
+        return view('ocorrencia.visualizar_ocorrencia', compact('ocorrencia', 'pessoas', 'endereco', 'fatos'));
     }
 
     public function show_Editar_Ocorrencia($id_ocorrencia){

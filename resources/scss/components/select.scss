@@ -1,0 +1,61 @@
+.custom-selection .select-btn{
+    border-radius: $border-radius;
+    border: 1px solid $gray-color;
+    display: flex;
+    padding: 0.375rem 0.75rem;
+    height: calc(1.5em + 0.75rem + 2px);
+    justify-content: space-between;
+    background: white;
+    color: $gray-text-color;
+}
+
+.icon-select{
+    margin-top: 3px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.custom-selection .select-btn:hover{
+    cursor: pointer;
+}
+
+.custom-selection .content{
+    display: none;
+    z-index: 48;
+    position: relative;
+}
+
+.custom-selection.active .content{
+    display: block !important;
+}
+
+.custom-selection .select-btn .icon-select{
+    transition: $tran-05;
+}
+
+.custom-selection.active .select-btn .icon-select{
+    transform: rotate(-180deg);
+    transition: $tran-05;
+}
+
+.custom-selection .content .options{
+    margin-top: 8px;
+    list-style: none;
+    border-radius: $border-radius;
+    border: 1px solid $gray-color;
+    position: absolute;
+    width: 100%;
+    background: white;
+}
+
+.custom-selection .content .options .option{
+    cursor: pointer;
+    padding: 7px 12px;
+    border-radius: $border-radius;
+    color: $gray-text-color;
+}
+
+.custom-selection .content .options .option:hover{
+    background: $primary-color;
+    color: $white-text-color;
+}

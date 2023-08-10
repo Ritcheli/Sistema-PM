@@ -29,7 +29,7 @@ class UsuarioController extends Controller
         return redirect('/dashboard');
     }
 
-    public function create(array $data){
+    public function create($data){
         return usuarios::create([
             'nome_usuario'    => $data['nome_usuario'],
             'nome_completo'   => $data['nome_completo'],

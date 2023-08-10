@@ -23,6 +23,5 @@ class EstadoController extends Controller
         } else {
             return ($id_estado[0]->id_estado);
         }
-
     }
 }

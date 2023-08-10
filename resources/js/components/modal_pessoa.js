@@ -49,7 +49,7 @@ if (modal_cad_pessoa != null){
         });
 
         if ($("#table-pessoa")[0] != null){
-            $(document).on("click", ".btn-table-edit", function(e){
+            $(document).on("click", ".edit-pessoa", function(e){
                 component_pessoa = $(this).closest('.envolvido');
                 id_edit_pessoa = $(this).attr('value');
 
@@ -167,8 +167,7 @@ if (modal_cad_pessoa != null){
                                         break;
                                 }
                             })   
-                        }
-                        else {
+                        } else {
                             component_pessoa.find('.nome-envolvido').html(result.pessoa.nome);
                             component_pessoa.find('.RG-CPF-envolvido').html(result.pessoa.RG_CPF);
 
@@ -284,10 +283,10 @@ export function addPessoaToTable(id_pessoa, nome , RG_CPF){
             </td>
             <td>
                 <div class="d-flex justify-content-between">
-                    <button type="button" value="` + id_pessoa + `" title="Editar" class="btn btn-table-edit w-45"> 
+                    <button type="button" value="` + id_pessoa + `" title="Editar" class="btn btn-table-edit edit-pessoa w-45"> 
                         <i class='bx bxs-edit btn-table-icon-CM'></i>
                     </button>
-                    <button type="button" value="` + id_pessoa + `" title="Remover" class="btn btn-table-remove btn-remove-pessoa-ocorr w-45"> 
+                    <button type="button" value="` + id_pessoa + `" title="Remover" class="btn btn-table-remove btn-remove-from-table w-45"> 
                         <i class='bx bxs-trash btn-table-icon-CM'></i>
                     </button>
                 </div>

@@ -27,3 +27,7 @@
     bottom: 0;
     background: $primary-color;
 }
+
+.disabled{
+    pointer-events: none;
+}

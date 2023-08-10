@@ -1,0 +1,24 @@
+.menu-collapse{
+    height: fit-content;
+    top: 110px;
+    position: fixed;
+    left: 318px;
+    transition: $tran-05; 
+    width: calc(93.74% - $sidebar-open-width);
+    padding: 20px 30px 10px;
+    box-shadow: 5px 5px 8px -5px $shadow-color;
+    background: $navbar-color;
+    z-index: 80;
+    border-radius: $border-radius;
+    border: 1px solid $background-color;
+}
+
+.collapse-button{
+    color: black;
+    font-size: 30px;
+    padding-top: 8px;
+}
+
+.collapse-button:hover{
+    cursor: pointer;
+}

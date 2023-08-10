@@ -94,7 +94,7 @@ return [
         'string' => 'O campo :attribute não pode ter mais de :max caracteres',
     ],
     'max_digits' => 'The :attribute field must not have more than :max digits.',
-    'mimes' => 'O campo foto precisa ser do tipo: :values.',
+    'mimes' => 'O arquivo precisa ser do tipo: :values.',
     'mimetypes' => 'The :attribute field must be a file of type: :values.',
     'min' => [
         'array' => 'The :attribute field must have at least :min items.',
@@ -125,7 +125,7 @@ return [
     'prohibited_unless' => 'The :attribute field is prohibited unless :other is in :values.',
     'prohibits' => 'The :attribute field prohibits :other from being present.',
     'regex' => 'The :attribute field format is invalid.',
-    'required' => 'O campo :attribute está vazio',
+    'required' => 'O campo :attribute é obrigatório',
     'required_array_keys' => 'The :attribute field must contain entries for: :values.',
     'required_if' => 'The :attribute field is required when :other is :value.',
     'required_if_accepted' => 'The :attribute field is required when :other is accepted.',

@@ -80,5 +80,4 @@ export function clear_input_img_file(){
         img_preview[i].innerHTML = html_img_preview;
         label_upl[i].innerHTML   = html_label_upl;
     }
-}
-   
+} 

@@ -18,7 +18,6 @@ class ocorrencias extends Model
         'descricao_ocorrencia',
         'id_bairro',
         'id_ocorrencia_extraida',
-        'id_fato_ocorrencia',
         'id_usuario'
     ];
 
