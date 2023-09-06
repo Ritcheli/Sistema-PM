@@ -154,6 +154,8 @@ return [
     |
     */
 
+    'PDF' => Barryvdh\DomPDF\Facade::class,
+
     'providers' => [
 
         /*
@@ -185,6 +187,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Barryvdh\DomPDF\ServiceProvider::class,
 
         /*
          * Application Service Providers...

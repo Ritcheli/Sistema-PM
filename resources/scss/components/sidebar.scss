@@ -11,6 +11,11 @@
     box-shadow: 0px 0px 10px 2px $shadow-color;
 }
 
+.search-box-CM input::placeholder{
+    color: $white-text-color;
+    opacity: 0.6;
+}
+
 .sidebar-CM.close-CM{
     width: $sidebar-close-width;
 }

@@ -18,7 +18,7 @@
             <li class="search-box-CM">
                 <a href="#"> 
                     <i class='bx bx-search-alt-2 icon-CM'></i>
-                    <input type="sidebar-text-CM" placeholder="Procurar...">
+                    <input type="sidebar-text-CM" id="search_side_bar" placeholder="Procurar...">
                 </a>
             </li>
             <div class="menu-CM">
@@ -39,8 +39,8 @@
                         </li>
                         <ul class="sub-menu-CM close-CM"> 
                             <li> <a href="{{ route("show_Cad_Ocorrencia") }}"> Cadastro </a> </li>
-                            <li> <a href="{{ route("show_Busca_Ocorrencia") }}"> Consulta </a> </li>
                             <li> <a href="{{ route("show_Importar_Ocorrencia") }}"> Importar </a> </li>
+                            <li> <a href="{{ route("show_Busca_Ocorrencia") }}"> Consulta </a> </li>
                         </ul>
                     </div>
                     <div class="links-CM">
@@ -56,6 +56,24 @@
                             <li> <a href="{{ route("show_Busca_Pessoa") }}"> Consulta </a> </li>
                         </ul>
                     </div>
+                    <div class="links-CM">
+                        <li class="icon-link-CM">
+                            <a href="#"> 
+                                <i class='bx bx-line-chart icon-CM'></i>
+                                <span class="sidebar-text-CM"> Análise </span>
+                            </a>
+                            <i class='bx bx-chevron-down arrow-link-CM'></i>
+                        </li>
+                        <ul class="sub-menu-CM close-CM">
+                            <li> <a href="{{ route("show_Analise_Ocorrencia")}}"> Ocorrências </a> </li>
+                        </ul>
+                    </div>
+                    <li class="nav-link-CM">
+                        <a href={{ route("show_Configuracoes") }}> 
+                            <i class='bx bxs-cog icon-CM'></i>
+                            <span class="sidebar-text-CM"> Configurações </span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

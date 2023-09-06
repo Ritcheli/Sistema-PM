@@ -175,3 +175,40 @@
     right: 10px; 
     top: 5px;
 }
+
+.btn-pdf{
+    position: fixed;
+    right: 88px;
+    top: 150px;
+    height: 60px;
+    width: 60px;
+    z-index: 100;
+    background: white;
+    border-radius: $border-radius;
+    box-shadow: 5px 5px 8px -5px $shadow-color !important;
+}
+
+.btn-pdf .content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 55px;
+    transition: $tran-05;
+    text-decoration: none;
+    color: $second-color;
+}
+
+.btn-pdf:hover{
+    cursor: pointer;
+    background: rgb(214, 214, 214);
+    color: $second-color-strong;
+    transition: $tran-05;
+}
+
+.btn-pdf:active{
+    transform: scale(0.97);
+    color: $second-color-weak;
+    background: white;  
+    transition: $tran-05;
+}

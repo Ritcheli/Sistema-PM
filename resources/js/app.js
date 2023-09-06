@@ -6,7 +6,7 @@ import 'bootstrap';
 import $ from 'jquery';
 import 's-pagination';
 import 'pdfobject';
-import 'jspdf';
+import 'jspdf'; // Revisar essa biblioteca
 
 // Pages
 import './pages/ocorrencia';
@@ -17,6 +17,7 @@ import './pages/importar_ocorrencia';
 import './pages/revisar_ocorrencia';
 import './pages/dashboard';
 import './pages/visualizar_ocorrencia';
+import './pages/analise_ocorrencia';
 
 // Vendors
 import './vendors-extensions/bootstrap';
@@ -36,5 +37,6 @@ import './components/form_droga';
 import './components/form_animal';
 import './components/form_objeto_diverso';
 import './components/form_arma';
+import './components/virtual-select.min';
 
 window.jQuery = window.$ = $;

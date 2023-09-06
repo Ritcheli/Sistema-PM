@@ -1,6 +1,6 @@
 // Bootstrap
-@import '/node_modules/bootstrap/scss/bootstrap';
-@import '/node_modules/select2/dist/css/select2.min.css';
+@import '/node_modules/bootstrap/scss/bootstrap',
+        '/node_modules/select2/dist/css/select2.min.css';
 
 // Variables
 @import 'utilities/variables';
@@ -9,7 +9,8 @@
 @import 'vendors-extensions/bootstrapp',
         'vendors-extensions/ck_editor',
         'vendors-extensions/sweetalert2',
-        'vendors-extensions/select2';
+        'vendors-extensions/select2',
+        'vendors-extensions/virtual_selection';
 
 // Bases
 @import 'base/maps', 
@@ -34,9 +35,12 @@
         'components/images.scss',
         'components/table',
         'components/select',
-        'components/menu_collapse';
+        'components/menu_collapse',
+        'components/form_styles',
+        'components/virtual-select.min';
 
 // Pages
-@import 'pages/login';
-@import 'pages/dashboard';
-@import 'pages/visualizar_ocorrencia';
+@import 'pages/login',
+        'pages/dashboard',
+        'pages/visualizar_ocorrencia',
+        'pages/analises';

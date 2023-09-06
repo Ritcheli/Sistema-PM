@@ -1,0 +1,58 @@
+.vscomp-toggle-button{
+    min-height: calc(1.5em + 0.75rem + 2px);
+    font-size: 1rem;
+    color: $gray-text-color;
+    border: 1px solid #ced4da;
+}
+
+// .vscomp-toggle-button.is-invalid
+
+.vscomp-wrapper.focused .vscomp-toggle-button, .vscomp-wrapper:focus .vscomp-toggle-button {
+    box-shadow: none !important;
+}
+
+.vscomp-wrapper.has-clear-button .vscomp-toggle-button{
+    border-radius: $border_radius;
+}
+
+.checkbox-icon::after{
+    border-radius: $border_radius;
+}
+
+.vscomp-wrapper .vscomp-option.selected .checkbox-icon::after, .checkbox-icon.checked::after {
+    transform: rotate(45deg) translate(1px, -4px);
+    border-color: $primary-color-strong !important;
+    border-top-color: $primary-color-strong !important;
+    border-right-color: $primary-color-strong !important;
+    border-bottom-color: $primary-color-strong !important;
+    border-left-color: $primary-color-strong !important;
+    border-left-color: rgba(0, 0, 0, 0) !important;
+    border-top-color: rgba(0, 0, 0, 0) !important;
+    border-radius: 0;
+    width: 50%;
+}
+
+.pop-comp-wrapper, .vscomp-dropbox{
+    border-radius: 6px !important;
+    color: $gray-text-color;
+    font-size: 1rem;
+}
+
+.vscomp-wrapper:not(.has-value) .vscomp-value{
+    opacity: 0.75 !important;
+    font-weight: 400;
+}
+
+.vscomp-ele{
+    max-width: none !important;
+}
+
+.vscomp-arrow, .vscomp-clear-button{
+    margin-top: 2px !important;
+    transition: $tran-05;
+}
+
+.vscomp-wrapper.show-value-as-tags .vscomp-value-tag {
+    background: $gray-color;
+}
+

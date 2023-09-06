@@ -16,8 +16,6 @@ if (document.getElementById('descricao_inicial_ocor_import') != null){
 document.addEventListener('DOMContentLoaded', function(e){
     let input_num_protocolo           = $('#input_num_protocolo');
     let input_data_hora               = $('#input_data_hora');
-    let input_grupo                   = $('#input_grupo');
-    let input_fato                    = $('#input_fato');
     let input_cep                     = $('#input_CEP');
     let input_estado                  = $('#input_estado');
     let input_cidade                  = $('#input_cidade');
@@ -29,8 +27,7 @@ document.addEventListener('DOMContentLoaded', function(e){
 
     let tag_input_num_protocolo_invalido           = $('#input_num_protocolo-invalido');    
     let tag_input_data_hora_invalida               = $('#input_data_hora-invalida');
-    let tag_input_grupo_invalido                   = $('#input_grupo-invalido');
-    let tag_input_fato_invalido                    = $('#input_fato-invalido');
+    let tag_input_tipo_ocorrencia_invalido         = $('#input_tipo_ocorrencia-invalido');
     let tag_input_estado_invalido                  = $('#input_estado-invalido');
     let tag_input_cidade_invalida                  = $('#input_cidade-invalida');
     let tag_input_bairro_invalido                  = $('#input_bairro-invalido');
@@ -43,23 +40,34 @@ document.addEventListener('DOMContentLoaded', function(e){
         searchVeiculo();
     })
 
+    VirtualSelect.init({ 
+        ele: '#tipo_ocorrencia_extraida',
+        placeholder: 'Selecione o tipo da ocorrência',
+        disableSelectAll: true,
+        noSearchResultsText: 'Nenhum resultado encontrado',
+        searchPlaceholderText: 'Procurar...', 
+        showValueAsTags: true,
+        autoFocus: false,
+    });
+
+    $('.tipo-ocorr-ext').removeAttr('hidden');
+
     $("#form_ocorrencia_revisada").on('submit', function(e){
         e.preventDefault();
         
         let url = $(this).attr('action');
 
-        var veiculos = [];
-        var objetos  = [];
-        var armas    = [];
-        var drogas   = [];
-        var animais  = []; 
+        var veiculos  = [];
+        var objetos   = [];
+        var armas     = [];
+        var drogas    = [];
+        var animais   = []; 
+        var tipo_ocor = [];
 
         var form_data = new FormData();
 
         form_data.append('num_protocol', input_num_protocolo.val());
         form_data.append('data_hora', input_data_hora.val());
-        form_data.append('grupo', input_grupo.val());
-        form_data.append('fato', input_fato.val());
         form_data.append('endereco_cep', input_cep.val());
         form_data.append('endereco_estado', input_estado.val());
         form_data.append('endereco_cidade', input_cidade.val());
@@ -139,9 +147,17 @@ document.addEventListener('DOMContentLoaded', function(e){
             form_data.append('animais[]', JSON.stringify(item));
         });
 
+        $.each($("#tipo_ocorrencia_extraida").find('.vscomp-value-tag'), function(){
+            tipo_ocor.push($(this).attr('data-value'));
+        })
+
+        if (tipo_ocor.length > 0){
+            form_data.append('tipo_ocorrencia', tipo_ocor);
+        }
+
         form_data.append('id_ocorrencia_extraida', $(this).attr('value'));
         form_data.append('revisado', 'S');
-        
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -167,13 +183,9 @@ document.addEventListener('DOMContentLoaded', function(e){
                                 input_data_hora.addClass('is-invalid');
                                 tag_input_data_hora_invalida.html('<strong>' + value + '</strong>');
                                 break;
-                            case 'grupo':
-                                input_grupo.addClass('is-invalid');
-                                tag_input_grupo_invalido.html('<strong>' + value + '</strong>');
-                                break;
-                            case 'fato':
-                                input_fato.addClass('is-invalid');
-                                tag_input_fato_invalido.html('<strong>' + value + '</strong>');
+                            case 'tipo_ocorrencia':
+                                $('#tipo_ocorrencia_extraida').addClass('is-invalid');
+                                tag_input_tipo_ocorrencia_invalido.html('<strong>' + value + '</strong>');
                                 break;
                             case 'endereco_estado':
                                 input_estado.addClass('is-invalid');

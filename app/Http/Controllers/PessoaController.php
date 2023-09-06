@@ -52,19 +52,23 @@ class PessoaController extends Controller
                    ->get();
 
         $pessoa = DB::table('pessoas')
-                     ->select('nome', 'alcunha', DB::raw('DATE_FORMAT(pessoas.data_nascimento, "%d/%m/%Y") as data_nascimento'), 'RG_CPF', 'telefone', 'observacao')
+                     ->select('id_pessoa', 'nome', 'alcunha', DB::raw('DATE_FORMAT(pessoas.data_nascimento, "%d/%m/%Y") as data_nascimento'), 'RG_CPF', 'telefone', 'observacao')
                      ->where('id_pessoa', $id_pessoa)
                      ->get();
         
         $ocorrencias = DB::table('ocorrencias_pessoas')
                          ->select(DB::raw('DATE_FORMAT(ocorrencias.data_hora, "%d/%m/%Y") as data'), DB::raw('DATE_FORMAT(ocorrencias.data_hora, "%H:%i:%s") as hora'),
                                   'ocorrencias.num_protocol', 'ocorrencias.endereco_rua', 'ocorrencias.endereco_cep', 'ocorrencias.endereco_num', 'bairros.nome as endereco_bairro',
-                                  'cidades.nome as endereco_cidade', 'estados.sigla as endereco_estado')
+                                  'cidades.nome as endereco_cidade', 'estados.sigla as endereco_estado', 'ocorrencias.descricao_inicial', 'ocorrencias.descricao_ocorrencia',
+                                  DB::raw('GROUP_CONCAT(fatos_ocorrencias.natureza SEPARATOR ", ") AS fato_ocorrencia'))
                          ->leftJoin('ocorrencias', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias.id_ocorrencia')
+                         ->leftJoin('ocorrencias_fatos_ocorrencias', 'ocorrencias.id_ocorrencia', 'ocorrencias_fatos_ocorrencias.id_ocorrencia')
+                         ->leftJoin('fatos_ocorrencias', 'ocorrencias_fatos_ocorrencias.id_fato_ocorrencia', 'fatos_ocorrencias.id_fato_ocorrencia')
                          ->leftJoin('bairros', 'ocorrencias.id_bairro', 'bairros.id_bairro')
                          ->leftJoin('cidades', 'bairros.id_cidade', 'cidades.id_cidade')
                          ->leftJoin('estados', 'cidades.id_estado', 'estados.id_estado')
                          ->where('ocorrencias_pessoas.id_pessoa', $id_pessoa)
+                         ->groupBy('ocorrencias.num_protocol')
                          ->get();
         
         return view('pessoa.visualizar_pessoa', compact('fotos_pessoas', 'first', 'pessoa', 'ocorrencias'));

@@ -9,6 +9,11 @@
 
     <x-slot:container_form>
         <div class="container-fluid px-0">
+            <div class="btn-pdf">  
+                <a class="content" href="{{ route('create_PDF_Pessoa', ['id_pessoa' => $pessoa[0]->id_pessoa]) }}" target="_blank">
+                    <i class='bx bxs-file-pdf'></i>
+                </a>
+            </div>
             <div class="container-fluid CM mb-5">
                 <div class="container" id="testee">
                     <div class="row d-flex justify-content-center">
@@ -18,7 +23,7 @@
                         Polícia militar de Santa Catarina
                     </div>
                     <div class="row d-flex justify-content-center header-rel-ocorr">
-                        19º Batalhão da Polícia Militar
+                        19º Batalhão de Polícia Militar
                     </div>
                     <div class="row d-flex justify-content-center header-rel-ocorr">
                         Araranguá - SC
@@ -173,11 +178,8 @@
                                     <div class="title-infos">Fato ocorrência</div>
                                 </div>
                                 <div class="row">
-                                    <div> Roubo </div>
+                                    <div> {{ $ocorrencia->fato_ocorrencia }} </div>
                                 </div>
-                                {{-- <div class="row">
-                                    <div> {{ $fatos[0]->natureza }}</div>
-                                </div> --}}
                             </div>
                         </div>
                         <div class="row mt-2">
@@ -235,6 +237,30 @@
                                 </div>
                                 <div class="row">
                                     <div> {{ $ocorrencia->endereco_estado }} </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col"> 
+                                <div class="row">
+                                    <div class="title-infos">Descrição inicial</div>
+                                </div>
+                                <div class="row">
+                                    @if ($ocorrencia->descricao_inicial == "")
+                                        <div> Sem descrição inicial </div>
+                                    @else
+                                        <div> {{ strip_tags($ocorrencia->descricao_inicial) }} </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col">
+                                <div class="row text-justify">
+                                    <div class="title-infos">Descrição</div>
+                                </div>
+                                <div class="row text-justify">
+                                    <div> {!! ($ocorrencia->descricao_ocorrencia) !!}  </div>
                                 </div>
                             </div>
                         </div>

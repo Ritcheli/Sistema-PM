@@ -1,0 +1,37 @@
+.selected {
+    stroke: black;
+    stroke-width: 2;
+}
+
+.connected {
+    stroke: $fourth-color-strong; /* Cor da borda */
+    stroke-width: 2; /* Largura da borda */
+}
+
+.container-fluid .CM .info-nodo{
+    position: absolute;
+    padding: 15px;
+    border: 1px solid #ccc;
+    max-width: 225px;
+    box-shadow: 5px 5px 8px -5px $shadow-color;
+    right: 80px;
+}
+
+.nodo-pessoa-img{
+    height: 125px;
+    width: 110px;
+    border-radius: $border_radius;
+}
+
+.row-subtitle{
+    display: flex;
+    align-items: center;
+}
+
+.legenda-color{
+    height: 15px;
+    width: 15px;
+    outline: 2px solid #5d5a5a;
+    border: 2px solid white;
+    border-radius: 50%;
+}

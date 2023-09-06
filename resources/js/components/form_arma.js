@@ -76,8 +76,8 @@ document.addEventListener('DOMContentLoaded', function(){
                     arma_edit.find('.calibre_arma').html(form_data_arma[4]['value']);
                     arma_edit.find('.num_serie_arma').html(form_data_arma[5]['value']);
                 }
-
-                who_call_arma == 'cad-arma';
+                
+                who_call_arma = 'cad-arma';
 
                 $(this)[0].reset();
                 $(this).find('.is-invalid').removeClass('is-invalid')  

@@ -112,17 +112,26 @@ class OcorrenciaExtraidaController extends Controller
                      ->where('id_ocorrencia_extraida', $id_ocorrencia_extraida)
                      ->leftJoin('animais', 'ocorrencias_extraidas_animais.id_animal', 'animais.id_animal')
                      ->get();
+        
+        $ocr_ext_fatos_ocorrencias = DB::table('ocorrencias_extraidas_fatos_ocorrencias')
+                                       ->select('ocorrencias_extraidas_fatos_ocorrencias.id_fato_ocorrencia')
+                                       ->where('ocorrencias_extraidas_fatos_ocorrencias.id_ocorrencia_extraida', $id_ocorrencia_extraida)
+                                       ->get();
+        
+        $fatos_ocorrencias = DB::table('fatos_ocorrencias')
+                               ->select('fatos_ocorrencias.natureza', 'fatos_ocorrencias.id_fato_ocorrencia')
+                               ->get(); 
+        
 
         return view('ocorrencia.revisar_ocorrencia', compact('ocorrencia_extraida', 'pessoas', 'veiculos', 'objetos_diversos',
-                                                             'armas', 'drogas', 'animais'));
+                                                             'armas', 'drogas', 'animais', 'ocr_ext_fatos_ocorrencias', 'fatos_ocorrencias'));
     }
 
     public function nova_Ocorrencia_Revisada(Request $request){
         $validator = Validator::make($request->all(), [
             'num_protocol'      => ['required'],
             'data_hora'         => ['required'],
-            'grupo'             => ['required'],
-            'fato'              => ['required'],
+            'tipo_ocorrencia'   => ['required'],
             'endereco_estado'   => ['required'],
             'endereco_cidade'   => ['required'],
             'endereco_bairro'   => ['required'],
@@ -138,30 +147,6 @@ class OcorrenciaExtraidaController extends Controller
         $dados_ocorrencias_extraidas = request()->only('num_protocol', 'data_hora', 'endereco_cep',  
                                                        'endereco_rua', 'endereco_numero', 'descricao_inicial',
                                                        'descricao', 'id_ocorrencia_extraida', 'revisado');
-
-        // Cadastro de grupos e fatos
-        $dado_grupo_ocorr = request()->only('grupo'); 
-        $dado_fato_ocorr  = request()->only('fato'); 
-                                                
-        $grupo_fato = DB::table('grupos_fatos')->where('nome', $dado_grupo_ocorr['grupo'])->first();
-
-        if ($grupo_fato == null){
-            $dados_grupos_fatos['nome'] = $dado_grupo_ocorr['grupo'];
-
-            $grupo_fato = (new GrupoFatoController)->create($dados_grupos_fatos);
-        }
-        
-        $fato_ocorrencia = DB::table('fatos_ocorrencias')->where('natureza', $dado_fato_ocorr['fato'])->first();
-
-        if ($fato_ocorrencia == null){
-            $dados_fatos['natureza']           = $dado_fato_ocorr['fato'];
-            $dados_fatos['potencial_ofensivo'] = "sem dados ainda";
-            $dados_fatos['id_grupo_fato']      = $grupo_fato->id_grupo_fato; 
-        
-            $fato_ocorrencia = (new FatoOcorrenciaController)->create($dados_fatos);
-        }
-
-        $dados_ocorrencias_extraidas['id_fato_ocorrencia'] = $fato_ocorrencia->id_fato_ocorrencia;
 
         // Cadastro de endereço
         $dados_estado_ocorr = request()->only('endereco_estado');
@@ -183,11 +168,28 @@ class OcorrenciaExtraidaController extends Controller
         $dados_ocorrencias['descricao_ocorrencia']   = $dados_ocorrencias_extraidas['descricao'];
         $dados_ocorrencias['id_ocorrencia_extraida'] = $dados_ocorrencias_extraidas['id_ocorrencia_extraida'];
         $dados_ocorrencias['id_bairro']              = $dados_ocorrencias_extraidas['id_bairro'];
-        $dados_ocorrencias['id_fato_ocorrencia']     = $dados_ocorrencias_extraidas['id_fato_ocorrencia'];
 
         $ocorrencias = $this->create_ocorrencia($dados_ocorrencias);
 
         // --------------------- Seção de cadastro das informações extras das tabelas ocorrencias_extraidas e ocorrencias --------------------- //
+
+        // Cadastro de fatos relacionados a ocorrência
+        DB::table('ocorrencias_extraidas_fatos_ocorrencias')
+          ->where('ocorrencias_extraidas_fatos_ocorrencias.id_ocorrencia_extraida', $dados_ocorrencias_extraidas['id_ocorrencia_extraida'])
+          ->delete();
+
+        $fatos_ocorr = explode(',', request()->only('tipo_ocorrencia')['tipo_ocorrencia']);
+
+        foreach ($fatos_ocorr as $fato_ocorr){
+            $dados_fatos_ocorrencia['id_ocorrencia_extraida'] = $ocorrencias->id_ocorrencia_extraida;
+            $dados_fatos_ocorrencia['id_fato_ocorrencia']     = $fato_ocorr;
+
+            (new OcorrenciaExtraidaFatoOcorrenciaController)->create($dados_fatos_ocorrencia);
+
+            $dados_fatos_ocorrencia['id_ocorrencia'] = $ocorrencias->id_ocorrencia;
+
+            (new OcorrenciaFatoOcorrenciaController)->create($dados_fatos_ocorrencia);
+        }
 
         // Cadastro de envolvidos relacionados a ocorrência
         if ($request->has('envolvidos')){
@@ -210,12 +212,12 @@ class OcorrenciaExtraidaController extends Controller
         }
         
         // Cadastro de veiculos relacionados a ocorrência
+        DB::table('ocorrencias_extraidas_veiculos')
+          ->where('id_ocorrencia_extraida', $ocorrencias->id_ocorrencia_extraida)
+          ->delete();
+
         if ($request->has('veiculos')){
             $dados_veiculos = $request->only('veiculos');
-
-            DB::table('ocorrencias_extraidas_veiculos')
-              ->where('id_ocorrencia_extraida', $ocorrencias->id_ocorrencia_extraida)
-              ->delete();
 
             for ($i = 0; $i < count($dados_veiculos['veiculos']); $i++){
                 $dados_veiculos_ocorr['id_ocorrencia_extraida'] = $request->id_ocorrencia_extraida;
@@ -231,23 +233,23 @@ class OcorrenciaExtraidaController extends Controller
         }
 
         // Cadastro de objetos relacionados a ocorrência
-        if ($request->has('objetos')){
-            $dados_objetos = $request->only('objetos');
-
-            $objetos = DB::table('ocorrencias_extraidas_objetos_diversos')
+        $objetos = DB::table('ocorrencias_extraidas_objetos_diversos')
                          ->select('ocorrencias_extraidas_objetos_diversos.id_objeto_diverso')
                          ->where('ocorrencias_extraidas_objetos_diversos.id_ocorrencia_extraida', $request->id_ocorrencia_extraida)
                          ->get();
                 
-            DB::table('ocorrencias_extraidas_objetos_diversos')
-                ->where('ocorrencias_extraidas_objetos_diversos.id_ocorrencia_extraida', $request->id_ocorrencia_extraida)
-                ->delete();
-            
-            foreach ($objetos as $objeto) {
-                DB::table('objetos_diversos')
-                    ->where('objetos_diversos.id_objeto_diverso', $objeto->id_objeto_diverso)
-                    ->delete();
-            }
+        DB::table('ocorrencias_extraidas_objetos_diversos')
+          ->where('ocorrencias_extraidas_objetos_diversos.id_ocorrencia_extraida', $request->id_ocorrencia_extraida)
+          ->delete();
+        
+        foreach ($objetos as $objeto) {
+            DB::table('objetos_diversos')
+              ->where('objetos_diversos.id_objeto_diverso', $objeto->id_objeto_diverso)
+              ->delete();
+        }
+
+        if ($request->has('objetos')){
+            $dados_objetos = $request->only('objetos');
 
             for ($i = 0; $i < count($dados_objetos['objetos']); $i++){
                 $dados_objetos_novo['objeto']            = json_decode($dados_objetos['objetos'][$i])->objeto;
@@ -272,23 +274,23 @@ class OcorrenciaExtraidaController extends Controller
         }
 
         // Cadastro de armas relacionados a ocorrência
+        $armas = DB::table('ocorrencias_extraidas_armas')
+                   ->select('ocorrencias_extraidas_armas.id_arma')
+                   ->where('ocorrencias_extraidas_armas.id_ocorrencia_extraida', $request->id_ocorrencia_extraida)
+                   ->get();
+
+        DB::table('ocorrencias_extraidas_armas')
+          ->where('ocorrencias_extraidas_armas.id_ocorrencia_extraida', $request->id_ocorrencia_extraida)
+          ->delete();
+
+        foreach ($armas as $arma) {
+            DB::table('armas')
+              ->where('armas.id_arma', $arma->id_arma)
+              ->delete();
+        }
+        
         if ($request->has('armas')){
             $dados_armas = $request->only('armas');
-
-            $armas = DB::table('ocorrencias_extraidas_armas')
-                           ->select('ocorrencias_extraidas_armas.id_arma')
-                           ->where('ocorrencias_extraidas_armas.id_ocorrencia_extraida', $request->id_ocorrencia_extraida)
-                           ->get();
-                
-            DB::table('ocorrencias_extraidas_armas')
-                ->where('ocorrencias_extraidas_armas.id_ocorrencia_extraida', $request->id_ocorrencia_extraida)
-                ->delete();
-
-            foreach ($armas as $arma) {
-                DB::table('armas')
-                    ->where('armas.id_arma', $arma->id_arma)
-                    ->delete();
-            }
 
             for ($i = 0; $i < count($dados_armas['armas']); $i++){
                 $dados_armas_novo['tipo']       = json_decode($dados_armas['armas'][$i])->tipo;
@@ -311,12 +313,12 @@ class OcorrenciaExtraidaController extends Controller
         }
 
         // Cadastro de drogas relacionados a ocorrência
+        DB::table('ocorrencias_extraidas_drogas')
+          ->where('ocorrencias_extraidas_drogas.id_ocorrencia_extraida', $request->id_ocorrencia_extraida)
+          ->delete();
+
         if ($request->has('drogas')){
             $dados_drogas = $request->only('drogas');
-
-            DB::table('ocorrencias_extraidas_drogas')
-              ->where('ocorrencias_extraidas_drogas.id_ocorrencia_extraida', $request->id_ocorrencia_extraida)
-              ->delete();
 
             for ($i = 0; $i < count($dados_drogas['drogas']); $i++){
                 $dados_drogas_novo['tipo']       = json_decode($dados_drogas['drogas'][$i])->tipo;
@@ -337,23 +339,12 @@ class OcorrenciaExtraidaController extends Controller
         }
 
         // Cadastro de animais relacionados a ocorrência
+        DB::table('ocorrencias_extraidas_animais')
+          ->where('ocorrencias_extraidas_animais.id_ocorrencia_extraida', $request->id_ocorrencia_extraida)
+          ->delete();  
+        
         if ($request->has('animais')){
             $dados_animais = $request->only('animais');
-
-            $animais = DB::table('ocorrencias_extraidas_animais')
-                             ->select('ocorrencias_extraidas_animais.id_animal')
-                             ->where('ocorrencias_extraidas_animais.id_ocorrencia_extraida', $request->id_ocorrencia_extraida)
-                             ->get();
-    
-            DB::table('ocorrencias_extraidas_animais')
-                ->where('ocorrencias_extraidas_animais.id_ocorrencia_extraida', $request->id_ocorrencia_extraida)
-                ->delete();  
-            
-            foreach ($animais as $animal) {
-                DB::table('animais')
-                    ->where('animais.id_animal', $animal->id_animal)
-                    ->delete();
-            }
 
             for ($i = 0; $i < count($dados_animais['animais']); $i++){
                 $dados_animais_novo['especie'] = json_decode($dados_animais['animais'][$i])->especie;
@@ -363,8 +354,8 @@ class OcorrenciaExtraidaController extends Controller
                 $dados_animais_ocorr['id_ocorrencia_extraida'] = $request->id_ocorrencia_extraida;
                 $dados_animais_ocorr['id_animal']              = $animal;
                 $dados_animais_ocorr['quantidade']             = json_decode($dados_animais['animais'][$i])->quantidade;
-                $dados_animais_ocorr['observacao']             = json_decode($dados_animais['animais'][$i])->participacao;
-                $dados_animais_ocorr['participacao']           = json_decode($dados_animais['animais'][$i])->outras_info;
+                $dados_animais_ocorr['observacao']             = json_decode($dados_animais['animais'][$i])->outras_info;
+                $dados_animais_ocorr['participacao']           = json_decode($dados_animais['animais'][$i])->participacao;
                 
                 (new OcorrenciaExtraidaAnimalController)->create($dados_animais_ocorr);
 
@@ -540,33 +531,15 @@ class OcorrenciaExtraidaController extends Controller
 
                 $ocorrencia_extraida = $this->create($dados_ocorrencia);
 
-                if ($value->grupos != ''){
-                    $grupo_fato = DB::table('grupos_fatos')->where('nome', $value->grupos)->first();
-
-                    if ($grupo_fato == null){
-                        $dados_grupos_fatos['nome'] = $value->grupos;
-
-                        $grupo_fato = (new GrupoFatoController)->create($dados_grupos_fatos);
-                    }
-                } else {
-                    $grupo_fato = DB::table('grupos_fatos')->where('nome', 'Sem Grupo')->first();
-                }
-
                 foreach ($value->fatos as $fato) {
                     $fato_ocorrencia = DB::table('fatos_ocorrencias')->where('natureza', trim($fato))->first();
 
-                    if ($fato_ocorrencia == null){
-                        $dado_fato['natureza']           = trim($fato);
-                        $dado_fato['potencial_ofensivo'] = "sem dados ainda";
-                        $dado_fato['id_grupo_fato']      = $grupo_fato->id_grupo_fato; 
-                    
-                        $fato_ocorrencia = (new FatoOcorrenciaController)->create($dado_fato);
+                    if ($fato_ocorrencia != null){
+                        $dado_fato['id_ocorrencia_extraida'] = $ocorrencia_extraida->id_ocorrencia_extraida;
+                        $dado_fato['id_fato_ocorrencia']     = $fato_ocorrencia->id_fato_ocorrencia;
+
+                        (new OcorrenciaExtraidaFatoOcorrenciaController)->create($dado_fato);
                     }
-
-                    $dado_fato['id_ocorrencia_extraida'] = $ocorrencia_extraida->id_ocorrencia_extraida;
-                    $dado_fato['id_fato_ocorrencia']     = $fato_ocorrencia->id_fato_ocorrencia;
-
-                    (new OcorrenciaExtraidaFatoOcorrenciaController)->create($dado_fato);
                 }
 
                 foreach ($value->envolvidos as $envolvido){
@@ -607,6 +580,7 @@ class OcorrenciaExtraidaController extends Controller
                 foreach ($value->veiculos as $veiculo){
                     $veiculo_extraido = DB::table('veiculos')->select('id_veiculo')->where('placa', $veiculo->placa)->first();
 
+                    Log::debug($veiculo->marca);
                     if ($veiculo_extraido == null){
                         $dado_veiculo['placa']                = $veiculo->placa;
                         $dado_veiculo['chassi']               = $veiculo->chassi;
@@ -716,7 +690,6 @@ class OcorrenciaExtraidaController extends Controller
                                       'descricao_inicial'    => $dados['descricao_inicial'],
                                       'descricao_ocorrencia' => $dados['descricao'],
                                       'revisado'             => $dados['revisado'],
-                                      'id_fato_ocorrencia'   => $dados['id_fato_ocorrencia'],
                                       'id_bairro'            => $dados['id_bairro']
         ]);
 
@@ -734,7 +707,6 @@ class OcorrenciaExtraidaController extends Controller
             'descricao_ocorrencia'   => $dados['descricao_ocorrencia'],
             'id_bairro'              => $dados['id_bairro'],
             'id_ocorrencia_extraida' => $dados['id_ocorrencia_extraida'],
-            'id_fato_ocorrencia'     => $dados['id_fato_ocorrencia'],
             'id_usuario'            => Auth::id()
         ]);
     }

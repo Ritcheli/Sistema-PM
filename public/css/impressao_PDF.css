@@ -1,0 +1,138 @@
+*{
+    font-family: 'Poppins', sans-serif;
+    color: #3d3c3c;
+    font-size: 14px;
+}
+
+@page {
+    margin: 25px 25px;
+}
+
+.pagenum:before {
+    font-size: 10px;
+    content: counter(page);
+}
+
+.header-pdf {
+    position: fixed;
+    top: 0cm;
+    left: 1cm;
+    right: 1cm;
+    height: 0cm;
+}
+
+.header-img{ 
+    width: 90px;
+    height: 90px;
+}
+
+.header-text{
+    position: relative;
+    padding-left: 10px;
+    width: 100%;
+    height: 100%;
+    line-height: 20px;
+    font-weight: 700;
+    top: 50%;
+}
+
+.body-pdf {
+    margin-top: 4cm;
+    margin-left: 1.5cm;
+    margin-right: 1.5cm;
+    margin-bottom: 2cm;
+}
+
+.body-title-pdf {
+    display: flex;
+    text-align: center;
+    font-size: 16px;
+    padding-bottom: 25px;
+}
+
+.body-session-title-pdf {
+    border-top: solid 2px black;
+    border-bottom: solid 2px black;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 20px;
+    list-style: none;
+    padding-left: 0;
+    display: flex;
+    text-align: center;
+}
+
+.content-table{
+    width: 100%;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.content-table-td-1 td{
+    width: 620px;
+    vertical-align: top;  
+}
+
+.content-table-td-2 td{
+    width: 310px;
+    vertical-align: top;  
+}
+
+.content-table-td-3 td{
+    width: 206.66px;
+    vertical-align: top;
+}
+
+.content-table-td-4 td{
+    width: 155px;
+    vertical-align: top;
+}
+
+.content-desc-pdf{
+    padding-top: 1px;
+    padding-left: 1px;
+    text-align: justify;
+}
+
+.img-relatorio{
+    height: 230px;
+    width: 210px;
+    border-radius: 15px;
+}
+
+.img-table-envolvidos {
+    width: 225px;
+}
+
+.table-envolvidos{
+    margin-bottom: 15px;
+}
+
+.table-envolvidos td{
+    height:30px;
+}
+
+.table-envolvidos-info{
+    vertical-align: top;
+}
+
+.footer-pdf {
+    position: fixed; 
+    bottom: 0cm; 
+    left: 0cm; 
+    right: 0cm;
+    height: 1cm;
+    font-size: 10px;
+    margin-top: 1cm;
+    text-align: right;
+    padding-right: 53px;
+}
+
+.header-table {
+    padding: 10px;
+    width: 100%;
+}
+  
+.header-td {
+    padding: 10px;
+}

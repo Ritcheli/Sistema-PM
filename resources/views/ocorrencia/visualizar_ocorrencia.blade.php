@@ -7,16 +7,21 @@
 
     <x-slot:container_form>
         <div class="container-fluid px-0">
-            <div class="container-fluid CM mb-5">
-                <div class="container" id="testee">
+            <div class="btn-pdf">  
+                <a class="content" href="{{ route('create_PDF_Ocorrencia', ['id_ocorrencia' => $ocorrencia[0]->id_ocorrencia]) }}" target="_blank">
+                    <i class='bx bxs-file-pdf'></i>
+                </a>
+            </div>
+            <div class="container-fluid CM mb-5 pb-5">
+                <div class="container">
                     <div class="row d-flex justify-content-center">
                         <img src="http://localhost:8000/img/logo-pm-sc.png" alt="">
                     </div>
                     <div class="row d-flex justify-content-center mt-3 header-rel-ocorr">
-                        Polícia militar de Santa Catarina
+                        Polícia Militar de Santa Catarina
                     </div>
                     <div class="row d-flex justify-content-center header-rel-ocorr">
-                        19º Batalhão da Polícia Militar
+                        19º Batalhão de Polícia Militar
                     </div>
                     <div class="row d-flex justify-content-center header-rel-ocorr">
                         Araranguá - SC
@@ -62,14 +67,11 @@
                     <div class="row mt-2">
                         <div class="col"> 
                             <div class="row">
-                                <div class="title-infos">Fato ocorrência</div>
+                                <div class="title-infos">Fato Ocorrência</div>
                             </div>
                             <div class="row">
-                                <div> Roubo </div>
+                                <div> {{ $fatos[0]->fato_ocorrencia }}</div>
                             </div>
-                            {{-- <div class="row">
-                                <div> {{ $fatos[0]->natureza }}</div>
-                            </div> --}}
                         </div>
                     </div>
                     <div class="row mt-2">
@@ -130,13 +132,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-2 mb-0">
+                    <div class="row mt-2">
                         <div class="col"> 
                             <div class="row">
-                                <div class="title-infos">Descrição inicial</div>
+                                <div class="title-infos">Descrição Inicial</div>
                             </div>
                             <div class="row">
-                                <div> {{ strip_tags($ocorrencia[0]->descricao_inicial) }} </div>
+                                @if ($ocorrencia[0]->descricao_inicial == "")
+                                    <div> Sem descrição inicial </div>
+                                @else
+                                    <div> {{ strip_tags($ocorrencia[0]->descricao_inicial) }} </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -146,19 +152,21 @@
                                 <div class="title-infos">Descrição</div>
                             </div>
                             <div class="row text-justify">
-                                <div> {{ strip_tags($ocorrencia[0]->descricao_ocorrencia) }} </div>
+                                <div> {!! ($ocorrencia[0]->descricao_ocorrencia) !!}  </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row"> 
-                        <hr class="solid"> 
-                    </div>
-                    <div class="row justify-content-center header-rel-ocorr"> 
-                        Envolvidos
-                    </div>
-                    <div class="row"> 
-                        <hr class="solid"> 
-                    </div>
+                    @if (count($pessoas) > 0)
+                        <div class="row"> 
+                            <hr class="solid"> 
+                        </div>
+                        <div class="row justify-content-center header-rel-ocorr"> 
+                            Envolvidos
+                        </div>
+                        <div class="row"> 
+                            <hr class="solid"> 
+                        </div>
+                    @endif
                     <div class="form-row">
                         @foreach ($pessoas as $pessoa)
                         <div class="form-group col-ms-3 mr-2">
@@ -208,13 +216,279 @@
                         </div>
                         @endforeach
                     </div>
-                </div>
-            </div>
-
-            <div class="container-fluid CM mb-5">
-                <div class="title-CM">Imprimir PDF</div> 
-                <div class="form-row">
-                    <button class="btn CM medium save-CM ml-2 shadow-none" id="pdfLALA"> PDF </button>
+                    @foreach ($veiculos as $veiculo)
+                        <div class="row"> 
+                            <hr class="solid"> 
+                        </div>
+                        <div class="row justify-content-center header-rel-ocorr"> 
+                            Veículo
+                        </div>
+                        <div class="row"> 
+                            <hr class="solid"> 
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col"> 
+                                <div class="row">
+                                    <div class="title-infos">Placa</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $veiculo->placa }} </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="title-infos">Cor</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $veiculo->cor }} </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="title-infos">Renavam</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $veiculo->renavam }} </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="title-infos">Chassi</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $veiculo->chassi }} </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-3"> 
+                                <div class="row">
+                                    <div class="title-infos">Marca</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $veiculo->marca }} </div>
+                                </div>
+                            </div>
+                            <div class="col"> 
+                                <div class="row">
+                                    <div class="title-infos">Participação</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $veiculo->participacao }} </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    @foreach ($objetos_diversos as $objeto_diverso)
+                        <div class="row"> 
+                            <hr class="solid"> 
+                        </div>
+                        <div class="row justify-content-center header-rel-ocorr"> 
+                            Objeto diverso
+                        </div>
+                        <div class="row"> 
+                            <hr class="solid"> 
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col"> 
+                                <div class="row">
+                                    <div class="title-infos">Objeto</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $objeto_diverso->objeto }} </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="title-infos">Num identificação</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $objeto_diverso->num_identificacao }} </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="title-infos">Modelo</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $objeto_diverso->modelo }} </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="title-infos">Marca</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $objeto_diverso->marca }} </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-3"> 
+                                <div class="row">
+                                    <div class="title-infos">Tipo</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $objeto_diverso->tipo }} </div>
+                                </div>
+                            </div>
+                            <div class="col-3"> 
+                                <div class="row">
+                                    <div class="title-infos">Un medida</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $objeto_diverso->un_medida }} </div>
+                                </div>
+                            </div>
+                            <div class="col-3"> 
+                                <div class="row">
+                                    <div class="title-infos">Quantidade</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $objeto_diverso->quantidade }} </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    @foreach ($armas as $arma)
+                        <div class="row"> 
+                            <hr class="solid"> 
+                        </div>
+                        <div class="row justify-content-center header-rel-ocorr"> 
+                            Arma
+                        </div>
+                        <div class="row"> 
+                            <hr class="solid"> 
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col"> 
+                                <div class="row">
+                                    <div class="title-infos">Tipo</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $arma->tipo }} </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="title-infos">Num série</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $arma->num_serie }} </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="title-infos">Calibre</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $arma->calibre }} </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-4"> 
+                                <div class="row">
+                                    <div class="title-infos">Espécie</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $arma->especie }} </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="row">
+                                    <div class="title-infos">Fabricação</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $arma->fabricacao }} </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    @foreach ($drogas as $droga)
+                        <div class="row"> 
+                            <hr class="solid"> 
+                        </div>
+                        <div class="row justify-content-center header-rel-ocorr"> 
+                            Substância
+                        </div>
+                        <div class="row"> 
+                            <hr class="solid"> 
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col"> 
+                                <div class="row">
+                                    <div class="title-infos">Tipo</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $droga->tipo }} </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="title-infos">Quantidade</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $droga->quantidade }} </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="title-infos">Un medida</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $droga->un_medida }} </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    @foreach ($animais as $animal)
+                        <div class="row"> 
+                            <hr class="solid"> 
+                        </div>
+                        <div class="row justify-content-center header-rel-ocorr"> 
+                            Animal
+                        </div>
+                        <div class="row"> 
+                            <hr class="solid"> 
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col"> 
+                                <div class="row">
+                                    <div class="title-infos">Espécie</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $animal->especie }} </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="title-infos">Quantidade</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $animal->quantidade }} </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="title-infos">Participação</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $animal->participacao }} </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="title-infos">Observação</div>
+                                </div>
+                                <div class="row">
+                                    <div> {{ $animal->observacao }} </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>

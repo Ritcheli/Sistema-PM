@@ -18,13 +18,25 @@ document.addEventListener('DOMContentLoaded', function () {
     let input_numero          = $('#input_numero');
     let input_descricao       = $('#descricao_ocor');
 
-    let tag_num_protocol_invalido = $('#num_protocolo_invalido');
-    let tag_data_hora_invalido    = $('#data_hora_invalida');
-    let tag_estado_invalido       = $('#estado_invalido');
-    let tag_cidade_invalido       = $('#cidade_invalida');
-    let tag_bairro_invalido       = $('#bairro_invalido');
-    let tag_rua_invalida          = $('#rua_invalida');
-    let tag_descricao_invalida    = $('#descricao_invalida');
+    let tag_num_protocol_invalido          = $('#num_protocolo_invalido');
+    let tag_data_hora_invalido             = $('#data_hora_invalida');
+    let tag_input_tipo_ocorrencia_invalido = $('#input_tipo_ocorrencia-invalido');
+    let tag_estado_invalido                = $('#estado_invalido');
+    let tag_cidade_invalido                = $('#cidade_invalida');
+    let tag_bairro_invalido                = $('#bairro_invalido');
+    let tag_rua_invalida                   = $('#rua_invalida');
+    let tag_descricao_invalida             = $('#descricao_invalida');
+
+    VirtualSelect.init({ 
+        ele: '#tipo_ocorrencia',
+        placeholder: 'Selecione o tipo da ocorrência',
+        disableSelectAll: true,
+        noSearchResultsText: 'Nenhum resultado encontrado',
+        searchPlaceholderText: 'Procurar...', 
+        showValueAsTags: true
+    });
+
+    $('.tipo-ocorr').removeAttr('hidden');
 
     $('#cancelar-cad-ocorrencia').on('click',function(){
         window.history.back();
@@ -53,18 +65,100 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#form_ocorrencia").on("submit", function(e){
         e.preventDefault();
         let url = $("#form_ocorrencia").attr('action')
-    
+        
+        var veiculos  = [];
+        var objetos   = [];
+        var armas     = [];
+        var drogas    = [];
+        var animais   = []; 
+        var tipo_ocor = [];
+
         var form_data = new FormData();
 
-        $('#table-body-pessoa').find('.btn-table-edit').each(function(e){
+        $('#table-body-pessoa').find('.btn-table-edit').each(function(){
             form_data.append('envolvidos[]', this.value);
         });
         
+        $('#table-body-veiculo').find('.veiculo').each(function(){
+            veiculos.push({
+                'id_veiculo'  : this.getElementsByClassName('btn-table-remove')[0].value,
+                'participacao': this.getElementsByClassName('participacao')[0].innerText.trim()
+            });
+        })
+
+        veiculos.forEach(item => {
+            form_data.append('veiculos[]', JSON.stringify(item));
+        });
+
+        $('#table-body-objeto').find('.objeto').each(function(){
+            objetos.push({
+                'num_identificacao': this.getElementsByClassName('num_identificacao')[0].innerText.trim(),
+                'objeto'           : this.getElementsByClassName('objeto_objeto')[0].innerText.trim(),
+                'tipo_objeto'      : this.getElementsByClassName('tipo_objeto')[0].innerText.trim(),
+                'marca_objeto'     : this.getElementsByClassName('marca_objeto')[0].innerText.trim(),
+                'un_med'           : this.getElementsByClassName('un_med')[0].innerText.trim(),
+                'modelo_objeto'    : this.getElementsByClassName('modelo_objeto')[0].innerText.trim(),
+                'quantidade'       : this.getElementsByClassName('quantidade')[0].innerText.trim()
+            });
+        })
+
+        objetos.forEach(item => {
+            form_data.append('objetos[]', JSON.stringify(item));
+        });
+
+        $('#table-body-arma').find('.arma').each(function(){
+            armas.push({
+                'tipo'      : this.getElementsByClassName('tipo_arma')[0].innerText.trim(),
+                'especie'   : this.getElementsByClassName('especie_arma')[0].innerText.trim(),
+                'fabricacao': this.getElementsByClassName('fabricacao_arma')[0].innerText.trim(),
+                'calibre'   : this.getElementsByClassName('calibre_arma')[0].innerText.trim(),
+                'num_serie' : this.getElementsByClassName('num_serie_arma')[0].innerText.trim()
+            });
+        })
+
+        armas.forEach(item => {
+            form_data.append('armas[]', JSON.stringify(item));
+        });
+
+        $('#table-body-droga').find('.droga').each(function(){
+            drogas.push({
+                'tipo'       : this.getElementsByClassName('tipo_droga')[0].innerText.trim(),
+                'quantidade' : this.getElementsByClassName('qtd_droga')[0].innerText.trim(),
+                'un_medida'  : this.getElementsByClassName('un_medida_droga')[0].innerText.trim(),
+            });
+        })
+
+        drogas.forEach(item => {
+            form_data.append('drogas[]', JSON.stringify(item));
+        });
+
+        $('#table-body-animal').find('.animal').each(function(){
+            animais.push({
+                'especie'     : this.getElementsByClassName('especie_animal')[0].innerText.trim(),
+                'quantidade'  : this.getElementsByClassName('qtd_animal')[0].innerText.trim(),
+                'participacao': this.getElementsByClassName('participacao_animal')[0].innerText.trim(),
+                'outras_info' : this.getElementsByClassName('outras_info_animal')[0].innerText.trim(),
+            });
+        })
+
+        animais.forEach(item => {
+            form_data.append('animais[]', JSON.stringify(item));
+        });
+
+        $.each($("#tipo_ocorrencia").find('.vscomp-value-tag'), function(){
+            tipo_ocor.push($(this).attr('data-value'));
+        })
+
+        if (tipo_ocor.length > 0){
+            form_data.append('tipo_ocorrencia', tipo_ocor);
+        }
+
         $('.is-invalid').removeClass('is-invalid');
 
         if ($("#salvar_ocorr").val() != ""){
             form_data.append('id_ocorrencia', $("#salvar_ocorr").val());
         }
+
         form_data.append('num_protocol', input_num_protocol.val());
         form_data.append('data_hora', input_data_hora.val());
         form_data.append('endereco_cep', input_endereco_cep.val());
@@ -98,6 +192,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             case 'data_hora':
                                 input_data_hora.addClass('is-invalid');
                                 tag_data_hora_invalido.html('<strong>' + value + '</strong>');
+                                break;
+                            case 'tipo_ocorrencia':
+                                $('#tipo_ocorrencia').addClass('is-invalid');
+                                tag_input_tipo_ocorrencia_invalido.html('<strong>' + value + '</strong>');
                                 break;
                             case 'endereco_estado':
                                 input_endereco_estado.addClass('is-invalid');

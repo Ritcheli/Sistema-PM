@@ -91,7 +91,7 @@ export function searchVeiculo(){
                             $.each(result.veiculos, function(key, value){
                                 $('#table-body-busca-veiculo').append(
                                     `<tr class="row-busca-veiculo">
-                                        <th scope="row" class="placa">` + value.placa  + `</th>
+                                        <th scope="row">` + value.placa  + `</th>
                                         <td>` + value.marca + `</td>
                                         <td>` + value.cor + `</td>
                                         <td>` + value.renavam + `</td>

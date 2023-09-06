@@ -193,7 +193,7 @@ def main():
                         chassi    = get_General_Data('Chassi:', '▪', item)
                         renavam   = get_General_Data('Renavam:', '▪', item)
 
-                        marca_cor_Aux = get_General_Data('\n', '▪', renavam)
+                        marca_cor_Aux = get_Items_Data('\n', '▪', renavam)
                         marca_cor_Aux = get_Items_Data('', '\n', marca_cor_Aux)
 
                         marca_cor = marca_cor_Aux.split('-')
