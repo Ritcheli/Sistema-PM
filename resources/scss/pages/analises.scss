@@ -35,3 +35,33 @@
     border: 2px solid white;
     border-radius: 50%;
 }
+
+.container-legend-color-palette{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 25px;
+    position: absolute;
+    bottom: 15px;
+    z-index: 100;
+}
+
+.legend-color-palette-details{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-palette{
+    width: 35px;
+    height: 35px;
+    border: 1px solid #F7F7F7;
+    border-radius: 6px;
+}
+
+.color-palette-text{
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 20px;
+}

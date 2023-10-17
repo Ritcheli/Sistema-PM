@@ -1,5 +1,5 @@
 <div class="modal fade" id="modal-pessoa" data-backdrop="static" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
       <div class="modal-content">
         <div class="modal-header border-0 mb-0">
           <div class="modal-title title-CM mb-0 mx-2 mt-2" id="modal-pessoa-title"> </div>
@@ -36,6 +36,58 @@
                         <label class="text-nowrap">Alcunha</label>
                         <input type="text" class="form-control CM mb-2" id="alcunha" name="alcunha" placeholder="Digite a alcunha">
                         <span class="invalid-feedback" role="alert" id="alcunha-invalido"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label class="text-nowrap">Participação do envolvido por fato</label>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="form-group col">
+                                        <label class="text-nowrap">Fato ocorrência</label>
+                                        <div class="custom-selection envolvido-fato" id="envolvido_fato" hidden>
+                                            <select name="native-select" id="vs_envolvido_fato" data-search="true" data-silent-initial-value-set="false">
+                                                {{ $fatos_ocorrencias }}
+                                            </select>
+                                        </div>
+                                        <span class="invalid-feedback" role="alert" id="envolvido_fato-invalido"></span>
+                                    </div>
+                                    <div class="form-group col">
+                                        <label class="text-nowrap">Participação fato</label>
+                                        <div class="custom-selection envolvido-participacao" id="envolvido_participacao" hidden>
+                                            <select name="native-select" id="vs_envolvido_participacao" data-search="true" data-silent-initial-value-set="false">
+                                                <option value="Apurar"> Apurar </option>
+                                                <option value="Autor"> Autor </option>
+                                                <option value="Comunicante"> Comunicante </option>
+                                                <option value="Suspeito"> Suspeito </option>
+                                                <option value="Testemunha"> Testemunha </option>
+                                                <option value="Vítima"> Vítima </option>
+                                            </select>
+                                        </div>
+                                        <span class="invalid-feedback" role="alert" id="envolvido_participacao-invalido"></span>
+                                    </div>
+                                    <div class="form-group col-auto mt-auto">
+                                        <button type="submit" title="Inserir participação" id="inserir-parti" class="btn CM small add-CM shadow-none">
+                                            <i class='bx bx-plus btn-icon-CM'></i>     
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <table class="table table-bordered CM mx-1 mb-3" id="table-fato-parti">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="w-50">Fato</th>
+                                                <th scope="col" class="w-50">Participação</th>
+                                                <th scope="col" class="w-20">Ação</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-body-fato-parti">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="upload-img-component">

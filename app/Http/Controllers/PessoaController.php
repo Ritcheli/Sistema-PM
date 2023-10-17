@@ -97,7 +97,7 @@ class PessoaController extends Controller
                 'CPF_RG'            => ['max:11'],
                 'alcunha'           => ['max:60'],
                 'observacao_pessoa' => ['max:65535'],
-                'files.*'          => ['mimes:jpg,jpeg,png']
+                'files.*'           => ['mimes:jpg,jpeg,png']
             ]);
         }
 

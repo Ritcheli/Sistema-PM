@@ -5,8 +5,6 @@
     border: 1px solid #ced4da;
 }
 
-// .vscomp-toggle-button.is-invalid
-
 .vscomp-wrapper.focused .vscomp-toggle-button, .vscomp-wrapper:focus .vscomp-toggle-button {
     box-shadow: none !important;
 }
@@ -56,3 +54,12 @@
     background: $gray-color;
 }
 
+.vscomp-new-option-icon::before{
+    border-color: $primary-color !important;
+    border-bottom-color: transparent !important; 
+    border-left-color: transparent !important;
+}
+
+.vscomp-value{
+    line-height: inherit !important;
+}

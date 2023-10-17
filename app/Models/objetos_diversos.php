@@ -9,12 +9,11 @@ class objetos_diversos extends Model
     protected $table = 'objetos_diversos';
 
     protected $fillable = [
-        'objeto',
         'num_identificacao', 
         'modelo',
         'marca',
-        'tipo',
-        'un_medida'
+        'un_medida',
+        'id_tipo_objeto'
     ];
 
     protected $primaryKey = 'id_objeto_diverso';

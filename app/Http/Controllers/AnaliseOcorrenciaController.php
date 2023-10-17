@@ -20,18 +20,24 @@ class AnaliseOcorrenciaController extends Controller
         $ocorrencias = DB::table('ocorrencias_pessoas')
                          ->select('ocorrencias_pessoas.id_ocorrencia', 'pessoas.nome', 'pessoas.RG_CPF', 'ocorrencias_pessoas.id_pessoa', 'fotos_pessoas.caminho_servidor')
                          ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
+                         ->leftJoin('participacao_pessoas_fatos', 'ocorrencias_pessoas.id_ocorrencia_pessoa', 'participacao_pessoas_fatos.id_ocorrencia_pessoa')
+                         ->leftJoin('fatos_ocorrencias', 'participacao_pessoas_fatos.id_fato_ocorrencia', 'fatos_ocorrencias.id_fato_ocorrencia')
+                         ->leftJoin('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
                          ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
+                         ->where('participacao_pessoas_fatos.participacao', 'Autor')
+                         ->groupBy('ocorrencias_pessoas.id_pessoa')
+                         ->groupBy('ocorrencias_pessoas.id_ocorrencia')
                          ->get();
 
         foreach ($ocorrencias as $ocorrencia){
             // Adiciona um novo nodo, contendo id e label
-            if ($nodes->doesntContain('id', $ocorrencia->id_pessoa))
+            if ($nodes->contains('data.id', $ocorrencia->id_pessoa) == false)
             {
-                $nodes->push(['id'     => $ocorrencia->id_pessoa, 
-                              'label'  => $ocorrencia->nome,
-                              'color'  => '#69B485',
-                              'RG_CPF' => $ocorrencia->RG_CPF,
-                              'foto'   => $ocorrencia->caminho_servidor]);
+                $nodes->push(['data' => ['id'     => $ocorrencia->id_pessoa, 
+                                         'label'  => $ocorrencia->nome,
+                                         'color'  => '#69B485',
+                                         'RG_CPF' => $ocorrencia->RG_CPF,
+                                         'foto'   => $ocorrencia->caminho_servidor]]);
             }
 
             // Verifica se os relacionamentos da ocorrência já foram adicionados
@@ -44,8 +50,7 @@ class AnaliseOcorrenciaController extends Controller
                 // Faz a iteração entre todos os integrantes de uma mesma ocorrência
                 if ($relacoes->count() > 2)
                 {
-                    for ($i = 1; $i < $relacoes->count(); $i++)
-                    {
+                    for ($i = 1; $i < $relacoes->count(); $i++){
                         // Remove o primeiro elemento do collection $count_relacoes e o coloca no $count_relacoes_aux
                         $relacoes_aux = collect([$relacoes->shift()]);
                         
@@ -55,26 +60,27 @@ class AnaliseOcorrenciaController extends Controller
                         // Alimenta o collection das arestas a partir da permutação dos dois valores collection
                         foreach ($result_permutacoes as $result_permutacao)
                         {
-                            $links->push(['source' => $result_permutacao[1]->id_pessoa,
-                                          'target' => $result_permutacao[0]->id_pessoa]);
+                            $links->push(['data' => ['source' => $result_permutacao[1]->id_pessoa,
+                                                     'target' => $result_permutacao[0]->id_pessoa]]);
                         }
                     }
 
-                    $links->push(['source' => $relacoes->first()->id_pessoa,
-                                  'target' => $relacoes->last()->id_pessoa]);    
+                    $links->push(['data' => ['source' => $relacoes->first()->id_pessoa,
+                                             'target' => $relacoes->last()->id_pessoa]]);    
                 } 
                 // Caso somente haja duas pessoas em uma mesma ocorrência não há necessidade de se fazer uma permutação 
                 // entre os envolvidos
                 else if ($relacoes->count() == 2)
                 {
-                    $links->push(['source' => $relacoes->first()->id_pessoa,
-                                  'target' => $relacoes->last()->id_pessoa]);
+                    $links->push(['data' => ['source' => $relacoes->first()->id_pessoa,
+                                             'target' => $relacoes->last()->id_pessoa]]);
                 }
             }
         }
 
-        $data['nodes'] = $nodes;
-        $data['links'] = $links;
+        $data = ($nodes->merge($links));
+        // $data['nodes'] = $nodes;
+        // $data['links'] = $links;
 
         return response()->json($data, 200);
     }

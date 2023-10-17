@@ -3,7 +3,7 @@
         <i class='bx bxs-user-circle icon-CM'></i>
         <span class="navbar-text-CM"> Perfil </span>
     </a>
-    <a href="">
+    <a href={{ route("logout") }}>
         <i class='bx bx-log-out icon-CM'></i>
         <span class="navbar-text-CM"> Logout </span>
     </a>

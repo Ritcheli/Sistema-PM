@@ -66,17 +66,25 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         let url = $("#form_ocorrencia").attr('action')
         
-        var veiculos  = [];
-        var objetos   = [];
-        var armas     = [];
-        var drogas    = [];
-        var animais   = []; 
-        var tipo_ocor = [];
+        var envolvidos = [];
+        var veiculos   = [];
+        var objetos    = [];
+        var armas      = [];
+        var drogas     = [];
+        var animais    = []; 
+        var tipo_ocor  = [];
 
         var form_data = new FormData();
 
-        $('#table-body-pessoa').find('.btn-table-edit').each(function(){
-            form_data.append('envolvidos[]', this.value);
+        $('#table-body-pessoa').find('.envolvido').each(function(){
+            envolvidos.push({
+                'id_envolvido': this.getElementsByClassName('id-envolvido')[0].innerText.trim(),
+                'participacao': this.getElementsByClassName('participacao-envolvido')[0].innerText.trim(),
+            });
+        }); 
+
+        envolvidos.forEach(item => {
+            form_data.append('envolvidos[]', JSON.stringify(item));
         });
         
         $('#table-body-veiculo').find('.veiculo').each(function(){
@@ -89,11 +97,10 @@ document.addEventListener('DOMContentLoaded', function () {
         veiculos.forEach(item => {
             form_data.append('veiculos[]', JSON.stringify(item));
         });
-
+        
         $('#table-body-objeto').find('.objeto').each(function(){
             objetos.push({
                 'num_identificacao': this.getElementsByClassName('num_identificacao')[0].innerText.trim(),
-                'objeto'           : this.getElementsByClassName('objeto_objeto')[0].innerText.trim(),
                 'tipo_objeto'      : this.getElementsByClassName('tipo_objeto')[0].innerText.trim(),
                 'marca_objeto'     : this.getElementsByClassName('marca_objeto')[0].innerText.trim(),
                 'un_med'           : this.getElementsByClassName('un_med')[0].innerText.trim(),

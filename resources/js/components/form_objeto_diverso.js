@@ -2,16 +2,30 @@ var who_call_obj  = 'cad-objeto';
 let obj_edit;
 
 document.addEventListener('DOMContentLoaded', function(e){
+    VirtualSelect.init({ 
+        ele: '#vs_tipo_objeto',
+        placeholder: 'Selecione o tipo do objeto',
+        noSearchResultsText: 'Nenhum resultado encontrado',
+        searchPlaceholderText: 'Procurar...', 
+        disableSelectAll: true,
+        showValueAsTags: true,
+        allowNewOption: true,
+    });
+
+    $('.tipo-obj').removeAttr('hidden');
+
+    if (document.querySelector('#vs_tipo_objeto') != null){
+        document.querySelector('#vs_tipo_objeto').reset();
+    }
+    
     if ($('#form-objetos-diversos').length > 0){
         let num_identificacao  = $('#num_identificacao');
-        let objeto             = $('#objeto');
         let marca_objeto       = $('#marca_objeto');
         let modelo_objeto      = $('#modelo_objeto');
         let unidade_medida_obj = $('#unidade_medida_obj');
-        let tipo_objeto        = $('#tipo_objeto');
+        let tipo_objeto        = $('#tipo_obj');
         let quantidade_objeto  = $('#quantidade_objeto');
 
-        let tag_objeto_invalido             = $('#objeto-invalido');
         let tag_marca_objeto_invalida       = $('#marca_objeto-invalida');
         let tag_modelo_objeto_invalido      = $('#modelo_objeto-invalido');
         let tag_unidade_medida_obj_invalida = $('#unidade_medida_obj-invalida');
@@ -28,11 +42,10 @@ document.addEventListener('DOMContentLoaded', function(e){
             obj_edit = $(this).closest('.objeto');
 
             num_identificacao.val(obj_edit.find('.num_identificacao').html().trim());
-            objeto.val(obj_edit.find('.objeto_objeto').html().trim());
             marca_objeto.val(obj_edit.find('.marca_objeto').html().trim());
             modelo_objeto.val(obj_edit.find('.modelo_objeto').html().trim());
             unidade_medida_obj.val(obj_edit.find('.un_med').html().trim());
-            tipo_objeto.val(obj_edit.find('.tipo_objeto').html().trim());
+            document.querySelector('#vs_tipo_objeto').setValue(obj_edit.find('.tipo_objeto').html().trim());
             quantidade_objeto.val(obj_edit.find('.quantidade').html().trim());
             
             who_call_obj = "edit-objeto";
@@ -54,17 +67,12 @@ document.addEventListener('DOMContentLoaded', function(e){
                 tag_modelo_objeto_invalido.html('<strong> O campo modelo é obrigatório </strong>');
                 validation_success = false;
             }
-            if (objeto.val() == ""){
-                objeto.addClass('is-invalid');
-                tag_objeto_invalido.html('<strong> O campo objeto é obrigatório </strong>');
-                validation_success = false;
-            }
             if (unidade_medida_obj.val() == ""){
                 unidade_medida_obj.addClass('is-invalid');
                 tag_unidade_medida_obj_invalida.html('<strong> O campo un. de medida é obrigatório </strong>');
                 validation_success = false;
             }
-            if (tipo_objeto.val() == ""){
+            if (document.querySelector('#vs_tipo_objeto').getDisplayValue() == ""){
                 tipo_objeto.addClass('is-invalid');
                 tag_tipo_objeto_invalido.html('<strong> O campo tipo é obrigatório </strong>');
                 validation_success = false;
@@ -81,12 +89,11 @@ document.addEventListener('DOMContentLoaded', function(e){
                 }
                 if (who_call_obj == 'edit-objeto'){
                     obj_edit.find('.num_identificacao').html(form_data_obj[1]['value']);
-                    obj_edit.find('.objeto').html(form_data_obj[2]['value']);
+                    obj_edit.find('.tipo_objeto').html(form_data_obj[2]['value']);
                     obj_edit.find('.marca_objeto').html(form_data_obj[3]['value']);
                     obj_edit.find('.modelo_objeto').html(form_data_obj[4]['value']);
                     obj_edit.find('.un_med').html(form_data_obj[5]['value']);
-                    obj_edit.find('.tipo_objeto').html(form_data_obj[6]['value']);
-                    obj_edit.find('.quantidade').html(form_data_obj[7]['value']);
+                    obj_edit.find('.quantidade').html(form_data_obj[6]['value']);
                 }
                 who_call_obj = 'cad-objeto';
 
@@ -105,11 +112,8 @@ function addObjetoToTable(objeto_diverso){
             <td scope="row" class="align-middle d-none num_identificacao">
                 ` + objeto_diverso[1]['value'] + `
             </td>
-            <td scope="row" class="align-middle d-none objeto_objeto">
-                ` + objeto_diverso[2]['value'] + `
-            </td>
             <th scope="row" class="align-middle tipo_objeto">
-                ` + objeto_diverso[6]['value'] + `
+                ` + objeto_diverso[2]['value'] + `
             </th>
             <td scope="row" class="align-middle marca_objeto">
                 ` + objeto_diverso[3]['value'] + `
@@ -121,9 +125,9 @@ function addObjetoToTable(objeto_diverso){
                 ` + objeto_diverso[4]['value'] + `
             </td>   
             <td class="align-middle quantidade">
-                ` + objeto_diverso[7]['value'] + `
+                ` + objeto_diverso[6]['value'] + `
             </td>
-            <td>
+            <td class="align-middle">
                 <div class="d-flex justify-content-between">
                     <button type="button" title="Editar" class="btn btn-table-edit edit-objeto w-45"> 
                         <i class='bx bxs-edit btn-table-icon-CM'></i>

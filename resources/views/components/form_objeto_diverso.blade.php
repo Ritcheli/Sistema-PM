@@ -10,9 +10,13 @@
                     <span class="invalid-feedback" role="alert" id="num_identificacao-invalido"></span>
                 </div>
                 <div class="form-group col-md-6">
-                    <label class="text-nowrap">Objeto</label>
-                    <input type="text" class="form-control CM" id="objeto" name="objeto" maxlength="45" placeholder="Digite o objeto">
-                    <span class="invalid-feedback" role="alert" id="objeto-invalido"></span>
+                    <label class="text-nowrap">Tipo objeto</label>
+                    <div class="custom-selection tipo-obj" id="tipo_obj" hidden>
+                        <select name="native-select" id="vs_tipo_objeto" data-search="true" data-silent-initial-value-set="false">
+                            {{ $tipos_objetos }}
+                        </select>
+                    </div>
+                    <span class="invalid-feedback" role="alert" id="tipo_objeto-invalido"></span>
                 </div> 
             </div>
             <div class="form-row">
@@ -26,19 +30,12 @@
                     <input type="text" class="form-control CM" id="modelo_objeto" name="modelo_objeto" maxlength="45" placeholder="Digite o modelo do objeto">
                     <span class="invalid-feedback" role="alert" id="modelo_objeto-invalido"></span>
                 </div>
-                <div class="form-group col-md-4">
-                    <label class="text-nowrap">Unidade de medida</label>
+                <div class="form-group col-md-2">
+                    <label class="text-nowrap">Un de medida</label>
                     <input type="text" class="form-control CM" id="unidade_medida_obj" name="unidade_medida_obj" maxlength="30" placeholder="Digite a unidade de medida do objeto">
                     <span class="invalid-feedback" role="alert" id="unidade_medida_obj-invalida"></span>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-8">
-                    <label class="text-nowrap">Tipo</label>
-                    <input type="text" class="form-control CM" id="tipo_objeto" name="tipo_objeto" maxlength="60" placeholder="Digite o tipo do objeto">
-                    <span class="invalid-feedback" role="alert" id="tipo_objeto-invalido"></span>
-                </div> 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-2">
                     <label class="text-nowrap">Quantidade</label>
                     <input type="text" class="form-control CM" id="quantidade_objeto" name="quantidade_objeto" placeholder="Digite a Quantidade">
                     <span class="invalid-feedback" role="alert" id="quantidade_objeto-invalida"></span>

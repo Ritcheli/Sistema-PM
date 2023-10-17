@@ -292,10 +292,11 @@
                         <div class="row mt-2">
                             <div class="col"> 
                                 <div class="row">
-                                    <div class="title-infos">Objeto</div>
+                                    <div class="title-infos">Tipo</div>
                                 </div>
                                 <div class="row">
                                     <div> {{ $objeto_diverso->objeto }} </div>
+
                                 </div>
                             </div>
                             <div class="col">
@@ -324,14 +325,6 @@
                             </div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-3"> 
-                                <div class="row">
-                                    <div class="title-infos">Tipo</div>
-                                </div>
-                                <div class="row">
-                                    <div> {{ $objeto_diverso->tipo }} </div>
-                                </div>
-                            </div>
                             <div class="col-3"> 
                                 <div class="row">
                                     <div class="title-infos">Un medida</div>

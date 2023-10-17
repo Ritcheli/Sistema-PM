@@ -1,7 +1,15 @@
 <x-layout>
     <x-slot:modal>
         <x-modal-busca-pessoas></x-modal-busca-pessoas>
-        <x-modal-pessoa></x-modal-pessoa>
+        <x-modal-pessoa>
+            <x-slot:fatos_ocorrencias>
+                @foreach ($fatos_ocorrencias as $fato_ocorrencia)
+                    <option value={{ $fato_ocorrencia->id_fato_ocorrencia }}>
+                        {{ $fato_ocorrencia->natureza }}
+                    </option>
+                @endforeach
+            </x-slot:fatos_ocorrencias>
+        </x-modal-pessoa>
         <x-modal-veiculo></x-modal-veiculo>
         <x-modal-busca-veiculo></x-modal-busca-veiculo>
     </x-slot:modal>
@@ -56,7 +64,8 @@
                                                 <tr>
                                                     <th scope="col" class="w-5">Id</th>
                                                     <th scope="col" class="w-50">Nome</th>
-                                                    <th scope="col" class="w-30">CPF ou RG</th>
+                                                    <th scope="col" class="w-30">RG ou CPF</th>
+                                                    <th scope="col" class="d-none">participacao</th>
                                                     <th scope="col" class="w-10">Ações</th>
                                                 </tr>
                                             </thead>
@@ -70,8 +79,11 @@
                                                             <td class="align-middle nome-envolvido">
                                                                 {{ $pessoa->nome }}
                                                             </td>
-                                                            <td class="align-middle RG-CPF-envolvido">
+                                                            <td class="align-middle RG_CPF-envolvido">
                                                                 {{ $pessoa->RG_CPF }}
+                                                            </td>
+                                                            <td class="align-middle participacao-envolvido d-none">
+                                                                {{ $pessoa->participacao }}
                                                             </td>
                                                             <td>
                                                                 <div class="d-flex justify-content-between">
@@ -164,6 +176,11 @@
                     </div>
                     <div class="tab-pane fade" id="nav-objetos" role="tabpanel" aria-labelledby="nav-objetos-tab">
                         <x-form-objeto-diverso>
+                            <x-slot:tipos_objetos>
+                                @foreach ($tipos_objetos as $tipo_objeto)
+                                    <option value="{{ $tipo_objeto->objeto }}"> {{ $tipo_objeto->objeto }} </option>
+                                @endforeach    
+                            </x-slot:tipos_objetos>   
                             <x-slot:objetos_diversos>
                                 @if ($Who_Call == 'Editar_Ocorrencia')
                                     @foreach ($objetos_diversos as $objeto_diverso)
@@ -174,11 +191,8 @@
                                             <td scope="row" class="align-middle d-none id_objeto-diverso">
                                                 {{ $objeto_diverso->id_objeto_diverso }}
                                             </td>
-                                            <td scope="row" class="align-middle d-none objeto_objeto">
-                                                {{ $objeto_diverso->objeto }}
-                                            </td>
                                             <th scope="row" class="align-middle tipo_objeto">
-                                                {{ $objeto_diverso->tipo }}
+                                                {{ $objeto_diverso->objeto }}
                                             </th>
                                             <td scope="row" class="align-middle marca_objeto">
                                                 {{ $objeto_diverso->marca }}

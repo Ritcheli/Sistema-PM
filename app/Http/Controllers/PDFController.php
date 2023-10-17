@@ -38,9 +38,10 @@ class PDFController extends Controller
                       ->get();
 
         $objetos_diversos = DB::table('objetos_diversos')
-                              ->select('objetos_diversos.objeto', 'objetos_diversos.num_identificacao', 'objetos_diversos.modelo', 'objetos_diversos.marca',
-                                    'objetos_diversos.tipo', 'objetos_diversos.un_medida', 'ocorrencias_objetos_diversos.quantidade')
+                              ->select('objetos_diversos.num_identificacao', 'objetos_diversos.modelo', 'objetos_diversos.marca',
+                                    'tipos_objetos.objeto', 'objetos_diversos.un_medida', 'ocorrencias_objetos_diversos.quantidade')
                               ->leftJoin('ocorrencias_objetos_diversos', 'objetos_diversos.id_objeto_diverso', 'ocorrencias_objetos_diversos.id_objeto_diverso')
+                              ->leftJoin('tipos_objetos', 'objetos_diversos.id_tipo_objeto', 'tipos_objetos.id_tipo_objeto')
                               ->where('ocorrencias_objetos_diversos.id_ocorrencia', $id_ocorrencia)
                               ->get();
         

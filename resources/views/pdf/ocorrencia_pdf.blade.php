@@ -279,10 +279,7 @@
                         <strong> Objeto diverso </strong> 
                     </div>
                     <table class="content-table">
-                        <tr class="content-table-td-4">
-                            <td>
-                                <strong> Objeto </strong>
-                            </td>
+                        <tr class="content-table-td-3">
                             <td>
                                 <strong> Num identificação </strong>
                             </td>
@@ -293,10 +290,7 @@
                                 <strong> Marca </strong>
                             </td>
                         </tr>
-                        <tr class="content-table-td-4">
-                            <td>
-                                {{ $objetos_diverso->objeto }}
-                            </td>
+                        <tr class="content-table-td-3">
                             <td>
                                 {{ $objetos_diverso->num_identificacao }}
                             </td>
@@ -309,7 +303,7 @@
                         </tr>
                     </table>
                     <table class="content-table">
-                        <tr class="content-table-td-4">
+                        <tr class="content-table-td-3">
                             <td>
                                 <strong> Tipo </strong>
                             </td>
@@ -323,7 +317,7 @@
                         </tr>
                         <tr class="content-table-td-4">
                             <td>
-                                {{ $objetos_diverso->tipo }}
+                                {{ $objetos_diverso->objeto }} 
                             </td>
                             <td>
                                 {{ $objetos_diverso->un_medida }}

@@ -2,6 +2,7 @@ import fitz
 import glob
 import os
 import json
+from fitz import Rect
 
 def main():
     text          = ''
@@ -21,6 +22,7 @@ def main():
             outras_info    = {}
             endereco       = {}
             nome_envolvido = {}
+            participacao   = {}
             envolvidos     = []
             objetos        = [] 
             drogas         = []
@@ -40,9 +42,14 @@ def main():
             str_Novo_Nome   = str_Novo_Nome.replace(' ', '')
 
 
-            if 'JasperReports' in pdf_metadata['creator']:
+            if ('PDFium' in pdf_metadata['creator']) or ('JasperReports' in pdf_metadata['creator']):
+                rect = Rect(60, 90, 580, 805)
+            elif ('Skia/PDF' in pdf_metadata['producer']):
+                rect = Rect(60, 25, 580, 815)
+
+            if ('PDFium' in pdf_metadata['creator']) or ('JasperReports' in pdf_metadata['creator']) or ('Skia/PDF' in pdf_metadata['producer']):
                 for page in doc: 
-                    text += str(page.get_text("text", clip = [60, 90, 580, 805], sort = True)) 
+                    text += str(page.get_text("text", rect, sort = True)) 
                     words['page' + str(i)] = page.get_text("words", clip = [60, 90, 580, 805])
                     i += 1
 
@@ -83,13 +90,16 @@ def main():
                                     aux_nome_3['nome' + str(j)] += " " + word[4] + " "
 
                 #Faz a separação de todos os fatos da ocorrência
+                if ('OUTROS DADOS:' in aux_fato):
+                    aux_fato = get_General_Data_Between("", "OUTROS DADOS:", aux_fato)
+
                 fatos = []
                 fatos = (aux_fato[19:].split(';'))
-                # fatos = aux_fato.strip('FATOS COMUNICADOS: ').split(';');
                 
                 #Faz a separação do nome dos envolvidos
                 for i in range(len(aux_nome_1)):
-                    nome_envolvido['nome' + str(i)] = get_General_Data("", "(", aux_nome_3['nome' + str(i)]) 
+                    nome_envolvido['nome' + str(i)]       = get_General_Data("", "(", aux_nome_3['nome' + str(i)]) 
+                    participacao['participacao' + str(i)] = get_General_Data("|", "Mãe:", aux_nome_3['nome' + str(i)])
 
                 #Extração do endereço
                 endereco_extraido = get_General_Data("LOCAL", "FATOS COMUNICADOS:", text)
@@ -133,6 +143,7 @@ def main():
                     cpf = cpf.replace('.', '').replace('-', '')
 
                     envolvidos.append({'nome': nome_envolvido['nome' + str(i)],
+                                       'participacao': participacao['participacao' + str(i)],
                                        'data_nascimento' : get_General_Data("Data de Nascimento:", "Naturalidade:", aux_envolvidos),
                                        'RG' : rg,
                                        'CPF': cpf,
@@ -347,6 +358,14 @@ def get_General_Data(str_Init_Word, str_End_Word, str_Text):
     Idx_End  = str_Text.find(str_End_Word)
 
     Data = str_Text[Idx_Init + len(str_Init_Word) + 1: Idx_End]
+
+    return Data.strip()
+
+def get_General_Data_Between(str_Init_Word, str_End_Word, str_Text):
+    Idx_Init = str_Text.find(str_Init_Word)
+    Idx_End  = str_Text.find(str_End_Word)
+
+    Data = str_Text[Idx_Init + len(str_Init_Word): Idx_End]
 
     return Data.strip()
 

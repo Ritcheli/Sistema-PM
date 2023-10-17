@@ -1,6 +1,6 @@
-import { addPessoaToTable } from './modal_pessoa'; 
 import Swal from 'sweetalert2';
 import Pagination from "s-pagination";
+import { loadDadoPessoa } from './modal_pessoa';
 
 let modal_busca_pessoa = document.getElementById('modal-busca-pessoas');
 var items_per_page = 5;
@@ -10,8 +10,6 @@ if (modal_busca_pessoa != null){
     document.addEventListener('DOMContentLoaded', function () {
         $('#table-busca-pessoa > tbody').on('dblclick', '>tr', function (e) {
             var id            = e.currentTarget.cells[0].innerHTML;
-            var nome          = e.currentTarget.cells[1].innerHTML;
-            var CPF_RG        = e.currentTarget.cells[2].innerHTML;
             var id_envolvidos = document.getElementsByClassName('id-envolvido');
 
             if (id_envolvidos.length > 0){
@@ -30,10 +28,14 @@ if (modal_busca_pessoa != null){
                         return;
                     }
                 }
-            }
+            }    
             
-            addPessoaToTable(id, nome, CPF_RG);
-    
+            loadDadoPessoa(id, 'busca-pessoa');
+
+            $('#modal-pessoa-title').html('Inserir pessoa');
+            $('#salvar-pessoa').html('Inserir');
+
+            $('#modal-pessoa').modal('show');
             $('#modal-busca-pessoas').modal('hide');
        });
     }, false);

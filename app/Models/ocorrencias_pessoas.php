@@ -14,7 +14,7 @@ class ocorrencias_pessoas extends Model
         'classificacao'
     ];
 
-    protected $primaryKey = 'id_ocorrencia_pessoa';
+    protected $primaryKey = 'id_ocorrencia_pessoa'; 
 
     public $timestamps = false;
 }
