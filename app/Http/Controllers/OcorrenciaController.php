@@ -6,7 +6,6 @@ use App\Models\ocorrencias;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class OcorrenciaController extends Controller
@@ -100,8 +99,6 @@ class OcorrenciaController extends Controller
                      ->where('ocorrencias_pessoas.id_ocorrencia', $id_ocorrencia)
                      ->groupBy('pessoas.id_pessoa', 'pessoas.nome', 'pessoas.RG_CPF')
                      ->get();    
-        
-        Log::debug($pessoas);
         
         $endereco = $this->get_Endereco($ocorrencia[0]->id_bairro);
 
