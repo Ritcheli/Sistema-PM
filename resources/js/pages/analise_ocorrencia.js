@@ -45,25 +45,42 @@ document.addEventListener('DOMContentLoaded', function() {
         placeholder: 'Selecione o grupo da ocorrência',
         noSearchResultsText: 'Nenhum resultado encontrado',
         searchPlaceholderText: 'Procurar...', 
-        showValueAsTags: true,
-        options: [
-          { label: 'Geral', value: 'Geral' },
-          { label: 'Armas de fogo', value: 'Arma_de_Fogo' },
-          { label: 'Substancias', value: 'Substancias' }
-        ]
+        showValueAsTags: true
     });
 
     $('#vs_rede_tipo').on('change', function() {
+        if (this.value == 'Pessoas'){
+            var options = [
+                { label: 'Furto/Roubo', value: 'Furto_Roubo' },
+                { label: 'Substâncias', value: 'Substancias' }
+            ]
+
+            document.querySelector('#vs_grupo_ocorr').setOptions(options);
+            document.querySelector('#vs_grupo_ocorr').removeAttribute('disabled');
+
+            return;
+        }
         if (this.value == 'Pessoas_Grupos'){
+            var options = [
+                { label: 'Geral', value: 'Geral' },
+                { label: 'Armas de fogo', value: 'Arma_de_Fogo' },
+                { label: 'Substancias', value: 'Substancias' }
+            ]
+
+            document.querySelector('#vs_grupo_ocorr').setOptions(options);
+
             document.querySelector('#vs_grupo_ocorr').setValue('Geral');
             document.querySelector('#vs_grupo_ocorr').removeAttribute('disabled');
-        } else {
+
+            return;
+        } 
+        else {
             document.querySelector('#vs_grupo_ocorr').reset();
             document.querySelector('#vs_grupo_ocorr').setAttribute('disabled', 'true');
         }
     });
 
-    $('#plot_SNA_pessoa_ocorrencia').on('submit', function(e){
+    $('#plot_SNA_Graph').on('submit', function(e){
         e.preventDefault(); 
 
         const url = $(this).attr('action');
@@ -88,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
             $('#vs_rede_participacao-invalida').html('O campo participação é obrigatório');
             error = true;
         }
-        if (tipo_rede == "Pessoas_Grupos" && grupo_ocorr == ""){
+        if ((tipo_rede == "Pessoas_Grupos" || tipo_rede == "Pessoas") && grupo_ocorr == ""){
             $('#vs_grupo_ocorr').addClass('is-invalid');
             $('#vs_grupo_ocorr-invalido').html('O campo grupo é obrigatório');
             error = true;
@@ -98,22 +115,27 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        if ($('#vs_rede_tipo').val() == 'Pessoas'){
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: url,
+            method: 'POST',
+            data: {
+                tipo_rede : tipo_rede,
+                participacao : participacao_envolvidos,
+                grupo_ocorr : grupo_ocorr,
+            },
+            success: function(result){
+                if (result != ""){
+                    if (tipo_rede == 'Pessoas'){
+                        plotPessoasGraph(result);
+                    }
                 }
-            });
-            $.ajax({
-                url: url,
-                method: 'POST',
-                dataType: 'json',
-                data: '',
-                success: function(data){
-                    plotPessoasGraph(data);
-                }
-            });
-        }
+            }
+        });
     });
 
     // $('#plot_SNA_pessoa_ocorrencia').on('submit', function(e){

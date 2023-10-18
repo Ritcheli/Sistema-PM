@@ -87,8 +87,7 @@ Route::middleware('auth')->group(function(){
 
     Route::controller(AnaliseOcorrenciaController::class)->group(function () {
         Route::get("/analise-ocorrencia", "show_Analise_Ocorrencia")->name('show_Analise_Ocorrencia');
-        Route::post("/analise-ocorrencia/ocorrencia-pessoa", "plot_SNA_Ocorrencia_Pessoa")->name('plot_SNA_Ocorrencia_Pessoa');
-        Route::post("/analise-ocorrencia/fato-pessoa", "plot_SNA_Pessoa_Fato_Ocorrencia")->name('plot_SNA_Pessoa_Fato_Ocorrencia');
+        Route::post("/analise-ocorrencia/plot-SNA-graph", "plot_SNA_Graph")->name('plot_SNA_Graph');
     });
 
     Route::controller(FotoPessoaController::class)->group(function () {

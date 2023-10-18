@@ -165,11 +165,9 @@ export function plotPessoasGraph(data){
                             <div class="color-palette-text"> + </div> 
                         </div>
                     </div> `)
-
-    // $('#container_color_palette').removeAttr('hidden');
     
-    console.log( 'degree of 197: ' + cy.$().dc({ root: '#197' }).degree );
-    console.log( 'degree centrality normalized of 197: ' + cy.$().dcn().degree('#197') );
-    console.log( 'closeness centrality of 197: ' + cy.$().ccn().closeness('#197') );
-    console.log( 'betweenness centrality centrality of 197: ' + cy.$().bc().betweenness('#197') );
+    // console.log( 'degree of 197: ' + cy.$().dc({ root: '#197' }).degree );
+    // console.log( 'degree centrality normalized of 197: ' + cy.$().dcn().degree('#197') );
+    // console.log( 'closeness centrality of 197: ' + cy.$().ccn().closeness('#197') );
+    // console.log( 'betweenness centrality centrality of 197: ' + cy.$().bc().betweenness('#197') );
 }

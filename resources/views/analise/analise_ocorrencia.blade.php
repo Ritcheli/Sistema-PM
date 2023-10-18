@@ -16,7 +16,7 @@
                     </a> 
                 </div>
                 <div class="collapse show" id="colapse_rede_config">
-                    <form action="{{ route('plot_SNA_Ocorrencia_Pessoa') }}" method="POST" id="plot_SNA_pessoa_ocorrencia">
+                    <form action="{{ route('plot_SNA_Graph') }}" method="POST" id="plot_SNA_Graph">
                         @csrf
                         <div class="form-row">
                             <div class="form-group col">

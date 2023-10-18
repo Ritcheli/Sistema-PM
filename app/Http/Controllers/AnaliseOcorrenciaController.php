@@ -12,22 +12,39 @@ class AnaliseOcorrenciaController extends Controller
         return view('analise.analise_ocorrencia');
     }
 
-    public function plot_SNA_Ocorrencia_Pessoa(){
+    public function plot_SNA_Graph(Request $request){
+        if ($request['tipo_rede'] == 'Pessoas'){ 
+            $data = $this->plot_SNA_Pessoas($request['participacao'], $request['grupo_ocorr']);
+        }
+
+        return response()->json($data, 200);
+    }
+
+    public function plot_SNA_Pessoas($participacao, $grupo){
         $nodes = collect();
         $links = collect();
         $list_adicionados = array();
 
-        $ocorrencias = DB::table('ocorrencias_pessoas')
-                         ->select('ocorrencias_pessoas.id_ocorrencia', 'pessoas.nome', 'pessoas.RG_CPF', 'ocorrencias_pessoas.id_pessoa', 'fotos_pessoas.caminho_servidor')
-                         ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
-                         ->leftJoin('participacao_pessoas_fatos', 'ocorrencias_pessoas.id_ocorrencia_pessoa', 'participacao_pessoas_fatos.id_ocorrencia_pessoa')
-                         ->leftJoin('fatos_ocorrencias', 'participacao_pessoas_fatos.id_fato_ocorrencia', 'fatos_ocorrencias.id_fato_ocorrencia')
-                         ->leftJoin('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
-                         ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
-                         ->where('participacao_pessoas_fatos.participacao', 'Autor')
-                         ->groupBy('ocorrencias_pessoas.id_pessoa')
-                         ->groupBy('ocorrencias_pessoas.id_ocorrencia')
-                         ->get();
+        $query = DB::table('ocorrencias_pessoas')
+                   ->select('ocorrencias_pessoas.id_ocorrencia', 'pessoas.nome', 'pessoas.RG_CPF', 'ocorrencias_pessoas.id_pessoa', 'fotos_pessoas.caminho_servidor', 'grupos_fatos.nome as grupo')
+                   ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
+                   ->leftJoin('participacao_pessoas_fatos', 'ocorrencias_pessoas.id_ocorrencia_pessoa', 'participacao_pessoas_fatos.id_ocorrencia_pessoa')
+                   ->leftJoin('fatos_ocorrencias', 'participacao_pessoas_fatos.id_fato_ocorrencia', 'fatos_ocorrencias.id_fato_ocorrencia')
+                   ->leftJoin('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
+                   ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
+                   ->whereIn('participacao_pessoas_fatos.participacao', $participacao);
+
+        // Aplicação dos filtros de grupo
+        if ($grupo == 'Furto_Roubo'){
+            $query->whereIn('grupos_fatos.nome', ['Furto', 'Roubo']);
+        }
+        if ($grupo == 'Substancias'){
+            $query->where('grupos_fatos.nome', 'Drogas');
+        }
+
+        $ocorrencias = $query->groupBy('ocorrencias_pessoas.id_pessoa')
+                             ->groupBy('ocorrencias_pessoas.id_ocorrencia')
+                             ->get();
 
         foreach ($ocorrencias as $ocorrencia){
             // Adiciona um novo nodo, contendo id e label
@@ -35,7 +52,6 @@ class AnaliseOcorrenciaController extends Controller
             {
                 $nodes->push(['data' => ['id'     => $ocorrencia->id_pessoa, 
                                          'label'  => $ocorrencia->nome,
-                                         'color'  => '#69B485',
                                          'RG_CPF' => $ocorrencia->RG_CPF,
                                          'foto'   => $ocorrencia->caminho_servidor]]);
             }
@@ -79,10 +95,8 @@ class AnaliseOcorrenciaController extends Controller
         }
 
         $data = ($nodes->merge($links));
-        // $data['nodes'] = $nodes;
-        // $data['links'] = $links;
 
-        return response()->json($data, 200);
+        return $data;
     }
 
     public function plot_SNA_Pessoa_Fato_Ocorrencia(){
