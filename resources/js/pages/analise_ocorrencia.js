@@ -2,8 +2,10 @@ import cytoscape from "cytoscape";
 import cytoscapePopper from "cytoscape-popper";
 
 import { plotPessoasGraph } from "../SNAGraphs/pessoas_graph";
-import { plotSNAGraphPessFato } from "../SNAGraphs/pessoa_fato_graph";
-import { plotSNAGraphPessOCorr } from "../SNAGraphs/pessoa_ocorr_graph";
+import { plotPessoasFatosGraph } from "../SNAGraphs/pessoas_fatos_graph";
+import { plotPessoasGruposGraph } from "../SNAGraphs/pessoas_grupos_graph";
+
+cytoscape.use(cytoscapePopper);
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -115,6 +117,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        $('#legendas').attr('hidden', true);
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -133,54 +137,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (tipo_rede == 'Pessoas'){
                         plotPessoasGraph(result);
                     }
+                    if (tipo_rede == 'Pessoas_Fatos'){
+                        plotPessoasFatosGraph(result);
+                    }
+                    if (tipo_rede == 'Pessoas_Grupos'){
+                        plotPessoasGruposGraph(result);
+                    }
                 }
             }
         });
     });
-
-    // $('#plot_SNA_pessoa_ocorrencia').on('submit', function(e){
-    //     e.preventDefault();
-
-    //     const url = $(this).attr('action');  
-
-        // $.ajaxSetup({
-        //     headers: {
-        //         'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-        //     }
-        // });
-        // $.ajax({
-        //     url: url,
-        //     method: 'POST',
-        //     dataType: 'json',
-        //     data: '',
-        //     success: function(data){
-        //         $("#component").empty();
-
-        //         plotSNAGraphPessOCorr(data);
-        //     }
-        // });
-    // });
-
-    // $('#plot_SNA_fato_pessoa').on('submit', function(e){
-    //     e.preventDefault();
-
-    //     const url = $(this).attr('action');  
-
-    //     $.ajaxSetup({
-    //         headers: {
-    //             'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-    //         }
-    //     });
-    //     $.ajax({
-    //         url: url,
-    //         method: 'POST',
-    //         dataType: 'json',
-    //         data: '',
-    //         success: function(data){
-    //             $("#component").empty();
-
-    //             plotSNAGraphPessFato(data)
-    //         }
-    //     });
-    // });
 }, false);

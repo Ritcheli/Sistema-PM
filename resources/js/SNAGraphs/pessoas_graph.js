@@ -1,9 +1,8 @@
 import cytoscape from "cytoscape";
-import cytoscapePopper from "cytoscape-popper";
 
 var color_palette = ['#FFEBEE', '#FFCDD2', '#EF9A9A', '#E57373', '#FF5252', '#F44336', '#D32F2F', '#c21e1e', '#891616', '#5d0f0f']
 
-cytoscape.use(cytoscapePopper);
+// cytoscape.use(cytoscapePopper);
 
 function between(x, min, max) {
     return (x >= min && x <= max);

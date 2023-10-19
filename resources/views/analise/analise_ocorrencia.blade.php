@@ -49,10 +49,10 @@
             <div class="container-fluid CM mb-6"> 
                 <div class="container-fluid CM info-nodo mb-0" id="legendas" hidden>
                     <div class="container">
-                        <div class="row pb-3">
+                        <div class="row pb-3 info-nodo-title">
                             <strong> Legenda </strong>
                         </div>
-                        <div class="subtitle-content">
+                        <div class="info-nodo-content">
                         </div>
                     </div>
                 </div>
