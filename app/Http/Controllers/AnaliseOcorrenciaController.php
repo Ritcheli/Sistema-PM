@@ -187,6 +187,7 @@ class AnaliseOcorrenciaController extends Controller
                              ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
                              ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
                              ->groupBy('grupos_fatos.id_grupo_fato', 'pessoas.id_pessoa')
+                             ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
                              ->get(); 
         
         // Relação de grupos e a quantidade de vezes que aparecem
@@ -196,6 +197,7 @@ class AnaliseOcorrenciaController extends Controller
                     ->join('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
                     ->join('participacao_pessoas_fatos', 'fatos_ocorrencias.id_fato_ocorrencia', 'participacao_pessoas_fatos.id_fato_ocorrencia')
                     ->join('ocorrencias_pessoas', 'participacao_pessoas_fatos.id_ocorrencia_pessoa', 'ocorrencias_pessoas.id_ocorrencia_pessoa')
+                    ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
                     ->get(); 
 
         $count_grupos = $grupos->countBy('nome');
