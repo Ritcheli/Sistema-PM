@@ -22,6 +22,12 @@ class AnaliseOcorrenciaController extends Controller
         if ($request['tipo_rede'] == 'Pessoas_Grupos'){
             $data = $this->plot_SNA_Pessoas_Grupos($request['participacao']);
         } 
+        if ($request['tipo_rede'] == 'Pessoas_Objetos'){
+            $data = $this->plot_SNA_Pessoas_Objetos($request['participacao']);
+        } 
+        if ($request['tipo_rede'] == 'Pessoas_Armas'){
+            $data = $this->plot_SNA_Pessoas_Armas($request['participacao']);
+        } 
 
         return response()->json($data, 200);
     }
@@ -243,4 +249,107 @@ class AnaliseOcorrenciaController extends Controller
 
         return $data;
     }
+
+    public function plot_SNA_Pessoas_Objetos($participacao){
+        $nodes     = collect();
+        $links     = collect();
+
+        $query = DB::table('participacao_pessoas_fatos')
+                   ->select('objetos_diversos.id_objeto_diverso', 'tipos_objetos.objeto', 'pessoas.id_pessoa', 'pessoas.nome',
+                            'ocorrencias_pessoas.id_ocorrencia', 'pessoas.RG_CPF', 'tipos_objetos.id_tipo_objeto', 'fotos_pessoas.caminho_servidor')
+                   ->join('ocorrencias_pessoas', 'participacao_pessoas_fatos.id_ocorrencia_pessoa', 'ocorrencias_pessoas.id_ocorrencia_pessoa')
+                   ->join('ocorrencias', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias.id_ocorrencia')
+                   ->join('ocorrencias_objetos_diversos', 'ocorrencias.id_ocorrencia', 'ocorrencias_objetos_diversos.id_ocorrencia')
+                   ->join('objetos_diversos', 'ocorrencias_objetos_diversos.id_objeto_diverso', 'objetos_diversos.id_objeto_diverso')
+                   ->join('tipos_objetos', 'objetos_diversos.id_tipo_objeto', 'tipos_objetos.id_tipo_objeto')
+                   ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
+                   ->join('fatos_ocorrencias', 'participacao_pessoas_fatos.id_fato_ocorrencia', 'fatos_ocorrencias.id_fato_ocorrencia')
+                   ->join('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
+                   ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
+                   ->groupBy('objetos_diversos.id_objeto_diverso', 'ocorrencias.id_ocorrencia', 'pessoas.id_pessoa')
+                   ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
+                   ->whereIn('grupos_fatos.nome', ['Furto', 'Roubo']);
+        
+        $subquery = $this->getEloquentSqlWithBindings($query);
+
+        $pessoas_objetos = collect(DB::select("select subquery.id_objeto_diverso, subquery.id_tipo_objeto, subquery.objeto, subquery.id_pessoa, subquery.nome, subquery.RG_CPF,
+                                                      subquery.caminho_servidor, count(*) as count_pessoa
+                                               from (" . $subquery . ") as subquery
+                                               GROUP BY subquery.id_tipo_objeto, subquery.id_pessoa"));
+
+        $objetos_aux = DB::select("select subquery.id_tipo_objeto, subquery.id_ocorrencia, MAX(subquery.objeto) AS objeto
+                                   from (" . $subquery . ") as subquery
+                                   GROUP BY subquery.id_objeto_diverso, subquery.id_ocorrencia");
+
+        $count_objetos  = collect($objetos_aux)->countBy('id_tipo_objeto');
+        $unique_objetos = collect($objetos_aux)->unique('id_tipo_objeto');
+
+        foreach ($unique_objetos as $unique_objeto){
+            $nodes->push(['data' => ['id'    => strval($unique_objeto->id_tipo_objeto) . strval($unique_objeto->objeto),
+                                     'label' => $unique_objeto->objeto,
+                                     'size'  => $count_objetos[$unique_objeto->id_tipo_objeto],
+                                     'color' => '#035efc',
+                                     'type'  => 'objeto']
+                        ]);
+        }
+
+        foreach ($pessoas_objetos as $pessoa_objeto){ 
+            $links->push(['data' => ['source' => strval($pessoa_objeto->id_pessoa) . $pessoa_objeto->nome,
+                                     'target' => strval($pessoa_objeto->id_tipo_objeto) . $pessoa_objeto->objeto,
+                                     'weight' => $pessoa_objeto->count_pessoa]
+                        ]);
+
+            if ($nodes->doesntContain('id' ,strval($pessoa_objeto->id_pessoa) . $pessoa_objeto->nome)){
+                $nodes->push(['data' => ['id'     => strval($pessoa_objeto->id_pessoa) . $pessoa_objeto->nome,
+                                         'label'  => $pessoa_objeto->nome,
+                                         'foto'   => $pessoa_objeto->caminho_servidor,
+                                         'RG_CPF' => $pessoa_objeto->RG_CPF,     
+                                         'size'   => 2,
+                                         'color'  => '#fc6203',
+                                         'type'   => 'pessoa']                    
+                            ]);
+            }
+        }
+
+        $subtitles = collect([
+            ['type'  => 'Objeto',
+             'color' => '#035efc'],
+            ['type'  => 'Pessoa',
+             'color' => '#fc6203'],
+        ]); 
+
+        $data['graph'] = ($nodes->merge($links));
+        $data['subtitles'] = $subtitles;
+
+        return $data;
+    }
+
+    public function plot_SNA_Pessoas_Armas(){
+        $query = DB::table('participacao_pessoas_fatos')
+                   ->select('ocorrencias_pessoas.id_ocorrencia', 'pessoas.nome', 'pessoas.RG_CPF', 'armas.id_arma', 'armas.tipo', 'fotos_pessoas.caminho_servidor')
+                   ->join('ocorrencias_pessoas', 'participacao_pessoas_fatos.id_ocorrencia_pessoa', 'ocorrencias_pessoas.id_ocorrencia_pessoa')
+                   ->join('ocorrencias_armas', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias_armas.id_ocorrencia')
+                   ->join('armas', 'ocorrencias_armas.id_arma', 'armas.id_arma')
+                   ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
+                   ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
+                   ->groupBy('ocorrencias_pessoas.id_ocorrencia', 'pessoas.id_pessoa')
+                   ->toSql();
+        
+        // $subquery = $this->getEloquentSqlWithBindings($query);
+
+        $pessoas_armas = collect(DB::select($query));
+        $objetos_aux   = collect(DB::select("select subquery.id_arma, subquery.id_ocorrencia, subquery.tipo 
+                                           from (" . $query . ") as subquery
+                                           GROUP by subquery.tipo, subquery.id_ocorrencia"));
+        
+        $count_objetos = $objetos_aux->countBy('tipo');
+
+        Log::debug($count_objetos);
+    }
+
+    public static function getEloquentSqlWithBindings($query){
+        return vsprintf(str_replace('?', '%s', $query->toSql()), collect($query->getBindings())->map(function ($binding) {
+            return is_numeric($binding) ? $binding : "'{$binding}'";
+    })->toArray());
+}
 }

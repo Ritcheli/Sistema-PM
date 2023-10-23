@@ -58,6 +58,17 @@ export function plotPessoasGraph(data){
                     },
                     'border-width': ' 2px',
                     'border-color': '#F7F7F7',
+                    "font-size": "4px",
+                    "text-valign": "center",
+                    "text-halign": "center",
+                    "text-outline-color": function(ele){
+                        return setColorNode(ele.cy().$().dcn().degree('#' + ele.data('id')));  
+                    },
+                    "text-outline-width": "0.8px",
+                    "color": "#fff",
+                    "overlay-padding": "6px",
+                    "z-index": "10",
+                    content: function(ele){ return ele.data('label'); },
                     width: function(ele){ return Math.max(0.5, Math.sqrt(ele.degree())) * 10; },
                     height: function(ele){ return Math.max(0.5, Math.sqrt(ele.degree())) * 10; }
                 },

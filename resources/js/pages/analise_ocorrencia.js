@@ -4,6 +4,7 @@ import cytoscapePopper from "cytoscape-popper";
 import { plotPessoasGraph } from "../SNAGraphs/pessoas_graph";
 import { plotPessoasFatosGraph } from "../SNAGraphs/pessoas_fatos_graph";
 import { plotPessoasGruposGraph } from "../SNAGraphs/pessoas_grupos_graph";
+import { plotPessoasObjetosGraph } from "../SNAGraphs/pessoas_objetos_graph";
 
 cytoscape.use(cytoscapePopper);
 
@@ -19,10 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
         showValueAsTags: true,
         hasOptionDescription: true,
         options: [
-          { label: 'Pessoas', value: 'Pessoas', description: 'Rede formada a partir da relação entre pessoas' },
-          { label: 'Pessoas - Objetos', value: 'Pessoas_Objetos', description: 'Rede formada a partir da relação entre pessoas e objetos envolvidos em roubos/furtos' },
-          { label: 'Pessoas - Fatos', value: 'Pessoas_Fatos', description: 'Rede formada a partir da relação entre pessoas e fatos de ocorrências' },
-          { label: 'Pessoas - Grupos', value: 'Pessoas_Grupos', description: 'Rede formada a partir da relação entre pessoas e grupos de ocorrências' }
+            { label: 'Pessoas', value: 'Pessoas', description: 'Rede formada a partir da relação entre pessoas' },
+            { label: 'Pessoas - Objetos', value: 'Pessoas_Objetos', description: 'Rede formada a partir da relação entre pessoas e objetos envolvidos em roubos/furtos' },
+            { label: 'Pessoas - Armas', value: 'Pessoas_Armas', description: 'Rede formada a partir da relação entre pessoas e armas' },
+            { label: 'Pessoas - Fatos', value: 'Pessoas_Fatos', description: 'Rede formada a partir da relação entre pessoas e fatos de ocorrências' },
+            { label: 'Pessoas - Grupos', value: 'Pessoas_Grupos', description: 'Rede formada a partir da relação entre pessoas e grupos de ocorrências' }
         ]
     });
 
@@ -62,20 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             return;
         }
-        if (this.value == 'Pessoas_Grupos'){
-            var options = [
-                { label: 'Geral', value: 'Geral' },
-                { label: 'Armas de fogo', value: 'Arma_de_Fogo' },
-                { label: 'Substancias', value: 'Substancias' }
-            ]
-
-            document.querySelector('#vs_grupo_ocorr').setOptions(options);
-
-            document.querySelector('#vs_grupo_ocorr').setValue('Geral');
-            document.querySelector('#vs_grupo_ocorr').removeAttribute('disabled');
-
-            return;
-        } 
         else {
             document.querySelector('#vs_grupo_ocorr').reset();
             document.querySelector('#vs_grupo_ocorr').setAttribute('disabled', 'true');
@@ -107,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
             $('#vs_rede_participacao-invalida').html('O campo participação é obrigatório');
             error = true;
         }
-        if ((tipo_rede == "Pessoas_Grupos" || tipo_rede == "Pessoas") && grupo_ocorr == ""){
+        if (tipo_rede == "Pessoas" && grupo_ocorr == ""){
             $('#vs_grupo_ocorr').addClass('is-invalid');
             $('#vs_grupo_ocorr-invalido').html('O campo grupo é obrigatório');
             error = true;
@@ -142,6 +130,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     if (tipo_rede == 'Pessoas_Grupos'){
                         plotPessoasGruposGraph(result);
+                    }
+                    if (tipo_rede == 'Pessoas_Objetos'){
+                        plotPessoasObjetosGraph(result);
+                    }
+                    if (tipo_rede == 'Pessoas_Armas'){
+                        
                     }
                 }
             }

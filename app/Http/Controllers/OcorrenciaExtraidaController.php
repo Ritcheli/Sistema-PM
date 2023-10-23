@@ -635,10 +635,10 @@ class OcorrenciaExtraidaController extends Controller
                     if ($participacoes[0] != ""){
                         foreach ($participacoes as $participacao){
                             $fato_participacao = explode(':', $participacao);
-                            
+
                             $fato = DB::table('fatos_ocorrencias')
                                       ->select('fatos_ocorrencias.id_fato_ocorrencia')
-                                      ->where('fatos_ocorrencias.natureza', trim($fato_participacao[1]))
+                                      ->where('fatos_ocorrencias.natureza', preg_replace('/\s+/', ' ',trim($fato_participacao[1])))
                                       ->first();
     
                             $participacao_pessoa_extraida_fato['id_ocorrencia_extraida_pessoa'] = $ocorrencia_extraida_pessoa->id_ocorrencia_extraida_pessoa;
