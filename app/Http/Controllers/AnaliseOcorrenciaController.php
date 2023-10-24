@@ -27,7 +27,13 @@ class AnaliseOcorrenciaController extends Controller
         } 
         if ($request['tipo_rede'] == 'Pessoas_Armas'){
             $data = $this->plot_SNA_Pessoas_Armas($request['participacao']);
+        }
+        if ($request['tipo_rede'] == 'Pessoas_Localizacao'){
+            $data = $this->plot_SNA_Pessoas_Localizacao($request['participacao']);
         } 
+        if ($request['tipo_rede'] == 'Pessoas_Drogas'){
+            $data = $this->plot_SNA_Pessoas_Drogas($request['participacao']);
+        }
 
         return response()->json($data, 200);
     }
@@ -392,9 +398,152 @@ class AnaliseOcorrenciaController extends Controller
         return $data;
     }
 
+    public function plot_SNA_Pessoas_Localizacao($participacao){
+        $nodes     = collect();
+        $links     = collect();
+
+        $query = DB::table('participacao_pessoas_fatos')
+                   ->select('ocorrencias.id_ocorrencia', 'grupos_fatos.id_grupo_fato', 'grupos_fatos.nome as grupo', 'pessoas.id_pessoa', 'pessoas.nome as pessoa', 'pessoas.RG_CPF',
+                            'fotos_pessoas.caminho_servidor', 'bairros.id_bairro', 'bairros.nome as bairro', 'cidades.nome as cidade')
+                   ->join('fatos_ocorrencias', 'participacao_pessoas_fatos.id_fato_ocorrencia', 'fatos_ocorrencias.id_fato_ocorrencia')
+                   ->join('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
+                   ->join('ocorrencias_pessoas', 'participacao_pessoas_fatos.id_ocorrencia_pessoa', 'ocorrencias_pessoas.id_ocorrencia_pessoa')
+                   ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
+                   ->join('ocorrencias', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias.id_ocorrencia')
+                   ->join('bairros', 'ocorrencias.id_bairro', 'bairros.id_bairro')
+                   ->join('cidades', 'bairros.id_cidade', 'cidades.id_cidade')
+                   ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
+                   ->groupBy('ocorrencias.id_ocorrencia', 'pessoas.id_pessoa', 'bairros.id_bairro')
+                   ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
+                   ->whereIn('grupos_fatos.nome', ['Furto', 'Roubo']);
+
+        $subquery = $this->getEloquentSqlWithBindings($query);
+        
+        $pessoas_localizacao = collect(DB::select('select subquery.id_pessoa, subquery.pessoa, subquery.RG_CPF, subquery.caminho_servidor, subquery.id_bairro, subquery.bairro, count(*) as count_pessoa 
+                                                   from (' . $subquery . ') as subquery
+                                                   group by subquery.id_pessoa, subquery.id_bairro'));
+        
+        $localizacao = collect(DB::select('select subquery.id_ocorrencia, subquery.id_pessoa, subquery.pessoa, subquery.id_bairro, subquery.bairro, subquery.cidade 
+                                           from (' . $subquery . ') as subquery
+                                           group by subquery.id_ocorrencia, subquery.id_bairro'));
+
+        $count_localizacao  = $localizacao->countBy('id_bairro');
+        $unique_localizacao = $localizacao->unique('id_bairro');
+
+        foreach ($unique_localizacao as $unique_local){
+            $nodes->push(['data' => ['id'     => strval($unique_local->id_bairro) . strval($unique_local->bairro),
+                                     'label'  => $unique_local->bairro,
+                                     'cidade' => $unique_local->cidade,
+                                     'size'   => $count_localizacao[$unique_local->id_bairro],
+                                     'color'  => '#035efc',
+                                     'type'   => 'localizacao']
+                        ]);
+        }
+
+        foreach ($pessoas_localizacao as $pessoa_localizacao){ 
+            $links->push(['data' => ['source' => strval($pessoa_localizacao->id_pessoa) . $pessoa_localizacao->pessoa,
+                                     'target' => strval($pessoa_localizacao->id_bairro) . strval($pessoa_localizacao->bairro),
+                                     'weight' => $pessoa_localizacao->count_pessoa]
+                        ]);
+
+            if ($nodes->doesntContain('data.id' , strval($pessoa_localizacao->id_pessoa) . $pessoa_localizacao->pessoa)){
+                $nodes->push(['data' => ['id'     => strval($pessoa_localizacao->id_pessoa) . $pessoa_localizacao->pessoa,
+                                         'label'  => $pessoa_localizacao->pessoa,
+                                         'foto'   => $pessoa_localizacao->caminho_servidor,
+                                         'RG_CPF' => $pessoa_localizacao->RG_CPF,     
+                                         'size'   => 2,
+                                         'color'  => '#fc6203',
+                                         'type'   => 'pessoa']                    
+                            ]);
+            }
+        }
+
+        $subtitles = collect([
+            ['type'  => 'Localização',
+             'color' => '#035efc'],
+            ['type'  => 'Pessoa',
+             'color' => '#fc6203'],
+        ]); 
+
+        $data['graph'] = ($nodes->merge($links));
+        $data['subtitles'] = $subtitles;
+
+        return $data;
+    }
+
+    public function plot_SNA_Pessoas_Drogas($participacao){
+        $nodes     = collect();
+        $links     = collect();
+
+        $query = DB::table('ocorrencias_pessoas')
+                   ->select('ocorrencias_pessoas.id_ocorrencia', 'drogas.id_droga', 'drogas.tipo', 'pessoas.id_pessoa', 'pessoas.nome', 'pessoas.RG_CPF', 'fotos_pessoas.caminho_servidor')
+                   ->join('ocorrencias_drogas', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias_drogas.id_ocorrencia')
+                   ->join('drogas', 'ocorrencias_drogas.id_droga', 'drogas.id_droga')
+                   ->join('participacao_pessoas_fatos', 'ocorrencias_pessoas.id_ocorrencia_pessoa', 'participacao_pessoas_fatos.id_ocorrencia_pessoa')
+                   ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
+                   ->join('fatos_ocorrencias', 'participacao_pessoas_fatos.id_fato_ocorrencia', 'fatos_ocorrencias.id_fato_ocorrencia')
+                   ->join('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
+                   ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
+                   ->where('grupos_fatos.nome', 'Drogas')
+                   ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
+                   ->groupBy('ocorrencias_pessoas.id_ocorrencia', 'drogas.id_droga', 'pessoas.id_pessoa');
+
+        $subquery = $this->getEloquentSqlWithBindings($query);
+
+        $pessoas_drogas = collect(DB::select('select subquery.id_droga, subquery.tipo, subquery.id_pessoa, subquery.nome, subquery.RG_CPF, subquery.caminho_servidor, count(*) as count_pessoa
+                                              from (' . $subquery . ') as subquery
+                                              group by subquery.id_droga, subquery.id_pessoa'));
+
+        $drogas = collect(DB::select('select subquery.id_droga, subquery.tipo, subquery.id_ocorrencia
+                                      from (' . $subquery . ') as subquery
+                                      group by subquery.id_droga, subquery.id_ocorrencia'));
+
+        $count_drogas  = $drogas->countBy('id_droga');
+        $unique_drogas = $drogas->unique('id_droga');
+
+        foreach ($unique_drogas as $unique_droga){
+            $nodes->push(['data' => ['id'     => strval($unique_droga->id_droga) . strval($unique_droga->tipo),
+                                     'label'  => $unique_droga->tipo,
+                                     'size'   => $count_drogas[$unique_droga->id_droga],
+                                     'color'  => '#035efc',
+                                     'type'   => 'droga']
+                        ]);
+        }
+
+        foreach ($pessoas_drogas as $pessoa_droga){ 
+            $links->push(['data' => ['source' => strval($pessoa_droga->id_pessoa) . $pessoa_droga->nome,
+                                     'target' => strval($pessoa_droga->id_droga) . strval($pessoa_droga->tipo),
+                                     'weight' => $pessoa_droga->count_pessoa]
+                        ]);
+
+            if ($nodes->doesntContain('data.id' , strval($pessoa_droga->id_pessoa) . $pessoa_droga->nome)){
+                $nodes->push(['data' => ['id'     => strval($pessoa_droga->id_pessoa) . $pessoa_droga->nome,
+                                         'label'  => $pessoa_droga->nome,
+                                         'foto'   => $pessoa_droga->caminho_servidor,
+                                         'RG_CPF' => $pessoa_droga->RG_CPF,     
+                                         'size'   => 2,
+                                         'color'  => '#fc6203',
+                                         'type'   => 'pessoa']                    
+                            ]);
+            }
+        }
+
+        $subtitles = collect([
+            ['type'  => 'Droga',
+             'color' => '#035efc'],
+            ['type'  => 'Pessoa',
+             'color' => '#fc6203'],
+        ]); 
+
+        $data['graph'] = ($nodes->merge($links));
+        $data['subtitles'] = $subtitles;
+
+        return $data;
+    }
+
     public static function getEloquentSqlWithBindings($query){
         return vsprintf(str_replace('?', '%s', $query->toSql()), collect($query->getBindings())->map(function ($binding) {
             return is_numeric($binding) ? $binding : "'{$binding}'";
-    })->toArray());
-}
+        })->toArray());
+    }
 }

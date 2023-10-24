@@ -6,6 +6,8 @@ import { plotPessoasFatosGraph } from "../SNAGraphs/pessoas_fatos_graph";
 import { plotPessoasGruposGraph } from "../SNAGraphs/pessoas_grupos_graph";
 import { plotPessoasObjetosGraph } from "../SNAGraphs/pessoas_objetos_graph";
 import { plotPessoaArmaGraph } from "../SNAGraphs/pessoas_armas_graph";
+import { plotPessoasLocalizacaosGraph } from "../SNAGraphs/pessoas_localizacao_graph";
+import { plotPessoasDrogasGraph } from "../SNAGraphs/pessoas_drogas_graph";
 
 cytoscape.use(cytoscapePopper);
 
@@ -22,10 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
         hasOptionDescription: true,
         options: [
             { label: 'Pessoas', value: 'Pessoas', description: 'Rede formada a partir da relação entre pessoas' },
-            { label: 'Pessoas - Objetos', value: 'Pessoas_Objetos', description: 'Rede formada a partir da relação entre pessoas e objetos envolvidos em roubos/furtos' },
             { label: 'Pessoas - Armas', value: 'Pessoas_Armas', description: 'Rede formada a partir da relação entre pessoas e armas' },
+            { label: 'Pessoas - Drogas', value: 'Pessoas_Drogas', description: 'Rede formada a partir da relação entre pessoas e substâncias ilícitas apreendidas' },
             { label: 'Pessoas - Fatos', value: 'Pessoas_Fatos', description: 'Rede formada a partir da relação entre pessoas e fatos de ocorrências' },
-            { label: 'Pessoas - Grupos', value: 'Pessoas_Grupos', description: 'Rede formada a partir da relação entre pessoas e grupos de ocorrências' }
+            { label: 'Pessoas - Grupos', value: 'Pessoas_Grupos', description: 'Rede formada a partir da relação entre pessoas e grupos de ocorrências' },
+            { label: 'Pessoas - Localização', value: 'Pessoas_Localizacao', description: 'Rede formada a partir da relação entre pessoas e a localização onde as ocorrências de furto e roubo aconteceram' },
+            { label: 'Pessoas - Objetos', value: 'Pessoas_Objetos', description: 'Rede formada a partir da relação entre pessoas e objetos envolvidos em roubos/furtos' }
         ]
     });
 
@@ -137,6 +141,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     if (tipo_rede == 'Pessoas_Armas'){
                         plotPessoaArmaGraph(result);
+                    }
+                    if (tipo_rede == 'Pessoas_Localizacao'){
+                        plotPessoasLocalizacaosGraph(result);
+                    }
+                    if (tipo_rede == 'Pessoas_Drogas'){
+                        plotPessoasDrogasGraph(result);
                     }
                 }
             }

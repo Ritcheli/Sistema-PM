@@ -554,9 +554,9 @@ class OcorrenciaExtraidaController extends Controller
 
                 # Endereço da ocorrência extraída
 
-                $dados_bairro['endereco_bairro'] = $value->endereco->endereco_bairro;
-                $dados_cidade['endereco_cidade'] = $value->endereco->endereco_cidade;
-                $dados_estado['endereco_estado'] = $value->endereco->endereco_estado;
+                $dados_bairro['endereco_bairro'] = preg_replace('/\s+/', ' ', $value->endereco->endereco_bairro);
+                $dados_cidade['endereco_cidade'] = preg_replace('/\s+/', ' ', $value->endereco->endereco_cidade);
+                $dados_estado['endereco_estado'] = preg_replace('/\s+/', ' ', $value->endereco->endereco_estado);
 
                 $dados_ocorrencia['id_bairro'] = (new OcorrenciaController)->salvar_Endereco($dados_estado, $dados_cidade, $dados_bairro);
             
