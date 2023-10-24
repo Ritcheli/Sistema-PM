@@ -5,6 +5,7 @@ import { plotPessoasGraph } from "../SNAGraphs/pessoas_graph";
 import { plotPessoasFatosGraph } from "../SNAGraphs/pessoas_fatos_graph";
 import { plotPessoasGruposGraph } from "../SNAGraphs/pessoas_grupos_graph";
 import { plotPessoasObjetosGraph } from "../SNAGraphs/pessoas_objetos_graph";
+import { plotPessoaArmaGraph } from "../SNAGraphs/pessoas_armas_graph";
 
 cytoscape.use(cytoscapePopper);
 
@@ -135,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         plotPessoasObjetosGraph(result);
                     }
                     if (tipo_rede == 'Pessoas_Armas'){
-                        
+                        plotPessoaArmaGraph(result);
                     }
                 }
             }

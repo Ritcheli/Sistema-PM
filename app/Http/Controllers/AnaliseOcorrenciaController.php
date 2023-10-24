@@ -154,7 +154,7 @@ class AnaliseOcorrenciaController extends Controller
                                      'weight' => $pessoa_fato->count_pessoa]
                         ]);
 
-            if ($nodes->doesntContain('id' ,strval($pessoa_fato->id_pessoa) . $pessoa_fato->nome)){
+            if ($nodes->doesntContain('data.id' ,strval($pessoa_fato->id_pessoa) . $pessoa_fato->nome)){
                 $nodes->push(['data' => ['id'     => strval($pessoa_fato->id_pessoa) . $pessoa_fato->nome,
                                          'label'  => $pessoa_fato->nome,
                                          'foto'   => $pessoa_fato->caminho_servidor,
@@ -225,7 +225,7 @@ class AnaliseOcorrenciaController extends Controller
                                      'weight' => $pessoa_grupo->count_pessoa]
                         ]);
 
-            if ($nodes->doesntContain('id' ,strval($pessoa_grupo->id_pessoa) . $pessoa_grupo->pessoa)){
+            if ($nodes->doesntContain('data.id' ,strval($pessoa_grupo->id_pessoa) . $pessoa_grupo->pessoa)){
                 $nodes->push(['data' => ['id'     => strval($pessoa_grupo->id_pessoa) . $pessoa_grupo->pessoa,
                                          'label'  => $pessoa_grupo->pessoa,
                                          'foto'   => $pessoa_grupo->caminho_servidor,
@@ -299,7 +299,7 @@ class AnaliseOcorrenciaController extends Controller
                                      'weight' => $pessoa_objeto->count_pessoa]
                         ]);
 
-            if ($nodes->doesntContain('id' ,strval($pessoa_objeto->id_pessoa) . $pessoa_objeto->nome)){
+            if ($nodes->doesntContain('data.id' ,strval($pessoa_objeto->id_pessoa) . $pessoa_objeto->nome)){
                 $nodes->push(['data' => ['id'     => strval($pessoa_objeto->id_pessoa) . $pessoa_objeto->nome,
                                          'label'  => $pessoa_objeto->nome,
                                          'foto'   => $pessoa_objeto->caminho_servidor,
@@ -324,27 +324,72 @@ class AnaliseOcorrenciaController extends Controller
         return $data;
     }
 
-    public function plot_SNA_Pessoas_Armas(){
+    public function plot_SNA_Pessoas_Armas($participacao){
+        $nodes     = collect();
+        $links     = collect();
+
         $query = DB::table('participacao_pessoas_fatos')
-                   ->select('ocorrencias_pessoas.id_ocorrencia', 'pessoas.nome', 'pessoas.RG_CPF', 'armas.id_arma', 'armas.tipo', 'fotos_pessoas.caminho_servidor')
+                   ->select('ocorrencias_pessoas.id_ocorrencia', 'pessoas.id_pessoa', 'pessoas.nome', 'pessoas.RG_CPF', 'armas.id_arma', 'armas.tipo', 'fotos_pessoas.caminho_servidor')
                    ->join('ocorrencias_pessoas', 'participacao_pessoas_fatos.id_ocorrencia_pessoa', 'ocorrencias_pessoas.id_ocorrencia_pessoa')
                    ->join('ocorrencias_armas', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias_armas.id_ocorrencia')
                    ->join('armas', 'ocorrencias_armas.id_arma', 'armas.id_arma')
                    ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
                    ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
                    ->groupBy('ocorrencias_pessoas.id_ocorrencia', 'pessoas.id_pessoa')
-                   ->toSql();
+                   ->whereIn('participacao_pessoas_fatos.participacao', $participacao);
         
-        // $subquery = $this->getEloquentSqlWithBindings($query);
+        $subquery = $this->getEloquentSqlWithBindings($query);
 
-        $pessoas_armas = collect(DB::select($query));
-        $objetos_aux   = collect(DB::select("select subquery.id_arma, subquery.id_ocorrencia, subquery.tipo 
-                                           from (" . $query . ") as subquery
-                                           GROUP by subquery.tipo, subquery.id_ocorrencia"));
+        $pessoas_armas = collect(DB::select("select subquery.id_pessoa, subquery.nome, subquery.id_arma, subquery.tipo, subquery.caminho_servidor, subquery.RG_CPF,
+                                                    subquery.id_ocorrencia, count(*) count_pessoa 
+                                             from (" . $subquery . ") as subquery
+                                             group by subquery.tipo, subquery.nome"));
+
+        $armas_aux = collect(DB::select("select subquery.id_arma, subquery.id_ocorrencia, subquery.tipo 
+                                         from (" . $subquery . ") as subquery
+                                         GROUP by subquery.tipo, subquery.id_ocorrencia"));
         
-        $count_objetos = $objetos_aux->countBy('tipo');
+        $count_armas  = $armas_aux->countBy('tipo');
+        $unique_armas = $pessoas_armas->unique('tipo');
+        
+        foreach ($unique_armas as $unique_arma){
+            $nodes->push(['data' => ['id'    => strval($unique_arma->tipo),
+                                     'label' => $unique_arma->tipo,
+                                     'size'  => $count_armas[$unique_arma->tipo],
+                                     'color' => '#035efc',
+                                     'type'  => 'arma']
+                        ]);
+        }
 
-        Log::debug($count_objetos);
+        foreach ($pessoas_armas as $pessoa_arma){ 
+            $links->push(['data' => ['source' => strval($pessoa_arma->id_pessoa) . $pessoa_arma->nome,
+                                     'target' => $pessoa_arma->tipo,
+                                     'weight' => $pessoa_arma->count_pessoa]
+                        ]);
+
+            if ($nodes->doesntContain('data.id' , strval($pessoa_arma->id_pessoa) . $pessoa_arma->nome)){
+                $nodes->push(['data' => ['id'     => strval($pessoa_arma->id_pessoa) . $pessoa_arma->nome,
+                                         'label'  => $pessoa_arma->nome,
+                                         'foto'   => $pessoa_arma->caminho_servidor,
+                                         'RG_CPF' => $pessoa_arma->RG_CPF,     
+                                         'size'   => 2,
+                                         'color'  => '#fc6203',
+                                         'type'   => 'pessoa']                    
+                            ]);
+            }
+        }
+
+        $subtitles = collect([
+            ['type'  => 'Arma',
+             'color' => '#035efc'],
+            ['type'  => 'Pessoa',
+             'color' => '#fc6203'],
+        ]); 
+
+        $data['graph'] = ($nodes->merge($links));
+        $data['subtitles'] = $subtitles;
+
+        return $data;
     }
 
     public static function getEloquentSqlWithBindings($query){
