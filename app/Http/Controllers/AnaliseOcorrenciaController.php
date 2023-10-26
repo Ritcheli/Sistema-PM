@@ -165,7 +165,7 @@ class AnaliseOcorrenciaController extends Controller
                                          'label'  => $pessoa_fato->nome,
                                          'foto'   => $pessoa_fato->caminho_servidor,
                                          'RG_CPF' => $pessoa_fato->RG_CPF,     
-                                         'size'   => 2,
+                                         'size'   => 1.5,
                                          'color'  => '#fc6203',
                                          'type'   => 'pessoa']                    
                             ]);
@@ -181,6 +181,10 @@ class AnaliseOcorrenciaController extends Controller
 
         $data['graph'] = ($nodes->merge($links));
         $data['subtitles'] = $subtitles;
+        $data['values_to_normalize'] = collect([
+            'max_value' => $nodes->max('data.size'),
+            'min_value' => $nodes->min('data.size')
+        ]);
 
         return $data;
     }
@@ -236,7 +240,7 @@ class AnaliseOcorrenciaController extends Controller
                                          'label'  => $pessoa_grupo->pessoa,
                                          'foto'   => $pessoa_grupo->caminho_servidor,
                                          'RG_CPF' => $pessoa_grupo->RG_CPF,     
-                                         'size'   => 2,
+                                         'size'   => 1.5,
                                          'color'  => '#fc6203',
                                          'type'   => 'pessoa']                    
                             ]);
@@ -252,6 +256,10 @@ class AnaliseOcorrenciaController extends Controller
 
         $data['graph'] = ($nodes->merge($links));
         $data['subtitles'] = $subtitles;
+        $data['values_to_normalize'] = collect([
+            'max_value' => $nodes->max('data.size'),
+            'min_value' => $nodes->min('data.size')
+        ]);
 
         return $data;
     }
@@ -310,7 +318,7 @@ class AnaliseOcorrenciaController extends Controller
                                          'label'  => $pessoa_objeto->nome,
                                          'foto'   => $pessoa_objeto->caminho_servidor,
                                          'RG_CPF' => $pessoa_objeto->RG_CPF,     
-                                         'size'   => 2,
+                                         'size'   => 1.5,
                                          'color'  => '#fc6203',
                                          'type'   => 'pessoa']                    
                             ]);
@@ -326,6 +334,10 @@ class AnaliseOcorrenciaController extends Controller
 
         $data['graph'] = ($nodes->merge($links));
         $data['subtitles'] = $subtitles;
+        $data['values_to_normalize'] = collect([
+            'max_value' => $nodes->max('data.size'),
+            'min_value' => $nodes->min('data.size')
+        ]);
 
         return $data;
     }
@@ -378,7 +390,7 @@ class AnaliseOcorrenciaController extends Controller
                                          'label'  => $pessoa_arma->nome,
                                          'foto'   => $pessoa_arma->caminho_servidor,
                                          'RG_CPF' => $pessoa_arma->RG_CPF,     
-                                         'size'   => 2,
+                                         'size'   => 1.5,
                                          'color'  => '#fc6203',
                                          'type'   => 'pessoa']                    
                             ]);
@@ -394,6 +406,10 @@ class AnaliseOcorrenciaController extends Controller
 
         $data['graph'] = ($nodes->merge($links));
         $data['subtitles'] = $subtitles;
+        $data['values_to_normalize'] = collect([
+            'max_value' => $nodes->max('data.size'),
+            'min_value' => $nodes->min('data.size')
+        ]);
 
         return $data;
     }
@@ -451,7 +467,7 @@ class AnaliseOcorrenciaController extends Controller
                                          'label'  => $pessoa_localizacao->pessoa,
                                          'foto'   => $pessoa_localizacao->caminho_servidor,
                                          'RG_CPF' => $pessoa_localizacao->RG_CPF,     
-                                         'size'   => 2,
+                                         'size'   => 1.5,
                                          'color'  => '#fc6203',
                                          'type'   => 'pessoa']                    
                             ]);
@@ -467,6 +483,10 @@ class AnaliseOcorrenciaController extends Controller
 
         $data['graph'] = ($nodes->merge($links));
         $data['subtitles'] = $subtitles;
+        $data['values_to_normalize'] = collect([
+            'max_value' => $nodes->max('data.size'),
+            'min_value' => $nodes->min('data.size')
+        ]);
 
         return $data;
     }
@@ -521,7 +541,7 @@ class AnaliseOcorrenciaController extends Controller
                                          'label'  => $pessoa_droga->nome,
                                          'foto'   => $pessoa_droga->caminho_servidor,
                                          'RG_CPF' => $pessoa_droga->RG_CPF,     
-                                         'size'   => 2,
+                                         'size'   => 1.5,
                                          'color'  => '#fc6203',
                                          'type'   => 'pessoa']                    
                             ]);
@@ -537,6 +557,10 @@ class AnaliseOcorrenciaController extends Controller
 
         $data['graph'] = ($nodes->merge($links));
         $data['subtitles'] = $subtitles;
+        $data['values_to_normalize'] = collect([
+            'max_value' => $nodes->max('data.size'),
+            'min_value' => $nodes->min('data.size')
+        ]);
 
         return $data;
     }

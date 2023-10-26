@@ -14,13 +14,40 @@ export function plotPessoasObjetosGraph(data){
             {
                 selector: 'node',
                 style: {
+                    "font-size": "0px",
+                    "text-valign": "center",
+                    "text-halign": "center",
+                    "text-outline-color": function(ele){
+                        return ele.data('color');  
+                    },
+                    "text-outline-width": "0.8px",
+                    "color": "#fff",
+                    "overlay-padding": "6px",
+                    "z-index": "10",
                     'background-color': function(ele){
                         return ele.data('color');  
                     },
                     'border-width': ' 2px',
                     'border-color': '#F7F7F7',
-                    width: function(ele){ return ele.data('size') * 10; },
-                    height: function(ele){ return ele.data('size') * 10; }
+                    content: function(ele){ return ele.data('label'); },
+                    width: function(ele){ 
+                        if (ele.data('type') == 'pessoa'){
+                            return ele.data('size')*10; 
+                        } else {
+                            let normalized_size = (ele.data('size') - data['values_to_normalize']['min_value'])/(data['values_to_normalize']['max_value'] - data['values_to_normalize']['min_value']);
+                        
+                            return Math.max(0.5, Math.sqrt(normalized_size)) * 50;  
+                        }
+                    },
+                    height: function(ele){ 
+                        if (ele.data('type') == 'pessoa'){
+                            return ele.data('size')*10; 
+                        } else {
+                            let normalized_size = (ele.data('size') - data['values_to_normalize']['min_value'])/(data['values_to_normalize']['max_value'] - data['values_to_normalize']['min_value']);
+
+                            return Math.max(0.5, Math.sqrt(normalized_size)) * 50; 
+                        }
+                    }
                 },
             },
         
@@ -139,4 +166,14 @@ export function plotPessoasObjetosGraph(data){
     });
 
     $('#legendas').removeAttr('hidden');
+
+    $(document).on('change', '#legend_switch', function (e) {
+        if (cy.elements('node').style('font-size') == '6px') {
+            cy.elements('node').style('font-size', '0');
+        } else {
+            cy.elements('node').style('font-size', '6px')
+        }     
+    });
+
+    $('#config').attr('hidden', false);
 }

@@ -106,3 +106,17 @@
 .modal {
     overflow-y:auto;
 }
+
+.custom-control-input:checked ~ .custom-control-label::before{
+    background: $primary-color;
+    border-color: $primary-color;
+}
+
+.custom-control-input:focus ~ .custom-control-label::before {
+    box-shadow: none;
+    outline: 0 none !important;
+}
+
+.custom-control-input:focus:not(:checked)~.custom-control-label::before {
+    border-color: #adb5bd;
+}

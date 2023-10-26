@@ -56,6 +56,46 @@
                         </div>
                     </div>
                 </div>
+                <div class="container-fluid CM config-SNA mb-0 bg-red" id="config" hidden>
+                    <div class="container">
+                        <div class="row pb-3 config-SNA-title">
+                            <strong> Configurações gerais</strong>
+                        </div>
+                        <div class="info-nodo-content">
+                            <div class="row row-subtitle">
+                                <div class="col-0">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="legend_switch">
+                                        <label class="custom-control-label" for="legend_switch"> Legendas </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="config-metricas" hidden>
+                            <div class="row pb-3 config-SNA-title mt-3">
+                                <strong> Métricas</strong>
+                            </div>
+                            <div class="info-nodo-content">
+                                <div class="row row-subtitle mb">
+                                    <div class="col-0">
+                                        <div class="custom-control custom-radio mb-1">
+                                            <input type="radio" id="DCN_radio" name="custom_radio" class="custom-control-input" checked>
+                                            <label class="custom-control-label" for="DCN_radio">Centralidade de grau</label>
+                                        </div>
+                                        <div class="custom-control custom-radio mb-1">
+                                            <input type="radio" id="BCN_radio" name="custom_radio" class="custom-control-input">
+                                            <label class="custom-control-label" for="BCN_radio">Centralidade de intermediação</label>
+                                        </div>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" id="CCN_radio" name="custom_radio" class="custom-control-input">
+                                            <label class="custom-control-label" for="CCN_radio">Centralidade de proximidade</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div id="cy" style="min-height: 600px" value="{{ URL::asset('') }}"> </div>
             </div>
         </div>

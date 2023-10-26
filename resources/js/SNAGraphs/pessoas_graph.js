@@ -1,8 +1,6 @@
 import cytoscape from "cytoscape";
 
-var color_palette = ['#FFEBEE', '#FFCDD2', '#EF9A9A', '#E57373', '#FF5252', '#F44336', '#D32F2F', '#c21e1e', '#891616', '#5d0f0f']
-
-// cytoscape.use(cytoscapePopper);
+var color_palette = ['#f7bcc5', '#ffb8bf', '#e38484', '#de6464', '#db5151', '#db4444', '#d62d2d', '#d41e1e', '#d10d0d', '#a30303']
 
 function between(x, min, max) {
     return (x >= min && x <= max);
@@ -54,23 +52,23 @@ export function plotPessoasGraph(data){
                 selector: 'node',
                 style: {
                     'background-color': function(ele){
-                        return setColorNode(ele.cy().$().dcn().degree('#' + ele.data('id')));  
+                        return setColorNode(calcDCNNode(ele));  
                     },
                     'border-width': ' 2px',
                     'border-color': '#F7F7F7',
-                    "font-size": "4px",
+                    "font-size": "0px",
                     "text-valign": "center",
                     "text-halign": "center",
                     "text-outline-color": function(ele){
-                        return setColorNode(ele.cy().$().dcn().degree('#' + ele.data('id')));  
+                        return setColorNode(calcDCNNode(ele));  
                     },
                     "text-outline-width": "0.8px",
                     "color": "#fff",
                     "overlay-padding": "6px",
                     "z-index": "10",
                     content: function(ele){ return ele.data('label'); },
-                    width: function(ele){ return Math.max(0.5, Math.sqrt(ele.degree())) * 10; },
-                    height: function(ele){ return Math.max(0.5, Math.sqrt(ele.degree())) * 10; }
+                    width: function(ele){ return Math.max(0.5, Math.sqrt(calcDCNNode(ele))) * 20; },
+                    height: function(ele){ return Math.max(0.5, Math.sqrt(calcDCNNode(ele))) * 20; }
                 },
             },
         
@@ -175,9 +173,69 @@ export function plotPessoasGraph(data){
                             <div class="color-palette-text"> + </div> 
                         </div>
                     </div> `)
-    
-    // console.log( 'degree of 197: ' + cy.$().dc({ root: '#197' }).degree );
-    // console.log( 'degree centrality normalized of 197: ' + cy.$().dcn().degree('#197') );
-    // console.log( 'closeness centrality of 197: ' + cy.$().ccn().closeness('#197') );
-    // console.log( 'betweenness centrality centrality of 197: ' + cy.$().bc().betweenness('#197') );
+
+    $(document).on('change', '#legend_switch', function (e) {
+        if (cy.elements('node').style('font-size') == '4px') {
+            cy.elements('node').style('font-size', '0');
+        } else {
+            cy.elements('node').style('font-size', '4px')
+        }     
+    });
+
+    $('#DCN_radio').on('click', function(){
+        let nodes = cy.nodes();
+        
+        nodes.forEach(function (ele){
+            ele.style('text-outline-color', setColorNode(calcDCNNode(ele)));
+            ele.style('background-color', setColorNode(calcDCNNode(ele)));
+            ele.style('width', Math.max(0.5, Math.sqrt(calcDCNNode(ele))) * 20);
+            ele.style('height', Math.max(0.5, Math.sqrt(calcDCNNode(ele))) * 20);
+        });
+    });
+
+    $('#BCN_radio').on('click', function(){
+        let nodes = cy.nodes();
+
+        nodes.forEach(function (ele){
+            ele.style('text-outline-color', setColorNode(calcBCNNode(ele)));
+            ele.style('background-color', setColorNode(calcBCNNode(ele)));
+            ele.style('width', Math.max(0.5, Math.sqrt(calcBCNNode(ele))) * 20);
+            ele.style('height', Math.max(0.5, Math.sqrt(calcBCNNode(ele))) * 20);
+        });
+    });
+
+    $('#CCN_radio').on('click', function(){
+        let nodes = cy.nodes();
+
+        nodes.forEach(function (ele){
+            ele.style('text-outline-color', setColorNode(calcCCNNode(ele)));
+            ele.style('background-color', setColorNode(calcCCNNode(ele)));
+            ele.style('width', Math.max(0.5, Math.sqrt(calcCCNNode(ele))) * 20);
+            ele.style('height', Math.max(0.5, Math.sqrt(calcCCNNode(ele))) * 20);
+        });
+    });
+
+    $(document).on('click', '#toggle-labels', function (e){
+        e.preventDefault();
+
+        nodes.forEach(function (ele){
+            ele.style('width', Math.max(0.5, Math.sqrt(calcDCNNode(ele))) * 50);
+            ele.style('height', Math.max(0.5, Math.sqrt(calcDCNNode(ele))) * 50);
+        });
+    });
+
+    $('#config').attr('hidden', false);
+    $('#config-metricas').attr('hidden', false);
+}
+
+function calcDCNNode(node){
+    return node.cy().$().dcn().degree('#' + node.data('id'));
+}
+
+function calcCCNNode(node){
+    return node.cy().$().ccn().closeness('#' + node.data('id'));
+}
+
+function calcBCNNode(node){
+    return node.cy().$().bc().betweennessNormalized('#' + + node.data('id'));
 }

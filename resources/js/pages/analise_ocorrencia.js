@@ -12,14 +12,13 @@ import { plotPessoasDrogasGraph } from "../SNAGraphs/pessoas_drogas_graph";
 cytoscape.use(cytoscapePopper);
 
 document.addEventListener('DOMContentLoaded', function() {
-
     VirtualSelect.init({ 
         ele: '#vs_rede_tipo',
         placeholder: 'Selecione o tipo da rede',
         noSearchResultsText: 'Nenhum resultado encontrado',
         searchPlaceholderText: 'Procurar...', 
         disableSelectAll: true,
-        zIndex: 100,
+        zIndex: 200,
         showValueAsTags: true,
         hasOptionDescription: true,
         options: [
@@ -39,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
         noSearchResultsText: 'Nenhum resultado encontrado',
         searchPlaceholderText: 'Procurar...', 
         showValueAsTags: true,
+        zIndex: 200,
         options: [
           { label: 'Apurar', value: 'Apurar' },
           { label: 'Autor', value: 'Autor' },
@@ -54,7 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
         placeholder: 'Selecione o grupo da ocorrência',
         noSearchResultsText: 'Nenhum resultado encontrado',
         searchPlaceholderText: 'Procurar...', 
-        showValueAsTags: true
+        showValueAsTags: true,
+        zIndex: 200,
     });
 
     $('#vs_rede_tipo').on('change', function() {
@@ -77,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     $('#plot_SNA_Graph').on('submit', function(e){
         e.preventDefault(); 
-
+        
         const url = $(this).attr('action');
         
         var tipo_rede               = $('#vs_rede_tipo').val();
@@ -111,6 +112,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         $('#legendas').attr('hidden', true);
+        $('#config').attr('hidden', true);
+        $('#config-metricas').attr('hidden', true);
+        $("#legend_switch").prop("checked", false);
 
         $.ajaxSetup({
             headers: {

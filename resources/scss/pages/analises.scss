@@ -19,14 +19,24 @@
     color: $gray-text-color;
 }
 
-.info-nodo-title{
+.info-nodo-title .config-SNA-title{
     font-size: 20px;
     letter-spacing: 1px;
 }
 
-.info-nodo-content{
+.info-nodo-content .config-SNA-content{
     font-size: 18px;
     font-weight: 500;
+}
+
+.container-fluid .CM .config-SNA{
+    position: absolute;
+    padding: 15px;
+    max-width: fit-content;
+    box-shadow: 5px 5px 8px -5px $shadow-color;
+    background: $gray-weak-color;
+    z-index: 100;
+    color: $gray-text-color;
 }
 
 .nodo-pessoa-img{
@@ -80,4 +90,9 @@
     margin-left: 5px;
     margin-right: 5px;
     font-size: 20px;
+}
+
+.card.config-radio-group{
+    background: $gray-weak-color;
+    width: 100%;
 }
