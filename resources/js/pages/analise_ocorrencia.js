@@ -58,6 +58,16 @@ document.addEventListener('DOMContentLoaded', function() {
         zIndex: 200,
     });
 
+    VirtualSelect.init({ 
+        ele: '#vs_search_in_graph',
+        search: true,
+        placeholder: 'Procurar',
+        noSearchResultsText: 'Nenhum resultado encontrado',
+        searchPlaceholderText: 'Procurar...', 
+        showValueAsTags: true,
+        zIndex: 200
+    });
+
     $('#vs_rede_tipo').on('change', function() {
         if (this.value == 'Pessoas'){
             var options = [
@@ -73,6 +83,18 @@ document.addEventListener('DOMContentLoaded', function() {
         else {
             document.querySelector('#vs_grupo_ocorr').reset();
             document.querySelector('#vs_grupo_ocorr').setAttribute('disabled', 'true');
+        }
+    });
+
+    $(".check-dropdown-menu").on("click", function(){
+        $(this).find(".dropdown-item-check").toggleClass("hidden");
+
+        if ($(this).attr('id') == 'check_menu_legenda'){
+            if ($(this).find(".dropdown-item-check").hasClass("hidden")){
+                $("#legendas").attr("hidden", true);
+            } else {
+                $("#legendas").attr("hidden", false);
+            }
         }
     });
 
@@ -111,10 +133,17 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        // Configurações dos menus de configuração da rede gerada
+        $("#navbar_SNA").removeClass("disabled");
+        $(".dropdown-item-check-start-inactive").addClass("hidden");
+        $(".dropdown-item-check-start-active").removeClass("hidden");
+        $('#check_menu_legenda').removeClass('disabled');
         $('#legendas').attr('hidden', true);
-        $('#config').attr('hidden', true);
-        $('#config-metricas').attr('hidden', true);
-        $("#legend_switch").prop("checked", false);
+        $('#fit_zoom').attr('hidden', false);
+
+        $('#cy').html("");
+
+        $('#cy').html('<div class="spinner-border text-success loading-spinner" role="status" id="loading-spinner-SNA"> </div>');
 
         $.ajaxSetup({
             headers: {
@@ -133,6 +162,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (result != ""){
                     if (tipo_rede == 'Pessoas'){
                         plotPessoasGraph(result);
+
+                        $('#check_menu_legenda').addClass('disabled');
+                        $('#check_menu_legenda').find('.dropdown-item-check').addClass('hidden');
                     }
                     if (tipo_rede == 'Pessoas_Fatos'){
                         plotPessoasFatosGraph(result);
@@ -152,6 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (tipo_rede == 'Pessoas_Drogas'){
                         plotPessoasDrogasGraph(result);
                     }
+                    $('#loading-spinner-SNA').attr('hidden', true);
                 }
             }
         });

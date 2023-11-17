@@ -39,8 +39,8 @@ class AnaliseOcorrenciaController extends Controller
     }
 
     public function plot_SNA_Pessoas($participacao, $grupo){
-        $nodes = collect();
-        $links = collect();
+        $nodes  = collect();
+        $links  = collect();
         $list_adicionados = array();
 
         $query = DB::table('ocorrencias_pessoas')
@@ -50,7 +50,8 @@ class AnaliseOcorrenciaController extends Controller
                    ->leftJoin('fatos_ocorrencias', 'participacao_pessoas_fatos.id_fato_ocorrencia', 'fatos_ocorrencias.id_fato_ocorrencia')
                    ->leftJoin('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
                    ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
-                   ->whereIn('participacao_pessoas_fatos.participacao', $participacao);
+                   ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
+                   ->orderBy('pessoas.nome');
 
         // Aplicação dos filtros de grupo
         if ($grupo == 'Furto_Roubo'){
@@ -79,7 +80,7 @@ class AnaliseOcorrenciaController extends Controller
                 array_push($list_adicionados, $ocorrencia->id_ocorrencia);
 
                 $relacoes = $ocorrencias->where('id_ocorrencia', $ocorrencia->id_ocorrencia);
-
+                
                 // Se houver mais de duas pessoas relacionadas ao mesmo BO executa este script
                 // Faz a iteração entre todos os integrantes de uma mesma ocorrência
                 if ($relacoes->count() > 2)
@@ -92,27 +93,92 @@ class AnaliseOcorrenciaController extends Controller
                         $result_permutacoes = $relacoes->crossJoin($relacoes_aux);   
 
                         // Alimenta o collection das arestas a partir da permutação dos dois valores collection
-                        foreach ($result_permutacoes as $result_permutacao)
-                        {
-                            $links->push(['data' => ['source' => $result_permutacao[1]->id_pessoa,
-                                                     'target' => $result_permutacao[0]->id_pessoa]]);
+                        foreach ($result_permutacoes as $result_permutacao){
+                            $element = $links->where('data.source', $result_permutacao[1]->id_pessoa)->where('data.target', $result_permutacao[0]->id_pessoa);
+
+                            Log::debug($element);
+
+                            if ((count($element) > 0)){
+                                $element = array_reverse($element->toArray());
+                                $source = data_get($element[0], 'data.source');
+                                $target = data_get($element[0], 'data.target');
+                                $weight = data_get($element[0], 'data.weight') + 1;
+
+                                // Filtrar a coleção para excluir o item com base nos valores de "source" e "target"
+                                $links = $links->filter(function ($item) use ($source, $target) {
+                                    return $item['data']['source'] !== $source || $item['data']['target'] !== $target;
+                                });
+
+                                $links->push(['data' => ['source' => $source,
+                                                        'target' => $target,
+                                                        'weight' => $weight]]); 
+                            } else {
+                                $links->push(['data' => ['source' => $result_permutacao[1]->id_pessoa,
+                                                         'target' => $result_permutacao[0]->id_pessoa,
+                                                         'weight' => 1]]);
+                            }
                         }
                     }
 
-                    $links->push(['data' => ['source' => $relacoes->first()->id_pessoa,
-                                             'target' => $relacoes->last()->id_pessoa]]);    
+                    Log::debug($element);
+                    $element = $links->where('data.source', $relacoes->first()->id_pessoa)->where('data.target', $relacoes->last()->id_pessoa);
+
+                    if (count($element) > 0){
+                        $element = array_reverse($element->toArray());
+                        $source = data_get($element[0], 'data.source');
+                        $target = data_get($element[0], 'data.target');
+                        $weight = data_get($element[0], 'data.weight') + 1;
+
+                        // Filtrar a coleção para excluir o item com base nos valores de "source" e "target"
+                        $links = $links->filter(function ($item) use ($source, $target) {
+                            return $item['data']['source'] !== $source || $item['data']['target'] !== $target;
+                        });
+
+                        $links->push(['data' => ['source' => $source,
+                                                 'target' => $target,
+                                                 'weight' => $weight]]); 
+                    } else {
+                        $links->push(['data' => ['source' => $relacoes->first()->id_pessoa,
+                                                 'target' => $relacoes->last()->id_pessoa,
+                                                 'weight' => 1]]);  
+                    }  
                 } 
                 // Caso somente haja duas pessoas em uma mesma ocorrência não há necessidade de se fazer uma permutação 
                 // entre os envolvidos
                 else if ($relacoes->count() == 2)
                 {
-                    $links->push(['data' => ['source' => $relacoes->first()->id_pessoa,
-                                             'target' => $relacoes->last()->id_pessoa]]);
+                    $element = $links->where('data.source', $relacoes->first()->id_pessoa)->where('data.target', $relacoes->last()->id_pessoa);
+
+                    if (count($element) > 0){
+                        $element = array_reverse($element->toArray());
+                        $source = data_get($element[0], 'data.source');
+                        $target = data_get($element[0], 'data.target');
+                        $weight = data_get($element[0], 'data.weight') + 1;
+
+                        // Filtrar a coleção para excluir o item com base nos valores de "source" e "target"
+                        $links = $links->filter(function ($item) use ($source, $target) {
+                            return $item['data']['source'] !== $source || $item['data']['target'] !== $target;
+                        });
+
+                        $links->push(['data' => ['source' => $source,
+                                                 'target' => $target,
+                                                 'weight' => $weight]]);  
+                    } else {
+                        $links->push(['data' => ['source' => $relacoes->first()->id_pessoa,
+                                                 'target' => $relacoes->last()->id_pessoa,
+                                                 'weight' => 1]]);  
+                    }
                 }
             }
         }
 
-        $data = ($nodes->merge($links));
+        $data['graph'] = ($nodes->merge($links));
+        $data['values_to_normalize'] = collect([
+            'max_value' => $links->max('data.weight'),
+            'min_value' => $links->min('data.weight')
+        ]);
+
+        Log::debug($links);
 
         return $data;
     }

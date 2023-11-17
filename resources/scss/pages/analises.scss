@@ -29,6 +29,26 @@
     font-weight: 500;
 }
 
+.fit-zoom{
+    z-index: 101;
+    text-align: center;
+    position: absolute;
+    font-size: 35px;
+    border-radius: $border-radius;
+    color: $gray-text-color;
+    height: 46px;
+    width: 46px;
+    transition: $tran-05;
+}
+
+.fit-zoom:hover{
+    background-color: #d7d7d7;
+    cursor: pointer;
+    transition: $tran-05;
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
 .container-fluid .CM .config-SNA{
     position: absolute;
     padding: 15px;
@@ -95,4 +115,137 @@
 .card.config-radio-group{
     background: $gray-weak-color;
     width: 100%;
+}
+
+.loading-spinner{
+    width: 5em;
+    height: 5em;
+    font-weight: 700;
+}
+
+.container-fluid.CM.plot-SNA-graph{
+    padding: 0;
+}
+
+.navbar.SNA-graph{
+    border-top-right-radius: $border_radius;
+    border-top-left-radius: $border_radius;
+    background: $sidebar-color;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.navbar-brand{
+    margin-right: 10px;
+}
+
+.navbar-brand.img-nav-brand{
+    width: 28px;
+}
+
+.nav-link.SNA-graph{
+    color: white;
+    font-size: 14px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    padding: 0;
+}
+
+.custom-control-sm.custom-radio.SNA-graph{
+    transform: scale(0.9) !important;
+    margin-left: -5px !important;
+}
+
+.nav-link.SNA-graph:hover{
+    background: $primary-color;
+    border-radius: $border-radius;
+    cursor: pointer;
+}
+
+.dropdown-item-check.hidden{
+    visibility: hidden;
+}
+
+.dropdown-item-check{
+    margin-right: 5px;
+    font-size: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    padding: 0px;
+    vertical-align: middle;
+}
+
+.btn-search-menu-SNA{
+    background-color: $primary-color-strong;
+    color: white;
+    border: solid 1px white;
+    box-shadow: none !important;
+}
+
+.btn-search-menu-SNA{
+    height: 35px;
+    font-size: 14px;
+    width: 150px;
+}
+
+.dropdown-item.SNA-graph{
+    text-wrap: nowrap;
+    font-size: 14px;
+    height: 30px;
+    display: flex;
+    vertical-align: middle;
+}
+
+.dropdown-item.SNA-graph:hover{
+    cursor: pointer;
+}
+
+.dropdown-item:hover{
+    background: $primary-color-weak;
+    color: white;
+    cursor: pointer;
+}
+
+.custom-control-label, .custom-control-label:hover{
+    cursor: pointer;
+}
+
+.custom-control.custom-radio.SNA-graph{
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.search-in-graph > div > div{
+    width: 250px;
+    font-size: 14px;
+    min-height: 0;
+    height: 35px;
+}
+
+.search-in-graph > div > div > .vscomp-value{
+    min-height: 24px !important;
+}
+
+.search-in-graph > div > div > .vscomp-clear-button{
+    margin-top: 0 !important;
+}
+
+.form-menu-search-SNA {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 23em;
+}
+
+.container-fluid .CM .info-tutorial{
+    position: absolute;
+    bottom: 0;
+    width: 300px;
+    z-index: 200;
+    background-color: $sidebar-color;
+    color: white;
+    opacity: 0.8;
+    padding: 10px;
 }

@@ -1,6 +1,9 @@
 import cytoscape from "cytoscape";
+import { highlight, unhighlight } from "./sna_graphs_functions";
 
-var color_palette = ['#f7bcc5', '#ffb8bf', '#e38484', '#de6464', '#db5151', '#db4444', '#d62d2d', '#d41e1e', '#d10d0d', '#a30303']
+var color_palette   = ['#f7bcc5', '#ffb8bf', '#e38484', '#de6464', '#db5151', '#db4444', '#d62d2d', '#d41e1e', '#d10d0d', '#a30303']
+var search_options  = [];
+var selected_metric = "#DCN_radio";
 
 function between(x, min, max) {
     return (x >= min && x <= max);
@@ -45,8 +48,8 @@ export function plotPessoasGraph(data){
     var cy = cytoscape({
         container: document.getElementById('cy'), // container to render in
 
-        elements: data,
-        
+        elements: data['graph'],
+
         style: [ // the stylesheet for the graph
             {
                 selector: 'node',
@@ -56,7 +59,7 @@ export function plotPessoasGraph(data){
                     },
                     'border-width': ' 2px',
                     'border-color': '#F7F7F7',
-                    "font-size": "0px",
+                    "font-size": "0",
                     "text-valign": "center",
                     "text-halign": "center",
                     "text-outline-color": function(ele){
@@ -71,91 +74,198 @@ export function plotPessoasGraph(data){
                     height: function(ele){ return Math.max(0.5, Math.sqrt(calcDCNNode(ele))) * 20; }
                 },
             },
-        
             {
-            selector: 'edge',
-            style: {
-                'width': 1,
-                'line-color': '#ccc',
-                'curve-style': 'bezier'
-            }
+                selector: 'node.faded',
+                style: {
+                    opacity: 0.08,
+                    events: 'no'
+                },
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'width': function (ele) {
+                        let normalized_weight = (ele.data('weight') - data['values_to_normalize']['min_value'])/(data['values_to_normalize']['max_value'] - data['values_to_normalize']['min_value']);
+
+                        return Math.max(0.3, Math.sqrt(normalized_weight)) * 4; 
+                    },
+                    'line-color': '#ccc',
+                    'curve-style': 'bezier'
+                }
+            }, 
+            {
+                selector: 'edge.faded',
+                style: {
+                    opacity: 0.06,
+                    events: 'no'
+                }
+            },
+            {
+                selector: '.hidden',
+                style: {
+                    display: 'none',
+                }
             }
         ],
-        
-        layout: {
-            name: 'cose'
-        },
     });
 
-    cy.center();
+    // Aplicação do layout cose e atualização da posição original dos nodos no grafo atual //
+    const layout = cy.layout({
+        name: 'cose',
+        padding: 50
+    });
+
+    layout.run();
+
+    layout.promiseOn('layoutstop').then(function() {
+        cy.elements().nodes().forEach(n => {
+            n.data('orgPos', {
+                x: n.position('x'),
+                y: n.position('y')
+            });
+        });
+    });
+    // ----------------------------------------------------------------------------------- //
 
     cy.elements().unbind("mouseover");
     cy.elements().bind("mouseover", (event) => {
         if (event.target.group() == 'nodes'){
-        event.target.popperRefObj = event.target.popper({
-            content: () => {
-            let content = document.createElement("div");
-            let foto;
+            event.target.popperRefObj = event.target.popper({
+                content: () => {
+                    let content = document.createElement("div");
+                    let foto;
 
-            content.classList.add("popper-div");
+                    content.classList.add("popper-div");
 
-            if (event.target.data('foto') != null){
-                foto = 'uploads/fotos_pessoas/' + event.target.data('foto').substring(event.target.data('foto').lastIndexOf('/') + 1);
-            } else {
-                foto = 'img/no_image.png'; 
-            }
+                    if (event.target.data('foto') != null){
+                        foto = 'uploads/fotos_pessoas/' + event.target.data('foto').substring(event.target.data('foto').lastIndexOf('/') + 1);
+                    } else {
+                        foto = 'img/no_image.png'; 
+                    }
 
-            content.innerHTML = `<div class="container">
-                                    <div class="row">
-                                        <div class="col m-0 pl-0" style="max-width:135px">
-                                            <img src="` + public_path + foto +  `" alt="" class="nodo-pessoa-img">
-                                        </div>
-                                        <div class="col">
-                                            <div class="row"> 
-                                                <div class="nodo-pessoa-info"> 
-                                                    <strong>
-                                                        Nome
-                                                    </strong>
+                    content.innerHTML = `<div class="container">
+                                            <div class="row">
+                                                <div class="col m-0 pl-0" style="max-width:135px">
+                                                    <img src="` + public_path + foto +  `" alt="" class="nodo-pessoa-img">
                                                 </div>
+                                                <div class="col">
+                                                    <div class="row"> 
+                                                        <div class="nodo-pessoa-info"> 
+                                                            <strong>
+                                                                Nome
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row pb-2"> 
+                                                        <div class="nodo-pessoa-info"> 
+                                                            ` + event.target.data('label') +  ` 
+                                                        </div>
+                                                    </div>
+                                                    <div class="row"> 
+                                                        <div class="nodo-pessoa-info"> 
+                                                            <strong>
+                                                                RG/CPF
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row"> 
+                                                        <div class="nodo-pessoa-info"> 
+                                                            ` + event.target.data('RG_CPF') + ` 
+                                                        </div>
+                                                    </div>
+                                                </div>       
                                             </div>
-                                            <div class="row pb-2"> 
-                                                <div class="nodo-pessoa-info"> 
-                                                    ` + event.target.data('label') +  ` 
-                                                </div>
-                                            </div>
-                                            <div class="row"> 
-                                                <div class="nodo-pessoa-info"> 
-                                                    <strong>
-                                                        RG/CPF
-                                                    </strong>
-                                                </div>
-                                            </div>
-                                            <div class="row"> 
-                                                <div class="nodo-pessoa-info"> 
-                                                    ` + event.target.data('RG_CPF') + ` 
-                                                </div>
-                                            </div>
-                                        </div>       
-                                    </div>
-                                </div>`;
+                                        </div>`;
 
-            document.body.appendChild(content);
+                    document.body.appendChild(content);
 
-            return content;
-            },
-        });
+                    return content;
+                },
+            });
+
+            $('html,body').css('cursor', 'pointer');
+        };
+        if (event.target.group() == 'edges'){
+            event.target.popperRefObj = event.target.popper({
+                content: () => {
+                    let content = document.createElement("div");
+
+                    content.classList.add("popper-div");
+
+                    content.innerHTML = `<div class="container m-0">
+                                                <div class="row"> 
+                                                    <div class="col text-center mb-1">
+                                                        <div class="nodo-fato"> 
+                                                            <strong>` 
+                                                                + cy.nodes('#' + event.target.data('target')).data('label') +  ` - `  
+                                                                + cy.nodes('#' + event.target.data('source')).data('label') + 
+                                                            `</strong>
+                                                        </div>
+                                                    </div>
+                                                </div>  
+                                                <div class="row"> 
+                                                    <div class="col text-center">
+                                                        <div class="nodo-fato"> 
+                                                            <strong>` + event.target.data('weight') + `</strong> ocorrência(s) registrada(s)
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                            </div>`;
+                    
+                    document.body.appendChild(content);
+
+                    return content;
+                },
+            });
         }
     });
 
     cy.elements().unbind("mouseout");
     cy.elements().bind("mouseout", (event) => {
-        if (event.target.group() == 'nodes'){
         if (event.target.popper) {
             event.target.popperRefObj.state.elements.popper.remove();
             event.target.popperRefObj.destroy();
         }
+
+        $('html,body').css('cursor', 'default');
+    });
+
+    cy.on('tap', e => {
+        var node = e.target;
+
+        if (e.target === cy ){
+            unhighlight(cy);
+        } else {
+            if (e.target.group() === 'nodes') {
+                highlight(node, cy);
+            }
         }
     });
+
+    // Alimentação dos dados referentes a busca dos nodos e trigger do evento tap
+    search_options = [];
+
+    $('#menu_search_in_graph').off('submit');
+    $('#menu_search_in_graph').on("submit", e => {
+        e.preventDefault();
+
+        cy.$id($('#vs_search_in_graph').val()).emit('tap');
+    })
+
+    $('#vs_search_in_graph').off('change');
+    $('#vs_search_in_graph').on('change', function() {
+        cy.$id($('#vs_search_in_graph').val()).emit('tap');
+    });
+
+    cy.elements('node').forEach( e => {
+        search_options.push(
+            {label: e.data('label'), value: e.data('id')}
+        );
+    });
+
+    document.querySelector('#vs_search_in_graph').setOptions(search_options);
+    // --------------------------------------------------------------------------- //
+
 
     $('#cy').append(`<div class="container-legend-color-palette" id="container_color_palette"> 
                         <div class="legend-color-palette-details">  
@@ -174,58 +284,142 @@ export function plotPessoasGraph(data){
                         </div>
                     </div> `)
 
-    $(document).on('change', '#legend_switch', function (e) {
-        if (cy.elements('node').style('font-size') == '4px') {
-            cy.elements('node').style('font-size', '0');
-        } else {
-            cy.elements('node').style('font-size', '4px')
-        }     
+    $(document).on('click', '#check_menu_nome_nodo', function (e) {
+        Promise.resolve()
+            .then( () => {
+                if (Array.from(cy.elements('node').style('font-size'))[0] == '0') {
+                    cy.elements('node').animate({
+                        style: { 
+                            'font-size': '4px',
+                        }
+                        
+                      }, {
+                        duration: 500
+                    });
+                } else {
+                    cy.elements('node').animate({
+                        style: { 
+                            'font-size': '0',
+                        }
+                      }, {
+                        duration: 500
+                    });
+                } 
+            });    
     });
+
+    $('#check_detect_community').on('click', (e) => {
+        if ($('#check_detect_community').find(".dropdown-item-check").hasClass("hidden")) {
+            $('#container_color_palette').attr('hidden', false);
+
+            $(selected_metric).trigger('click');
+        } else { 
+            $('#container_color_palette').attr('hidden', true);
+
+            // Assign random colors to each cluster!
+            Promise.resolve()
+                .then( () => {
+                    var clusters = cy.elements().markovClustering({
+                        attributes: [
+                            function( edge ){ 
+                                let normalized_weight = (edge.data('weight') - data['values_to_normalize']['min_value'])/(data['values_to_normalize']['max_value'] - data['values_to_normalize']['min_value']);
+        
+                                return normalized_weight; 
+                            }
+                        ]
+                    });
+
+                    for (var c = 0; c < clusters.length; c++) {
+                        let color = '#' + Math.floor(Math.random()*16777215).toString(16);
+
+                        clusters[c].animate({
+                            style: { 
+                                backgroundColor: color,
+                                'text-outline-color': color
+                            }
+                          }, {
+                            duration: 500
+                        });
+                    }
+                }       
+            );
+        }
+    });
+
+    $('#fit_zoom').off('click');
+    $('#fit_zoom').on('click', () => {
+        cy.animate({
+            fit: {
+                eles: cy,
+                padding: 50
+            }
+            
+        },{
+            duration: 1000
+        });
+
+        unhighlight(cy);
+    })
 
     $('#DCN_radio').on('click', function(){
         let nodes = cy.nodes();
+
+        $('#check_detect_community').find(".dropdown-item-check").addClass('hidden');
+        selected_metric = "#DCN_radio";
         
-        nodes.forEach(function (ele){
-            ele.style('text-outline-color', setColorNode(calcDCNNode(ele)));
-            ele.style('background-color', setColorNode(calcDCNNode(ele)));
-            ele.style('width', Math.max(0.5, Math.sqrt(calcDCNNode(ele))) * 20);
-            ele.style('height', Math.max(0.5, Math.sqrt(calcDCNNode(ele))) * 20);
-        });
+        Promise.resolve()
+            .then(
+                Promise.all( nodes.map(n => {
+                    return n.animation({
+                        style: {'width' : Math.max(0.5, Math.sqrt(calcDCNNode(n))) * 20, 
+                                'height': Math.max(0.5, Math.sqrt(calcDCNNode(n))) * 20,
+                                'text-outline-color' : setColorNode(calcDCNNode(n)),
+                                'background-color'   : setColorNode(calcDCNNode(n))
+                            }
+                    }).play().promise();
+                }))
+            );
     });
 
     $('#BCN_radio').on('click', function(){
         let nodes = cy.nodes();
 
-        nodes.forEach(function (ele){
-            ele.style('text-outline-color', setColorNode(calcBCNNode(ele)));
-            ele.style('background-color', setColorNode(calcBCNNode(ele)));
-            ele.style('width', Math.max(0.5, Math.sqrt(calcBCNNode(ele))) * 20);
-            ele.style('height', Math.max(0.5, Math.sqrt(calcBCNNode(ele))) * 20);
-        });
+        $('#check_detect_community').find(".dropdown-item-check").addClass('hidden');
+        selected_metric = "#BCN_radio";
+
+        Promise.resolve()
+            .then(
+                Promise.all( nodes.map(n => {
+                    return n.animation({
+                        style: {'width' : Math.max(0.5, Math.sqrt(calcBCNNode(n))) * 20, 
+                                'height': Math.max(0.5, Math.sqrt(calcBCNNode(n))) * 20,
+                                'text-outline-color' : setColorNode(calcBCNNode(n)),
+                                'background-color'   : setColorNode(calcBCNNode(n))
+                            }
+                    }).play().promise();
+                }))
+            );
     });
 
     $('#CCN_radio').on('click', function(){
         let nodes = cy.nodes();
 
-        nodes.forEach(function (ele){
-            ele.style('text-outline-color', setColorNode(calcCCNNode(ele)));
-            ele.style('background-color', setColorNode(calcCCNNode(ele)));
-            ele.style('width', Math.max(0.5, Math.sqrt(calcCCNNode(ele))) * 20);
-            ele.style('height', Math.max(0.5, Math.sqrt(calcCCNNode(ele))) * 20);
-        });
+        $('#check_detect_community').find(".dropdown-item-check").addClass('hidden');   
+        selected_metric = "#CCN_radio";
+
+        Promise.resolve()
+            .then(
+                Promise.all( nodes.map(n => {
+                    return n.animation({
+                        style: {'width' : Math.max(0.5, Math.sqrt(calcCCNNode(n))) * 20, 
+                                'height': Math.max(0.5, Math.sqrt(calcCCNNode(n))) * 20,
+                                'text-outline-color' : setColorNode(calcCCNNode(n)),
+                                'background-color'   : setColorNode(calcCCNNode(n))
+                            }
+                    }).play().promise();
+                }))
+            );
     });
-
-    $(document).on('click', '#toggle-labels', function (e){
-        e.preventDefault();
-
-        nodes.forEach(function (ele){
-            ele.style('width', Math.max(0.5, Math.sqrt(calcDCNNode(ele))) * 50);
-            ele.style('height', Math.max(0.5, Math.sqrt(calcDCNNode(ele))) * 50);
-        });
-    });
-
-    $('#config').attr('hidden', false);
-    $('#config-metricas').attr('hidden', false);
 }
 
 function calcDCNNode(node){
@@ -237,5 +431,5 @@ function calcCCNNode(node){
 }
 
 function calcBCNNode(node){
-    return node.cy().$().bc().betweennessNormalized('#' + + node.data('id'));
+    return node.cy().$().bc().betweennessNormalized('#' +  node.data('id'));
 }
