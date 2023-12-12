@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\fatos_ocorrencias;
-use Illuminate\Support\Facades\DB;
 
 class FatoOcorrenciaController extends Controller
 {

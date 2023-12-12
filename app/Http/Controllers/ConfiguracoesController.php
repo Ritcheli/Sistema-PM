@@ -6,12 +6,17 @@ use App\Imports\FatosImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ConfiguracoesController extends Controller
 {
     public function show_Configuracoes(){
-        return view('configuracoes.configuracoes');
+        $grupos = DB::table('grupos_fatos')
+                    ->select('*')
+                    ->get();
+
+        return view('configuracoes.configuracoes', compact('grupos'));
     }
 
     public function importar_Fatos(Request $request){
@@ -51,5 +56,33 @@ class ConfiguracoesController extends Controller
         }
 
         return redirect()->route('show_Configuracoes');
+    }
+
+    public function adiciona_Fatos_Manual(Request $request){
+        $validator = Validator::make($request->all(), [
+            'fato'               => ['required'],
+            'grupo'              => ['required'],
+            'potencial_ofensivo' => ['required']
+        ]);
+
+        if ($validator->fails()){
+            return response()->json(['errors' => $validator->errors()]);
+        }
+
+        $dados = $request->only('fato', 'grupo', 'potencial_ofensivo');
+        
+        $dados_grupo['nome']              = $dados['grupo'];
+        $dados_fato['natureza']           = $dados['fato'];
+        $dados_fato['potencial_ofensivo'] = $dados['potencial_ofensivo'];  
+
+        if (is_numeric($dados_grupo['nome']) == false) {
+            $grupo = (new GrupoFatoController)->create($dados_grupo);
+
+            $dados_grupo['nome'] = $grupo->id_grupo_fato;
+        }
+
+        $dados_fato['id_grupo_fato'] = $dados_grupo['nome'];
+
+        (new FatoOcorrenciaController)->create($dados_fato);
     }
 }

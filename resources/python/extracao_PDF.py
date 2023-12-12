@@ -10,6 +10,7 @@ def main():
     bool_no_files = True;
 
     list_Path = glob.glob("C:\\Users\\Ritcheli\\Documents\\UFSC\\2022-2\\TCC\\Sistema-PM\\public\\uploads\\pdf\\*.pdf")
+    # list_Path = glob.glob("C:\\Users\\Ritcheli\\Documents\\UFSC\\2022-2\\TCC\\Python-Extraction-PDF\\importacao_teste\\5.pdf")
 
     for k in range(0, len(list_Path)):
         if ('(inserted)' not in list_Path[k]):
@@ -37,17 +38,27 @@ def main():
 
             i = 0;
 
+            page_for_serch = doc[0]
+
+            if (len(page_for_serch.search_for("backend.ssp")) > 0):
+                rect = Rect(60, 25, 580, 815)
+                opcao_1 = True
+            if (len(page_for_serch.search_for("sade.pm.sc.gov")) > 0):
+                opcao_1 = False
+            else:
+                rect = Rect(60, 90, 580, 805)
+                opcao_1 = True
+
             str_Antigo_nome = list_Path[k]
             str_Novo_Nome   = list_Path[k].replace('.pdf', '(inserted).pdf')
             str_Novo_Nome   = str_Novo_Nome.replace(' ', '')
 
+            # if ('PDFium' in pdf_metadata['creator']) or ('JasperReports' in pdf_metadata['creator']):
+            #     rect = Rect(60, 90, 580, 805)
+            # elif ('Skia/PDF' in pdf_metadata['producer']):
+            #     rect = Rect(60, 25, 580, 815)
 
-            if ('PDFium' in pdf_metadata['creator']) or ('JasperReports' in pdf_metadata['creator']):
-                rect = Rect(60, 90, 580, 805)
-            elif ('Skia/PDF' in pdf_metadata['producer']):
-                rect = Rect(60, 25, 580, 815)
-
-            if ('PDFium' in pdf_metadata['creator']) or ('JasperReports' in pdf_metadata['creator']) or ('Skia/PDF' in pdf_metadata['producer']):
+            if (opcao_1 == True):
                 for page in doc: 
                     text += str(page.get_text("text", rect, sort = True)) 
                     words['page' + str(i)] = page.get_text("words", clip = [60, 90, 580, 805])

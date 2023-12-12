@@ -2,12 +2,7 @@ import cytoscape from "cytoscape";
 import cytoscapePopper from "cytoscape-popper";
 
 import { plotPessoasGraph } from "../SNAGraphs/pessoas_graph";
-import { plotPessoasFatosGraph } from "../SNAGraphs/pessoas_fatos_graph";
-import { plotPessoasGruposGraph } from "../SNAGraphs/pessoas_grupos_graph";
-import { plotPessoasObjetosGraph } from "../SNAGraphs/pessoas_objetos_graph";
-import { plotPessoaArmaGraph } from "../SNAGraphs/pessoas_armas_graph";
-import { plotPessoasLocalizacaosGraph } from "../SNAGraphs/pessoas_localizacao_graph";
-import { plotPessoasDrogasGraph } from "../SNAGraphs/pessoas_drogas_graph";
+import { plotPessoaOutroGraph } from "../SNAGraphs/pessoas_outros_graph";
 
 cytoscape.use(cytoscapePopper);
 
@@ -68,6 +63,16 @@ document.addEventListener('DOMContentLoaded', function() {
         zIndex: 200
     });
 
+    VirtualSelect.init({ 
+        ele: '#vs_search_SNA_details',
+        search: true,
+        placeholder: 'Procurar',
+        noSearchResultsText: 'Nenhum resultado encontrado',
+        searchPlaceholderText: 'Procurar...', 
+        showValueAsTags: true,
+        zIndex: 200
+    });
+
     $('#vs_rede_tipo').on('change', function() {
         if (this.value == 'Pessoas'){
             var options = [
@@ -96,6 +101,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 $("#legendas").attr("hidden", false);
             }
         }
+    });
+
+    $('#SNA_ajuda_close_button').on('click', () => {
+        $('#SNA_ajuda_container').attr('hidden', true);
     });
 
     $('#plot_SNA_Graph').on('submit', function(e){
@@ -138,8 +147,11 @@ document.addEventListener('DOMContentLoaded', function() {
         $(".dropdown-item-check-start-inactive").addClass("hidden");
         $(".dropdown-item-check-start-active").removeClass("hidden");
         $('#check_menu_legenda').removeClass('disabled');
+        $('#classificacao').attr('hidden', true);
         $('#legendas').attr('hidden', true);
         $('#fit_zoom').attr('hidden', false);
+        $('#nav_item_metrica').attr('hidden', true);
+        $('#SNA_result_details').attr('hidden', true);
 
         $('#cy').html("");
 
@@ -165,24 +177,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         $('#check_menu_legenda').addClass('disabled');
                         $('#check_menu_legenda').find('.dropdown-item-check').addClass('hidden');
+                        $('#DCN_radio').prop('checked', true);
+                        $('#nav_item_metrica').attr('hidden', false);
                     }
-                    if (tipo_rede == 'Pessoas_Fatos'){
-                        plotPessoasFatosGraph(result);
-                    }
-                    if (tipo_rede == 'Pessoas_Grupos'){
-                        plotPessoasGruposGraph(result);
-                    }
-                    if (tipo_rede == 'Pessoas_Objetos'){
-                        plotPessoasObjetosGraph(result);
-                    }
-                    if (tipo_rede == 'Pessoas_Armas'){
-                        plotPessoaArmaGraph(result);
-                    }
-                    if (tipo_rede == 'Pessoas_Localizacao'){
-                        plotPessoasLocalizacaosGraph(result);
-                    }
-                    if (tipo_rede == 'Pessoas_Drogas'){
-                        plotPessoasDrogasGraph(result);
+                    else{
+                        plotPessoaOutroGraph(result)
                     }
                     $('#loading-spinner-SNA').attr('hidden', true);
                 }

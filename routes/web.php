@@ -101,6 +101,7 @@ Route::middleware('auth')->group(function(){
     Route::controller(ConfiguracoesController::class)->group(function () {
         Route::get('/configuracoes', 'show_Configuracoes')->name('show_Configuracoes');
         Route::post('/configuracoes/importar-fatos', 'importar_Fatos')->name('importar_Fatos');
+        Route::post('/configuracoes/adiciona-fatos-manual', 'adiciona_Fatos_Manual')->name('adiciona_Fatos_Manual');
     });
 
     Route::controller(PDFController::class)->group(function (){

@@ -41,5 +41,45 @@
                 </form>
             </div>
         </div>
+        <div class="container-fluid side-by-side px-0">
+            <div class="container-fluid CM side-by-side mb-6">
+                <form method="POST" action="{{ route('adiciona_Fatos_Manual') }}" enctype="multipart/form-data" id="form_fatos_manual">
+                    @csrf
+                    <div class="form-row">
+                        <div class="form-group col-md-12 mb-0">
+                            <div class="title-CM">Adicionar fato</div>
+                        </div>
+                        <div class="form-group col">
+                            <label class="text-nowrap">Fato</label>
+                            <input type="text" class="form-control CM" id="fato" name="fato" placeholder="Digite o fato">
+                            <span class="invalid-feedback" id="tag_fato_invalido" role="alert"></span>
+                        </div> 
+                        <div class="form-group col">
+                            <label class="text-nowrap">Grupo</label>
+                            <div class="custom-selection grupo">
+                                <select name="native-select" id="vs_grupo" data-search="true" data-silent-initial-value-set="true" hidden>
+                                    @foreach ($grupos as $grupo)
+                                        <option value={{ $grupo->id_grupo_fato }} >
+                                            {{ $grupo->nome }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <span class="invalid-feedback" role="alert" id="tag_grupo_invalido"></span>
+                            </div>
+                        </div>
+                        <div class="form-group col">
+                            <label class="text-nowrap">Potencial ofensivo</label>
+                            <div class="custom-selection envolvido-participacao" id="vs_potencial_ofensivo"></div>
+                            <span class="invalid-feedback" id="tag_potencial_ofensivo_invalido" role="alert"></span>
+                        </div>
+                    </div>
+                    <div class="text-lg-right text-center mb-3">
+                        <button type="submit" class="btn CM medium save-CM ml-2 shadow-none" id="salvar_fato_manual" >
+                            Inserir
+                        </button>
+                    </div>   
+                </form>
+            </div>
+        </div>
     </x-slot:container_form>
 </x-layout>

@@ -197,3 +197,41 @@ export function style_SNA_bi(data) {
         }
     ];
 }
+
+export function show_classificacao(nodes_for_ordering, cy){
+    $('#classificacao').find('.table-class').html("");
+
+    for (var i = 0; i < nodes_for_ordering.length; i++){
+        $('#classificacao').find('.table-class').append(`
+        <tr class="class_node_info" id="` + nodes_for_ordering[i]['node_id'] + `">
+            <td class="td-class">
+                ` + (i + 1) +`
+            </td>
+            <td class="td-name">
+                ` +  cy.getElementById(nodes_for_ordering[i]['node_id']).data('label') + `
+            </td>
+            <td class="td-val">
+                ` + JSON.stringify(nodes_for_ordering[i]['value']).replace(/\.(\d{1,3}).*$/, '.$1') + `
+            </td>
+        </tr>
+        `);
+
+        if (i == 9) break;
+    }
+
+    $('.class_node_info').off('click');
+    $('.class_node_info').on('click', function() {
+        let id   = $(this).attr('id');
+        let node = cy.getElementById(id);
+
+        highlight(node, cy);
+    });
+}
+
+export var click_class = function click_check_menu_classificacao() {
+    if ($('#check_menu_classificacao').find(".dropdown-item-check").hasClass("hidden")) {
+        $('#classificacao').attr('hidden', true);
+    } else {
+        $('#classificacao').attr('hidden', false);
+    }
+}

@@ -7,7 +7,7 @@
 
     <x-slot:container_form>
         <div class="container-fluid px-0">
-            <div class="container-fluid CM mb-4">
+            <div class="container-fluid CM mb-5">
                 <div class="d-flex justify-content-between"> 
                     <div class="title-CM">Configuração da rede</div>
 
@@ -46,7 +46,7 @@
                     </form>
                 </div>
             </div>
-            <div class="container-fluid CM plot-SNA-graph mb-6"> 
+            <div class="container-fluid CM plot-SNA-graph mb-5"> 
                 <nav class="navbar SNA-graph navbar-expand-sm">
                     <img class="navbar-brand img-nav-brand" src="{{ URL::asset('/img/logo-pm-sc.png') }}" alt="">
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,6 +68,14 @@
                                             Nomes dos nodos
                                         </span>
                                     </div>
+                                    <div class="dropdown-item SNA-graph check-dropdown-menu pl-2 align-items-center" id="check_menu_classificacao">
+                                        <span class="dropdown-item-check dropdown-item-check-start-inactive hidden"> 
+                                            <i class='bx bx-check'></i>
+                                        </span>
+                                        <span class="dropdown-item-label">
+                                            Classificação
+                                        </span>
+                                    </div>
                                     <div class="dropdown-item SNA-graph check-dropdown-menu pl-2 align-items-center" id="check_menu_legenda">
                                         <span class="dropdown-item-check dropdown-item-check-start-active"> 
                                             <i class='bx bx-check'></i>
@@ -78,7 +86,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown" id="nav_item_metrica" hidden>
                                 <div class="nav-link SNA-graph" data-toggle="dropdown" aria-expanded="false">
                                     Métricas
                                 </div>
@@ -119,19 +127,7 @@
                                 </div>
                             </li>
                             <li class="nav-item dropdown">
-                                <div class="nav-link SNA-graph" data-toggle="dropdown" aria-expanded="false">
-                                    Exportar
-                                </div>
-                                <div class="dropdown-menu">
-                                    <div class="dropdown-item SNA-graph check-dropdown-menu pl-2 align-items-center">
-                                        <span class="dropdown-item-label ml-2">
-                                            PDF
-                                        </span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <div class="nav-link SNA-graph" data-toggle="dropdown" aria-expanded="false">
+                                <div class="nav-link SNA-graph" id="SNA_ajuda_nav_item" data-toggle="dropdown" aria-expanded="false">
                                     Ajuda
                                 </div>
                             </li>
@@ -145,21 +141,73 @@
                         </form>
                     </div>
                 </nav>
+                <div class="info-rede mt-4">
+                    <div class="container-fluid CM info-nodo mb-0" id="legendas" hidden>
+                        <div class="container">
+                            <div class="row pb-3 info-nodo-title">
+                                <strong> Legenda </strong>
+                            </div>
+                            <div class="info-nodo-content"></div>
+                        </div>
+                    </div>
+                    <div class="container-fluid CM info-class mb-0" id="classificacao" hidden>
+                        <div class="container">
+                            <div class="row pb-3 info-nodo-title">
+                                <strong> Classificação </strong>
+                            </div>
+                            <div class="row info-nodo-content">
+                                <table class="table-class"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="fit-zoom mt-4 ml-4" id="fit_zoom" hidden>
                     <i class='bx bx-fullscreen'></i>
                 </div>
-                <div class="container-fluid CM info-nodo mb-0 mt-4" id="legendas" hidden>
-                    <div class="container">
-                        <div class="row pb-3 info-nodo-title">
-                            <strong> Legenda </strong>
-                        </div>
-                        <div class="info-nodo-content"></div>
+                <div class="container-fluid CM info-tutorial ml-4" id="SNA_ajuda_container" hidden>
+                    <div class="SNA-ajuda-title">Ajuda</div>
+                    <div class="SNA-ajuda-text"></div>
+                    <div class="SNA-ajuda-close-button" id="SNA_ajuda_close_button">
+                        <i class='bx bx-x'></i> 
                     </div>
                 </div>
-                <div class="container-fluid CM info-tutorial ml-4">
-                    TEST
+                <div id="cy" style="min-height: 82vh" value="{{ URL::asset('') }}" class="d-flex align-items-center justify-content-center"> 
                 </div>
-                <div id="cy" style="min-height: 600px" value="{{ URL::asset('') }}" class="d-flex align-items-center justify-content-center"> 
+            </div>
+        </div>
+
+        <div class="container-fluid px-0" id="SNA_result_details" value={{ route('show_Visualizar_Pessoa', ['id_pessoa' => 'aux_id_pessoa']) }} hidden>
+            <div class="container-fluid CM mb-6">
+                <div class="SNA-result-details">
+                    <div class="title-CM">
+                        Resultados
+                    </div>
+                    <div class="mb-1" id="num_registros"></div>
+                </div>
+                <div class="form-group col-md-12 mb-0 px-0">
+                    <label class="text-nowrap">Buscar</label>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <div class="custom-selection" id="vs_search_SNA_details" hidden></div>
+                        </div> 
+                        <div class="form-group col-auto">
+                            <button type="submit" title="Buscar" id="SNA_table_button_search" class="btn CM small add-CM shadow-none">
+                                <i class='bx bx-search btn-icon-CM'> </i>
+                                Buscar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <table class="table table-bordered CM mb-3 text-center" id="SNA_table_details">
+                                <thead id="SNA_details_head"></thead>
+                                <tbody id="SNA_details_body"> </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center mb-0">
+                        <div id="SNA_details_pagination"></div>
+                    </div>
                 </div>
             </div>
         </div>

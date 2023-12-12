@@ -7,7 +7,6 @@ use App\Models\ocorrencias_extraidas;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
@@ -15,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class OcorrenciaExtraidaController extends Controller
 {
@@ -54,6 +54,8 @@ class OcorrenciaExtraidaController extends Controller
             }
             
         }
+
+        $query->orderByDesc('ocorrencias_extraidas.id_ocorrencia_extraida');
 
         $ocorrencias_extraidas = $query->paginate(10);
 
@@ -640,12 +642,14 @@ class OcorrenciaExtraidaController extends Controller
                                       ->select('fatos_ocorrencias.id_fato_ocorrencia')
                                       ->where('fatos_ocorrencias.natureza', preg_replace('/\s+/', ' ',trim($fato_participacao[1])))
                                       ->first();
-    
-                            $participacao_pessoa_extraida_fato['id_ocorrencia_extraida_pessoa'] = $ocorrencia_extraida_pessoa->id_ocorrencia_extraida_pessoa;
-                            $participacao_pessoa_extraida_fato['id_fato_ocorrencia']            = $fato->id_fato_ocorrencia;    
-                            $participacao_pessoa_extraida_fato['participacao']                  = trim($fato_participacao[0]);
                             
-                            (new ParticipacaoPessoaExtraidaFatoController)->create($participacao_pessoa_extraida_fato);
+                            if ($fato) {
+                                $participacao_pessoa_extraida_fato['id_ocorrencia_extraida_pessoa'] = $ocorrencia_extraida_pessoa->id_ocorrencia_extraida_pessoa;
+                                $participacao_pessoa_extraida_fato['id_fato_ocorrencia']            = $fato->id_fato_ocorrencia;    
+                                $participacao_pessoa_extraida_fato['participacao']                  = trim($fato_participacao[0]);
+                                
+                                (new ParticipacaoPessoaExtraidaFatoController)->create($participacao_pessoa_extraida_fato);
+                            }
                         }
                     }
                 }
