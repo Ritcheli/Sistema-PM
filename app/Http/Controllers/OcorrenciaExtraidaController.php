@@ -521,7 +521,9 @@ class OcorrenciaExtraidaController extends Controller
     }
 
     public function importar_Ocorrencia(Request $request){
-        $duplicated_pdf = ""; 
+        $duplicated_pdf   = ""; 
+        $fato_inexistente = "";
+        $count_fatos_inexistentes = 0;
 
         $request->validate([
             'files.*' => ['mimes:pdf']
@@ -595,6 +597,9 @@ class OcorrenciaExtraidaController extends Controller
                         $dado_fato['id_fato_ocorrencia']     = $fato_ocorrencia->id_fato_ocorrencia;
 
                         (new OcorrenciaExtraidaFatoOcorrenciaController)->create($dado_fato);
+                    } else {
+                        $fato_inexistente .= trim($fato) . ',';
+                        $count_fatos_inexistentes++;
                     }
                 }
 
@@ -631,6 +636,8 @@ class OcorrenciaExtraidaController extends Controller
                     $dado_pessoa['id_pessoa']              = $pessoa->id_pessoa;
                     
                     $participacoes = explode('|', $envolvido->participacao);
+
+                    array_shift($participacoes);
 
                     $ocorrencia_extraida_pessoa = (new OcorrenciaExtraidaPessoaController)->create($dado_pessoa);
 
@@ -730,6 +737,17 @@ class OcorrenciaExtraidaController extends Controller
         if ($duplicated_pdf != ""){
             alert('Erro!','As ocorrências possuindo número de protocolo ' . $duplicated_pdf . 
                           ' já foram adicionadas ao sistema', 'warning')->showConfirmButton('Continuar'); 
+        }
+
+        if ($fato_inexistente != ""){
+            if ($count_fatos_inexistentes > 1) {
+                alert('Atenção!','Os fatos ' . $fato_inexistente . 
+                          ' não estão cadastrados no sistema, recomenda-se inserí-los no menu de configurações, a fim de novas ocorrências serem adicionadas corretamente', 'warning')->showConfirmButton('Continuar'); 
+            } else {
+                alert('Atenção!','O fato ' . $fato_inexistente . 
+                          ' não está cadastrado no sistema, recomenda-se inserí-lo no menu de configurações, a fim de novas ocorrências serem adicionadas corretamente', 'warning')->showConfirmButton('Continuar'); 
+            }
+            
         }
 
         return redirect()->route('show_Importar_Ocorrencia');

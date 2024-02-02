@@ -10,7 +10,6 @@ def main():
     bool_no_files = True;
 
     list_Path = glob.glob("C:\\Users\\Ritcheli\\Documents\\UFSC\\2022-2\\TCC\\Sistema-PM\\public\\uploads\\pdf\\*.pdf")
-    # list_Path = glob.glob("C:\\Users\\Ritcheli\\Documents\\UFSC\\2022-2\\TCC\\Python-Extraction-PDF\\importacao_teste\\5.pdf")
 
     for k in range(0, len(list_Path)):
         if ('(inserted)' not in list_Path[k]):
@@ -34,7 +33,6 @@ def main():
             aux_2          = []
 
             doc = fitz.open(list_Path[k])
-            pdf_metadata = doc.metadata
 
             i = 0;
 
@@ -53,11 +51,6 @@ def main():
             str_Novo_Nome   = list_Path[k].replace('.pdf', '(inserted).pdf')
             str_Novo_Nome   = str_Novo_Nome.replace(' ', '')
 
-            # if ('PDFium' in pdf_metadata['creator']) or ('JasperReports' in pdf_metadata['creator']):
-            #     rect = Rect(60, 90, 580, 805)
-            # elif ('Skia/PDF' in pdf_metadata['producer']):
-            #     rect = Rect(60, 25, 580, 815)
-
             if (opcao_1 == True):
                 for page in doc: 
                     text += str(page.get_text("text", rect, sort = True)) 
@@ -65,7 +58,7 @@ def main():
                     i += 1
 
                 doc.close()
-
+                
                 #Extração dos fatos e nomes de envolvidos
                 aux_1 = ''
                 aux_2 = ''
@@ -110,7 +103,7 @@ def main():
                 #Faz a separação do nome dos envolvidos
                 for i in range(len(aux_nome_1)):
                     nome_envolvido['nome' + str(i)]       = get_General_Data("", "(", aux_nome_3['nome' + str(i)]) 
-                    participacao['participacao' + str(i)] = get_General_Data("|", "Mãe:", aux_nome_3['nome' + str(i)])
+                    participacao['participacao' + str(i)] = get_General_Data(nome_envolvido['nome' + str(i)], "Mãe:", text)
 
                 #Extração do endereço
                 endereco_extraido = get_General_Data("LOCAL", "FATOS COMUNICADOS:", text)

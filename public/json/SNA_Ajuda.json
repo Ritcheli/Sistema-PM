@@ -1,10 +1,14 @@
 {
 	"#DCN_radio":
 	{
-		"Descricao": "O grafo atual foi gerado pela métrica <strong class='SNA-ajuda-text-metric'> centralidade de grau</strong>, este tipo de grafo classifica os atores (nodos) de acordo com o número de conexões (arestas). Quanto maior o número de conexões, maior será o nodo representado no grafo. Esta métrica é útil para encontrar os indivíduos com os maiores e menores números de conexões dentro de uma rede. Um dos nodos com maior número de conexões no grafo atual é o <strong class='SNA-ajuda-text-node' value='Id_Nodo'>Nome_Nodo</strong>."
+		"Descricao": "O grafo atual foi gerado pela métrica <strong class='SNA-ajuda-text-metric'> centralidade de grau</strong>, um dos nodos com maior valor neste tipo de métrica é o <strong class='SNA-ajuda-text-node' value='Id_Nodo'>Nome_Nodo</strong>, isso pode indicar que este nodo exerce um grau de liderança na rede. Quanto maior o valor da centralidade de grau, maior o número de conexões que este ator possui nesta rede em questão."
 	},
 	"#BCN_radio":
 	{
-		"Descricao": "O grafo atual foi gerado pela métrica <strong class='SNA-ajuda-text-metric'> centralidade de intermediação</strong>, este tipo de grafo classifica os atores (nodos) de acordo com o número de vezes que ele está localizado no menor caminho de conexão entre outros nodos. Quanto maior o valor de centralidade de intermediação atribuído ao nodo, maior será o tamanho de sua representação no grafo. Um ator com um alto valor de centralidade de intermediação pode indicar que este possui um papel fundamental na rede, representando grande influência no fluxo das informações. Um dos nodos com maior número de conexões no grafo atual é o <strong class='SNA-ajuda-text-node' value='Id_Nodo'>Nome_Nodo</strong>."
+		"Descricao": "O grafo atual foi gerado pela métrica <strong class='SNA-ajuda-text-metric'> centralidade de intermediação</strong>, um dos nodos com maior valor neste tipo de métrica é o <strong class='SNA-ajuda-text-node' value='Id_Nodo'>Nome_Nodo</strong>, isto pode indicar que este nodo tem um papel importante para a comunicação entre os atores desta rede, visto que quanto maior a centralidade de intermediação, mais vezes este indivíduo estará no caminho de conexão entre distintos nodos."
+	},
+	"#CCN_radio":
+	{
+		"Descricao": "O grafo atual foi gerado pela métrica <strong class='SNA-ajuda-text-metric'> centralidade de proximidade</strong>, um dos nodos com maior valor neste tipo de métrica é o <strong class='SNA-ajuda-text-node' value='Id_Nodo'>Nome_Nodo</strong>, isto pode indicar que este nodo é um mantenedor da rede ou pussui a chance de se tornar um futuro líder, visto que este tipo de métrica representa o quão conexo são os nodos desta rede."
 	}
 }

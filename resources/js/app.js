@@ -16,8 +16,8 @@ import './pages/busca_pessoa';
 import './pages/importar_ocorrencia';
 import './pages/revisar_ocorrencia';
 import './pages/dashboard';
+import './pages/visualizar_ocorrencia';
 import './pages/analise_ocorrencia';
-import './pages/configuracao';
 
 // Vendors
 import './vendors-extensions/bootstrap';
