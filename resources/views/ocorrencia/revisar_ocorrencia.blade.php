@@ -28,7 +28,7 @@
                 </a> 
             </div>
             <div class="collapse" id="colapse_PDF">
-                <embed src={{ $ocorrencia_extraida[0]->pdf_caminho_servidor }} type="application/pdf" width="100%" height="500px">
+                <embed src={{ $ocorrencia_extraida[0]->pdf_caminho_servidor }} type="application/pdf" width="100%" height="400vh">
             </div>
         </div>
     </x-slot:other_objects>
