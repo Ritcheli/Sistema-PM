@@ -215,7 +215,6 @@ class PessoaController extends Controller
                 if ($found == false) {
                     // Processo de remoção de imagem
                     $this->delete_img($foto_pessoa);
-
                 }
             }
         } 
@@ -279,6 +278,7 @@ class PessoaController extends Controller
 
     public function save_img($file, $id_pessoa){
         $name             = time().'_'.$file->getClientOriginalName();
+        $name             = preg_replace('/\s+/', '', $name);
         $caminho_img      = public_path('uploads\fotos_pessoas') . '/' . $name;
         $caminho_servidor = URL::to('/') . '/uploads/fotos_pessoas/' . $name;
 
