@@ -226,15 +226,24 @@ class AnaliseOcorrenciaController extends Controller
                         ]);
 
             if ($nodes->doesntContain('data.id' ,strval($pessoa_fato->id_pessoa) . $pessoa_fato->nome)){
-                $nodes->push(['data' => ['id'        => strval($pessoa_fato->id_pessoa) . $pessoa_fato->nome,
-                                         'id_pessoa' => $pessoa_fato->id_pessoa,
-                                         'label'     => $pessoa_fato->nome,
-                                         'foto'      => $pessoa_fato->caminho_servidor,
-                                         'RG_CPF'    => $pessoa_fato->RG_CPF, 
-                                         'idade'     => date('Y') - date('Y', strtotime($pessoa_fato->data_nascimento)),    
-                                         'size'      => 1.5,
-                                         'color'     => '#fc6203',
-                                         'type'      => 'pessoa']                    
+                $recorrencias = DB::table("ocorrencias")
+                                  ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
+                                  ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
+                                  ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
+                                  ->where("pessoas.id_pessoa", $pessoa_fato->id_pessoa)
+                                  ->groupBy("pessoas.id_pessoa")
+                                  ->first();
+
+                $nodes->push(['data' => ['id'           => strval($pessoa_fato->id_pessoa) . $pessoa_fato->nome,
+                                         'id_pessoa'    => $pessoa_fato->id_pessoa,
+                                         'label'        => $pessoa_fato->nome,
+                                         'foto'         => $pessoa_fato->caminho_servidor,
+                                         'RG_CPF'       => $pessoa_fato->RG_CPF, 
+                                         'idade'        => date('Y') - date('Y', strtotime($pessoa_fato->data_nascimento)),    
+                                         'size'         => 1.5,
+                                         'color'        => '#fc6203',
+                                         'type'         => 'pessoa',
+                                         'recorrencias' => $recorrencias->count_pessoa]                    
                             ]);
             }
         }
@@ -303,15 +312,24 @@ class AnaliseOcorrenciaController extends Controller
                         ]);
 
             if ($nodes->doesntContain('data.id' ,strval($pessoa_grupo->id_pessoa) . $pessoa_grupo->pessoa)){
-                $nodes->push(['data' => ['id'        => strval($pessoa_grupo->id_pessoa) . $pessoa_grupo->pessoa,
-                                         'id_pessoa' => $pessoa_grupo->id_pessoa,
-                                         'label'     => $pessoa_grupo->pessoa,
-                                         'foto'      => $pessoa_grupo->caminho_servidor,
-                                         'RG_CPF'    => $pessoa_grupo->RG_CPF,     
-                                         'idade'     => date('Y') - date('Y', strtotime($pessoa_grupo->data_nascimento)),
-                                         'size'      => 1.5,
-                                         'color'     => '#fc6203',
-                                         'type'      => 'pessoa']                    
+                $recorrencias = DB::table("ocorrencias")
+                                  ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
+                                  ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
+                                  ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
+                                  ->where("pessoas.id_pessoa", $pessoa_grupo->id_pessoa)
+                                  ->groupBy("pessoas.id_pessoa")
+                                  ->first();
+
+                $nodes->push(['data' => ['id'           => strval($pessoa_grupo->id_pessoa) . $pessoa_grupo->pessoa,
+                                         'id_pessoa'    => $pessoa_grupo->id_pessoa,
+                                         'label'        => $pessoa_grupo->pessoa,
+                                         'foto'         => $pessoa_grupo->caminho_servidor,
+                                         'RG_CPF'       => $pessoa_grupo->RG_CPF,     
+                                         'idade'        => date('Y') - date('Y', strtotime($pessoa_grupo->data_nascimento)),
+                                         'size'         => 1.5,
+                                         'color'        => '#fc6203',
+                                         'type'         => 'pessoa',
+                                         'recorrencias' => $recorrencias->count_pessoa]                    
                             ]);
             }
         }
@@ -381,17 +399,30 @@ class AnaliseOcorrenciaController extends Controller
                                      'target' => strval($pessoa_objeto->id_tipo_objeto) . $pessoa_objeto->objeto,
                                      'weight' => $pessoa_objeto->count_pessoa]
                         ]);
-
+        
             if ($nodes->doesntContain('data.id' ,strval($pessoa_objeto->id_pessoa) . $pessoa_objeto->nome)){
-                $nodes->push(['data' => ['id'        => strval($pessoa_objeto->id_pessoa) . $pessoa_objeto->nome,
-                                         'id_pessoa' => $pessoa_objeto->id_pessoa,
-                                         'label'     => $pessoa_objeto->nome,
-                                         'foto'      => $pessoa_objeto->caminho_servidor,
-                                         'RG_CPF'    => $pessoa_objeto->RG_CPF,     
-                                         'idade'     => date('Y') - date('Y', strtotime($pessoa_objeto->data_nascimento)),
-                                         'size'      => 1.5,
-                                         'color'     => '#fc6203',
-                                         'type'      => 'pessoa']                    
+                $recorrencias = DB::table("ocorrencias")
+                                  ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
+                                  ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
+                                  ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
+                                  ->join("ocorrencias_fatos_ocorrencias", "ocorrencias.id_ocorrencia", "ocorrencias_fatos_ocorrencias.id_ocorrencia")
+                                  ->join("fatos_ocorrencias", "ocorrencias_fatos_ocorrencias.id_fato_ocorrencia", "fatos_ocorrencias.id_fato_ocorrencia")
+                                  ->join("grupos_fatos", "fatos_ocorrencias.id_grupo_fato", "grupos_fatos.id_grupo_fato")
+                                  ->whereIn('grupos_fatos.nome', ['Furto', 'Roubo'])
+                                  ->where("pessoas.id_pessoa", $pessoa_objeto->id_pessoa)
+                                  ->groupBy("pessoas.id_pessoa")
+                                  ->first();
+
+                $nodes->push(['data' => ['id'           => strval($pessoa_objeto->id_pessoa) . $pessoa_objeto->nome,
+                                         'id_pessoa'    => $pessoa_objeto->id_pessoa,
+                                         'label'        => $pessoa_objeto->nome,
+                                         'foto'         => $pessoa_objeto->caminho_servidor,
+                                         'RG_CPF'       => $pessoa_objeto->RG_CPF,     
+                                         'idade'        => date('Y') - date('Y', strtotime($pessoa_objeto->data_nascimento)),
+                                         'size'         => 1.5,
+                                         'color'        => '#fc6203',
+                                         'type'         => 'pessoa',
+                                         'recorrencias' => $recorrencias->count_pessoa]                    
                             ]);
             }
         }
@@ -458,15 +489,24 @@ class AnaliseOcorrenciaController extends Controller
                         ]);
 
             if ($nodes->doesntContain('data.id' , strval($pessoa_arma->id_pessoa) . $pessoa_arma->nome)){
-                $nodes->push(['data' => ['id'        => strval($pessoa_arma->id_pessoa) . $pessoa_arma->nome,
-                                         'id_pessoa' => $pessoa_arma->id_pessoa,
-                                         'label'     => $pessoa_arma->nome,
-                                         'foto'      => $pessoa_arma->caminho_servidor,
-                                         'RG_CPF'    => $pessoa_arma->RG_CPF,    
-                                         'idade'     => date('Y') - date('Y', strtotime($pessoa_arma->data_nascimento)), 
-                                         'size'      => 1.5,
-                                         'color'     => '#fc6203',
-                                         'type'      => 'pessoa']                    
+                $recorrencias = DB::table("ocorrencias")
+                                  ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
+                                  ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
+                                  ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
+                                  ->where("pessoas.id_pessoa", $pessoa_arma->id_pessoa)
+                                  ->groupBy("pessoas.id_pessoa")
+                                  ->first();
+
+                $nodes->push(['data' => ['id'           => strval($pessoa_arma->id_pessoa) . $pessoa_arma->nome,
+                                         'id_pessoa'    => $pessoa_arma->id_pessoa,
+                                         'label'        => $pessoa_arma->nome,
+                                         'foto'         => $pessoa_arma->caminho_servidor,
+                                         'RG_CPF'       => $pessoa_arma->RG_CPF,    
+                                         'idade'        => date('Y') - date('Y', strtotime($pessoa_arma->data_nascimento)), 
+                                         'size'         => 1.5,
+                                         'color'        => '#fc6203',
+                                         'type'         => 'pessoa',
+                                         'recorrencias' => $recorrencias->count_pessoa]                    
                             ]);
             }
         }
@@ -537,15 +577,28 @@ class AnaliseOcorrenciaController extends Controller
                         ]);
 
             if ($nodes->doesntContain('data.id' , strval($pessoa_localizacao->id_pessoa) . $pessoa_localizacao->pessoa)){
-                $nodes->push(['data' => ['id'        => strval($pessoa_localizacao->id_pessoa) . $pessoa_localizacao->pessoa,
-                                         'id_pessoa' => $pessoa_localizacao->id_pessoa,
-                                         'label'     => $pessoa_localizacao->pessoa,
-                                         'foto'      => $pessoa_localizacao->caminho_servidor,
-                                         'RG_CPF'    => $pessoa_localizacao->RG_CPF,     
-                                         'idade'     => date('Y') - date('Y', strtotime($pessoa_localizacao->data_nascimento)), 
-                                         'size'      => 1.5,
-                                         'color'     => '#fc6203',
-                                         'type'      => 'pessoa']                    
+                $recorrencias = DB::table("ocorrencias")
+                                  ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
+                                  ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
+                                  ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
+                                  ->join("ocorrencias_fatos_ocorrencias", "ocorrencias.id_ocorrencia", "ocorrencias_fatos_ocorrencias.id_ocorrencia")
+                                  ->join("fatos_ocorrencias", "ocorrencias_fatos_ocorrencias.id_fato_ocorrencia", "fatos_ocorrencias.id_fato_ocorrencia")
+                                  ->join("grupos_fatos", "fatos_ocorrencias.id_grupo_fato", "grupos_fatos.id_grupo_fato")
+                                  ->whereIn('grupos_fatos.nome', ['Furto', 'Roubo'])
+                                  ->where("pessoas.id_pessoa", $pessoa_localizacao->id_pessoa)
+                                  ->groupBy("pessoas.id_pessoa")
+                                  ->first();
+
+                $nodes->push(['data' => ['id'           => strval($pessoa_localizacao->id_pessoa) . $pessoa_localizacao->pessoa,
+                                         'id_pessoa'    => $pessoa_localizacao->id_pessoa,
+                                         'label'        => $pessoa_localizacao->pessoa,
+                                         'foto'         => $pessoa_localizacao->caminho_servidor,
+                                         'RG_CPF'       => $pessoa_localizacao->RG_CPF,     
+                                         'idade'        => date('Y') - date('Y', strtotime($pessoa_localizacao->data_nascimento)), 
+                                         'size'         => 1.5,
+                                         'color'        => '#fc6203',
+                                         'type'         => 'pessoa',
+                                         'recorrencias' => $recorrencias->count_pessoa]                    
                             ]);
             }
         }
@@ -614,15 +667,24 @@ class AnaliseOcorrenciaController extends Controller
                         ]);
 
             if ($nodes->doesntContain('data.id' , strval($pessoa_droga->id_pessoa) . $pessoa_droga->nome)){
-                $nodes->push(['data' => ['id'        => strval($pessoa_droga->id_pessoa) . $pessoa_droga->nome,
-                                         'id_pessoa' => $pessoa_droga->id_pessoa,
-                                         'label'     => $pessoa_droga->nome,
-                                         'foto'      => $pessoa_droga->caminho_servidor,
-                                         'RG_CPF'    => $pessoa_droga->RG_CPF, 
-                                         'idade'     => date('Y') - date('Y', strtotime($pessoa_droga->data_nascimento)),     
-                                         'size'      => 1.5,
-                                         'color'     => '#fc6203',
-                                         'type'      => 'pessoa']                    
+                $recorrencias = DB::table("ocorrencias")
+                                  ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
+                                  ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
+                                  ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
+                                  ->where("pessoas.id_pessoa", $pessoa_droga->id_pessoa)
+                                  ->groupBy("pessoas.id_pessoa")
+                                  ->first();
+
+                $nodes->push(['data' => ['id'           => strval($pessoa_droga->id_pessoa) . $pessoa_droga->nome,
+                                         'id_pessoa'    => $pessoa_droga->id_pessoa,
+                                         'label'        => $pessoa_droga->nome,
+                                         'foto'         => $pessoa_droga->caminho_servidor,
+                                         'RG_CPF'       => $pessoa_droga->RG_CPF, 
+                                         'idade'        => date('Y') - date('Y', strtotime($pessoa_droga->data_nascimento)),     
+                                         'size'         => 1.5,
+                                         'color'        => '#fc6203',
+                                         'type'         => 'pessoa',
+                                         'recorrencias' => $recorrencias->count_pessoa]                    
                             ]);
             }
         }

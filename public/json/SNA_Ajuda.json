@@ -10,5 +10,29 @@
 	"#CCN_radio":
 	{
 		"Descricao": "O grafo atual foi gerado pela métrica <strong class='SNA-ajuda-text-metric'> centralidade de proximidade</strong>, um dos nodos com maior valor neste tipo de métrica é o <strong class='SNA-ajuda-text-node' value='Id_Nodo'>Nome_Nodo</strong>, isto pode indicar que este nodo é um mantenedor da rede ou pussui a chance de se tornar um futuro líder, visto que este tipo de métrica representa o quão conexo são os nodos desta rede."
+	},
+	"Pessoas_Armas":
+	{
+		"Descricao": "O grafo atual é resultante das conexões entre <strong class='SNA-ajuda-text-metric'> pessoas</strong> e <strong class='SNA-ajuda-text-metric'> tipos de armas</strong>, um dos nodos com maior relevância neste grafo é o <strong class='SNA-ajuda-text-node' value='Id_Nodo'>Nome_Nodo</strong>, ele representa um dos tipos de armas mais envolvidas em ocorrências registradas nesse período."
+	},
+	"Pessoas_Drogas":
+	{
+		"Descricao": "O grafo atual é resultante das conexões entre <strong class='SNA-ajuda-text-metric'> pessoas</strong> e <strong class='SNA-ajuda-text-metric'> tipos de drogas</strong>, um dos nodos com maior relevância neste grafo é o <strong class='SNA-ajuda-text-node' value='Id_Nodo'>Nome_Nodo</strong>, ele representa um dos tipos de drogas mais envolvidas em ocorrências registradas nesse período."
+	},
+	"Pessoas_Fatos":
+	{
+		"Descricao": "O grafo atual é resultante das conexões entre <strong class='SNA-ajuda-text-metric'> pessoas</strong> e <strong class='SNA-ajuda-text-metric'> fatos de ocorrências</strong>, um dos nodos com maior relevância neste grafo é o <strong class='SNA-ajuda-text-node' value='Id_Nodo'>Nome_Nodo</strong>, ele representa um dos fatos de ocorrências mais registradas nesse período."
+	},
+	"Pessoas_Grupos":
+	{
+		"Descricao": "O grafo atual é resultante das conexões entre <strong class='SNA-ajuda-text-metric'> pessoas</strong> e <strong class='SNA-ajuda-text-metric'> grupos de ocorrências</strong>, um dos nodos com maior relevância neste grafo é o <strong class='SNA-ajuda-text-node' value='Id_Nodo'>Nome_Nodo</strong>, ele representa um dos grupos de ocorrências mais registradas nesse período."
+	},
+	"Pessoas_Localizacao":
+	{
+		"Descricao": "O grafo atual é resultante das conexões entre <strong class='SNA-ajuda-text-metric'> pessoas</strong> e <strong class='SNA-ajuda-text-metric'> locais</strong>, um dos nodos com maior relevância neste grafo é o <strong class='SNA-ajuda-text-node' value='Id_Nodo'>Nome_Nodo</strong>, ele representa um dos locais onde mais ocorreram casos de furto e roubo nesse período."
+	},
+	"Pessoas_Objetos":
+	{
+		"Descricao": "O grafo atual é resultante das conexões entre <strong class='SNA-ajuda-text-metric'> pessoas</strong> e <strong class='SNA-ajuda-text-metric'> objetos</strong>, um dos nodos com maior relevância neste grafo é o <strong class='SNA-ajuda-text-node' value='Id_Nodo'>Nome_Nodo</strong>, ele representa um dos objetos mais apreendidos em casos de furto e roubo nesse período."
 	}
 }

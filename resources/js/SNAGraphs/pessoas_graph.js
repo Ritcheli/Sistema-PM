@@ -441,7 +441,6 @@ export function plotPessoasGraph(data){
 
     $('#SNA_ajuda_nav_item').off('click');
     $('#SNA_ajuda_nav_item').on('click', () => {
-        console.log('click');
         const json_ajuda_path = public_path + 'json/SNA_Ajuda.json';
 
         const init = async () => {

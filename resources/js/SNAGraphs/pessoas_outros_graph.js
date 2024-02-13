@@ -16,6 +16,8 @@ export function plotPessoaOutroGraph(data){
     const public_path = $('#cy').attr('value');
 
     var subtitles = data['subtitles'];
+    var tipo_rede = $("#vs_rede_tipo").val();
+
     nodes_for_ordering = [];
     nodes_for_ordering_person = [];
     pag_last_page = 0;
@@ -126,6 +128,7 @@ export function plotPessoaOutroGraph(data){
                         RG_CPF: n.data('RG_CPF'),
                         foto: n.data('foto'),
                         idade: n.data('idade'),
+                        recorrencias: n.data('recorrencias')
                     });
 
                     search_options_details.push(
@@ -147,21 +150,14 @@ export function plotPessoaOutroGraph(data){
         .then(function(){
             pag_items_count = nodes_for_ordering_person.length;
 
-            // $('#SNA_details_head').html(
-            //     `<tr>
-            //         <td scope="col" class="w-5"> Foto </td>
-            //         <td scope="col" class="w-30"> Nome - RG/CPF </td>
-            //         <td scope="col" class="w-10"> Idade </td>
-            //         <td scope="col" class="w-5"> Frequência </td>
-            //         <td scope="col" class="w-5"> Ação </td>
-            //     </tr>`
-            // );
+            nodes_for_ordering_person.sort((a, b) => (a.recorrencias > b.recorrencias ? -1 : 0));
 
             $('#SNA_details_head').html(
                 `<tr>
                     <td scope="col" class="w-5"> Foto </td>
                     <td scope="col" class="w-30"> Nome - RG/CPF </td>
                     <td scope="col" class="w-10"> Idade </td>
+                    <td scope="col" class="w-5"> Frequência </td>
                     <td scope="col" class="w-5"> Ação </td>
                 </tr>`
             );
@@ -204,6 +200,11 @@ export function plotPessoaOutroGraph(data){
                                 <td scope="row"> 
                                     <div class="SNA-result-table-row">
                                         ` + nodes_for_ordering_person[i]['idade'] + ` anos
+                                    </div>
+                                </td>
+                                <td scope="row"> 
+                                    <div class="SNA-result-table-row">
+                                        ` + nodes_for_ordering_person[i]['recorrencias'] + ` ocorrência(s)
                                     </div>
                                 </td>
                                 <td scope="row"> 
@@ -472,6 +473,37 @@ export function plotPessoaOutroGraph(data){
                 } 
             });     
     });
+
+    $('#SNA_ajuda_nav_item').off('click');
+    $('#SNA_ajuda_nav_item').on('click', () => {
+        const json_ajuda_path = public_path + 'json/SNA_Ajuda.json';
+
+        const init = async () => {
+            try{
+                const response = await fetch(json_ajuda_path);
+
+                return response.json();
+            } catch(error) {
+                console.log(error);
+            }
+        }
+
+        init().then((data) => {
+            let data_desc = data[tipo_rede]['Descricao'];
+    
+            data_desc = data_desc.replace('Nome_Nodo', cy.getElementById(nodes_for_ordering[0]['node_id']).data('label'));
+            data_desc = data_desc.replace('Id_Nodo', nodes_for_ordering[0]['node_id']);
+
+            $('#SNA_ajuda_container').attr('hidden', false);
+
+            $('#SNA_ajuda_container').find('.SNA-ajuda-text').html(data_desc);
+        });
+    });
+
+    $('.SNA-ajuda-text-node').off('click');
+    $(document).on('click', '.SNA-ajuda-text-node', function() {
+        highlight(cy.getElementById($(this).attr('value')), cy);
+    })
 
     $('#check_menu_classificacao').off('click', click_class);
     $('#check_menu_classificacao').on('click', click_class);
