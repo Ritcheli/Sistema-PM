@@ -537,6 +537,10 @@ class OcorrenciaExtraidaController extends Controller
 
                 $file->move(public_path('uploads\pdf'), $name );
             }           
+        } else {
+            alert('Erro!', 'Selecione uma ou mais ocorrências para importar', 'error')->showConfirmButton('Continuar'); 
+    
+            return redirect()->route('show_Importar_Ocorrencia');
         }
         
         $process = new Process(["python", resource_path("\\python\\extracao_PDF.py"), public_path('uploads\\pdf\\*.pdf')],
@@ -548,8 +552,6 @@ class OcorrenciaExtraidaController extends Controller
         }
 
         $ocorrencias = json_decode($process->getOutput()); 
-
-        // $ocorrencias = json_decode(shell_exec("python ext.py $url"));
 
         foreach ($ocorrencias as $key => $value) {
             $nome_pdf           = basename($value->PDF_original);
@@ -739,7 +741,9 @@ class OcorrenciaExtraidaController extends Controller
         if ($duplicated_pdf != ""){
             alert('Erro!','As ocorrências possuindo número de protocolo ' . $duplicated_pdf . 
                           ' já foram adicionadas ao sistema', 'warning')->showConfirmButton('Continuar'); 
-        }
+            
+            return redirect()->route('show_Importar_Ocorrencia');
+        } 
 
         if ($fato_inexistente != ""){
             if ($count_fatos_inexistentes > 1) {
@@ -750,7 +754,10 @@ class OcorrenciaExtraidaController extends Controller
                           ' não está cadastrado no sistema, recomenda-se inserí-lo no menu de configurações, a fim de novas ocorrências serem adicionadas corretamente', 'warning')->showConfirmButton('Continuar'); 
             }
             
+            return redirect()->route('show_Importar_Ocorrencia');
         }
+
+        alert('Sucesso','Ocorrência(s) importada(s) com sucesso', 'success')->showConfirmButton('Continuar');
 
         return redirect()->route('show_Importar_Ocorrencia');
     }
