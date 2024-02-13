@@ -2,6 +2,7 @@ import fitz
 import glob
 import os
 import json
+import sys
 from fitz import Rect
 
 def main():
@@ -9,9 +10,9 @@ def main():
     ocorrencia    = []
     bool_no_files = True;
 
-    list_Path = glob.glob("C:\\Users\\Ritcheli\\Documents\\UFSC\\2022-2\\TCC\\Sistema-PM\\public\\uploads\\pdf\\*.pdf")
+    list_Path = glob.glob(sys.argv[1])
 
-    # list_Path = glob.glob("C:\\Users\\Ritcheli\\Documents\\UFSC\\2022-2\\TCC\\Python-Extraction-PDF\\importacao\\VINICIUSSADIMARQUES-PROTOCOLO8960927.pdf")
+    # list_Path = glob.glob("C:\\Users\\Ritcheli\\Documents\\UFSC\\2022-2\\TCC\\Sistema-PM\\public\\uploads\\pdf\\*.pdf")
 
     for k in range(0, len(list_Path)):
         if ('(inserted)' not in list_Path[k]):

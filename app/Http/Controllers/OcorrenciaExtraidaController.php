@@ -539,7 +539,7 @@ class OcorrenciaExtraidaController extends Controller
             }           
         }
         
-        $process = new Process(["python", resource_path("\\python\\extracao_PDF.py")],
+        $process = new Process(["python", resource_path("\\python\\extracao_PDF.py"), public_path('uploads\\pdf\\*.pdf')],
                                 null, ['SYSTEMROOT' => getenv('SYSTEMROOT'), 'PATH' => getenv("PATH")]);
         $process->run();
 
@@ -548,6 +548,8 @@ class OcorrenciaExtraidaController extends Controller
         }
 
         $ocorrencias = json_decode($process->getOutput()); 
+
+        // $ocorrencias = json_decode(shell_exec("python ext.py $url"));
 
         foreach ($ocorrencias as $key => $value) {
             $nome_pdf           = basename($value->PDF_original);
