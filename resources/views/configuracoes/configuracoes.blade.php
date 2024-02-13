@@ -8,7 +8,10 @@
     <x-slot:container_form>
         <div class="container-fluid px-0">
             <div class="container-fluid CM mb-4">
-                <div class="title-CM">Importar fatos</div>
+                <div class="d-flex d-flex justify-content-between">
+                    <div class="title-CM">Importar fatos</div>
+                    <div class="help-icon" id="help_fatos"> <i class='bx bxs-help-circle' ></i> </div>
+                </div>
                 <form method="POST" action="{{ route('importar_Fatos') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="form-row">

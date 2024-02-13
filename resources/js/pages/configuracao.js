@@ -26,6 +26,20 @@ document.addEventListener('DOMContentLoaded', function() {
         zIndex: 200,
     });
 
+    $('#help_fatos').on('click', function(){
+        Swal.fire({
+            title: 'Ajuda',
+            text: "Para atualizar a lista de fatos via importação, é necessário primeiramente obter o documento em pdf "
+                + "e em seguida utilizar qualquer conversor de pdf para xls (excel) disponível na internet para converter "
+                + "o arquivo em questão, por fim, selecione o arquivo resultante da conversão e importe para o sistema",
+            icon: 'question',
+            iconColor: '#a5dc86',
+            confirmButtonText: 'Entendi',
+            confirmButtonColor: '#009640',
+            width: '100vh'
+        })
+    });
+
     document.querySelector('#vs_grupo').reset();
     $('#vs_grupo').attr('hidden', false);
 

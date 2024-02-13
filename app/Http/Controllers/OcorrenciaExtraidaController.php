@@ -538,7 +538,7 @@ class OcorrenciaExtraidaController extends Controller
                 $file->move(public_path('uploads\pdf'), $name );
             }           
         } else {
-            alert('Erro!', 'Selecione uma ou mais ocorrências para importar', 'error')->showConfirmButton('Continuar'); 
+            alert('Erro!', 'Selecione um ou mais pdfs de ocorrências para importar', 'error')->showConfirmButton('Continuar'); 
     
             return redirect()->route('show_Importar_Ocorrencia');
         }
