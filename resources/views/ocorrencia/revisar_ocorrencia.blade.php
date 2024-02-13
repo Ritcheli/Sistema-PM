@@ -38,29 +38,34 @@
             <div class="container-fluid CM mb-4">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        @php
+                            $aba_ativa = "active"   
+                        @endphp
+
                         @if ($ocorrencia_extraida[0]->possui_envolvidos == "S")
-                            <button class="nav-link active" id="nav-envolvidos-tab" data-toggle="tab" data-target="#nav-envolvidos" type="button" role="tab" aria-controls="nav-envolvidos" aria-selected="true">Envolvidos</button>
+                            <button class="nav-link {{$aba_ativa}}" @php $aba_ativa = "" @endphp id="nav-envolvidos-tab" data-toggle="tab" data-target="#nav-envolvidos" type="button" role="tab" aria-controls="nav-envolvidos" aria-selected="true">Envolvidos</button>
                         @endif
                         @if ($ocorrencia_extraida[0]->possui_veiculos == "S")
-                            <button class="nav-link" id="nav-veiculos-tab" data-toggle="tab" data-target="#nav-veiculos" type="button" role="tab" aria-controls="nav-veiculos" aria-selected="false">Veículos</button>
+                            <button class="nav-link {{$aba_ativa}}" @php $aba_ativa = "" @endphp id="nav-veiculos-tab" data-toggle="tab" data-target="#nav-veiculos" type="button" role="tab" aria-controls="nav-veiculos" aria-selected="false">Veículos</button>
                         @endif
                         @if ($ocorrencia_extraida[0]->possui_objetos == "S")
-                            <button class="nav-link" id="nav-objetos-tab" data-toggle="tab" data-target="#nav-objetos" type="button" role="tab" aria-controls="nav-objetos" aria-selected="false">Objetos</button>
+                            <button class="nav-link {{$aba_ativa}}" @php $aba_ativa = "" @endphp id="nav-objetos-tab" data-toggle="tab" data-target="#nav-objetos" type="button" role="tab" aria-controls="nav-objetos" aria-selected="false">Objetos</button>
                         @endif
                         @if ($ocorrencia_extraida[0]->possui_armas == "S")
-                            <button class="nav-link" id="nav-armas-tab" data-toggle="tab" data-target="#nav-armas" type="button" role="tab" aria-controls="nav-armas" aria-selected="false">Armas</button>
+                            <button class="nav-link {{$aba_ativa}}" @php $aba_ativa = "" @endphp id="nav-armas-tab" data-toggle="tab" data-target="#nav-armas" type="button" role="tab" aria-controls="nav-armas" aria-selected="false">Armas</button>
                         @endif
                         @if ($ocorrencia_extraida[0]->possui_drogas == "S")
-                            <button class="nav-link" id="nav-drogas-tab" data-toggle="tab" data-target="#nav-drogas" type="button" role="tab" aria-controls="nav-drogas" aria-selected="false">Drogas</button>
+                            <button class="nav-link {{$aba_ativa}}" @php $aba_ativa = "" @endphp id="nav-drogas-tab" data-toggle="tab" data-target="#nav-drogas" type="button" role="tab" aria-controls="nav-drogas" aria-selected="false">Drogas</button>
                         @endif
                         @if ($ocorrencia_extraida[0]->possui_animais == "S")
-                            <button class="nav-link" id="nav-animais-tab" data-toggle="tab" data-target="#nav-animais" type="button" role="tab" aria-controls="nav-animais" aria-selected="false">Animais</button>
+                            <button class="nav-link {{$aba_ativa}}" @php $aba_ativa = "" @endphp id="nav-animais-tab" data-toggle="tab" data-target="#nav-animais" type="button" role="tab" aria-controls="nav-animais" aria-selected="false">Animais</button>
                         @endif
                     </div>
                 </nav>
+                @php $aba_ativa = "active" @endphp
                 <div class="tab-content" id="nav-tabContent">
                     @if ($ocorrencia_extraida[0]->possui_envolvidos == "S")
-                        <div class="tab-pane fade show active" id="nav-envolvidos" role="tabpanel" aria-labelledby="nav-envolvidos-tab">
+                        <div class="tab-pane fade show {{$aba_ativa}}" @php $aba_ativa = "" @endphp id="nav-envolvidos" role="tabpanel" aria-labelledby="nav-envolvidos-tab">
                             <form method="POST" action="{{ route('buscar_Pessoa_Ocorr_Modal') }}" id="form-envolvidos" class="form-tab @if ($ocorrencia_extraida[0]->revisado == 'S') disabled @endif">
                                 @csrf
                                 <div class="title-CM">Envolvidos</div>
@@ -129,7 +134,7 @@
                         </div>
                     @endif
                     @if ($ocorrencia_extraida[0]->possui_veiculos == "S")
-                        <div class="tab-pane fade show" id="nav-veiculos" role="tabpanel" aria-labelledby="nav-veiculos-tab">
+                        <div class="tab-pane fade show {{$aba_ativa}}" @php $aba_ativa = "" @endphp id="nav-veiculos" role="tabpanel" aria-labelledby="nav-veiculos-tab">
                             <form method="POST" action="{{ route('buscar_Veiculo_Modal') }}" id="form-veiculos-ocorr" class="form-tab  @if ($ocorrencia_extraida[0]->revisado == 'S') disabled @endif">
                                 @csrf
                                 <div class="title-CM">Veículos</div> 
@@ -198,7 +203,7 @@
                         </div>
                     @endif
                     @if ($ocorrencia_extraida[0]->possui_objetos == "S")
-                        <div class="tab-pane fade show" id="nav-objetos" role="tabpanel" aria-labelledby="nav-objetos-tab">
+                        <div class="tab-pane fade show {{$aba_ativa}}" @php $aba_ativa = "" @endphp id="nav-objetos" role="tabpanel" aria-labelledby="nav-objetos-tab">
                             <div class="@if ($ocorrencia_extraida[0]->revisado == 'S') disabled @endif">
                                 <x-form-objeto-diverso>
                                     <x-slot:tipos_objetos>
@@ -248,7 +253,7 @@
                         </div>
                     @endif
                     @if ($ocorrencia_extraida[0]->possui_armas == "S")
-                        <div class="tab-pane fade show" id="nav-armas" role="tabpanel" aria-labelledby="nav-armas-tab">
+                        <div class="tab-pane fade show {{$aba_ativa}}" @php $aba_ativa = "" @endphp id="nav-armas" role="tabpanel" aria-labelledby="nav-armas-tab">
                             <div class="@if ($ocorrencia_extraida[0]->revisado == 'S') disabled @endif">
                                 <x-form-arma>
                                     <x-slot:armas>
@@ -290,7 +295,7 @@
                         </div>
                     @endif
                     @if ($ocorrencia_extraida[0]->possui_drogas == "S")
-                        <div class="tab-pane fade show" id="nav-drogas" role="tabpanel" aria-labelledby="nav-drogas-tab">
+                        <div class="tab-pane fade show {{$aba_ativa}}" @php $aba_ativa = "" @endphp id="nav-drogas" role="tabpanel" aria-labelledby="nav-drogas-tab">
                             <div class="@if ($ocorrencia_extraida[0]->revisado == 'S') disabled @endif">
                                 <x-form-droga>
                                     <x-slot:drogas>
@@ -323,7 +328,7 @@
                         </div>
                     @endif
                     @if ($ocorrencia_extraida[0]->possui_animais == "S")
-                        <div class="tab-pane fade show" id="nav-animais" role="tabpanel" aria-labelledby="nav-animais-tab">
+                        <div class="tab-pane fade show {{$aba_ativa}}" @php $aba_ativa = "" @endphp id="nav-animais" role="tabpanel" aria-labelledby="nav-animais-tab">
                             <div class="@if ($ocorrencia_extraida[0]->revisado == 'S') disabled @endif">
                                 <x-form-animal>
                                     <x-slot:animais>

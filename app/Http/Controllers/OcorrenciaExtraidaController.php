@@ -639,7 +639,7 @@ class OcorrenciaExtraidaController extends Controller
 
                     array_shift($participacoes);
 
-                    $ocorrencia_extraida_pessoa = (new OcorrenciaExtraidaPessoaController)->create($dado_pessoa);
+                    $ocorrencia_extraida_pessoa = (new OcorrenciaExtraidaPessoaController)->create($dado_pessoa);   
 
                     if ($participacoes[0] != ""){
                         foreach ($participacoes as $participacao){

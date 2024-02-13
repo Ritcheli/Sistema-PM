@@ -11,6 +11,8 @@ def main():
 
     list_Path = glob.glob("C:\\Users\\Ritcheli\\Documents\\UFSC\\2022-2\\TCC\\Sistema-PM\\public\\uploads\\pdf\\*.pdf")
 
+    # list_Path = glob.glob("C:\\Users\\Ritcheli\\Documents\\UFSC\\2022-2\\TCC\\Python-Extraction-PDF\\importacao\\VINICIUSSADIMARQUES-PROTOCOLO8960927.pdf")
+
     for k in range(0, len(list_Path)):
         if ('(inserted)' not in list_Path[k]):
             bool_no_files = False
@@ -63,6 +65,8 @@ def main():
                 aux_1 = ''
                 aux_2 = ''
 
+                text = " ".join(text.split())
+
                 for i in range(len(words)):
                     for word in words['page' + str(i)]:
                         if (word[4] == 'COMUNICADOS:'):
@@ -74,36 +78,78 @@ def main():
                             aux_nome_1.append({'palavra' : word,
                                                'pag' : i})
 
-                #Inicializa o vetor de nomes
-                for i in range(len(aux_nome_1)):
-                    aux_nome_3['nome' + str(i)] = ""
-                
-                for word in words['page0']:
-                    if ((word[1] >= aux_1[1]) and (word[1] < aux_2[1])):
-                        aux_fato += word[4] + " "   
+                idx_atendente = text.find("ATENDENTES")
 
-                # For para percorrer todas as páginas de palavras
-                for i in range(len(words)):
-                    # For para percorrer todas as palavras em determinada página
-                    for word in words['page' + str(i)]:
-                        # For para percorrer todos os nomes existentes
-                        for j in range(len(aux_nome_1)):
-                            # Verifica se a página atual é a que contem os nomes
-                            if (aux_nome_1[j]['pag'] == i):
-                                if ((word[1] == aux_nome_1[j]['palavra'][1])):
-                                    aux_nome_3['nome' + str(j)] += " " + word[4] + " "
+                # Verifica se existem envolvidos relacionados a ocorrencia
+                if (text.find("ENVOLVIDOS", 0, idx_atendente) != -1):         
+                    #Inicializa o vetor de nomes
+                    for i in range(len(aux_nome_1)):
+                        aux_nome_3['nome' + str(i)] = ""
+                    
+                    for word in words['page0']:
+                        if ((word[1] >= aux_1[1]) and (word[1] < aux_2[1])):
+                            aux_fato += word[4] + " "   
+                    
+                    # For para percorrer todas as páginas de palavras
+                    for i in range(len(words)):
+                        # For para percorrer todas as palavras em determinada página
+                        for word in words['page' + str(i)]:
+                            # For para percorrer todos os nomes existentes
+                            for j in range(len(aux_nome_1)):
+                                # Verifica se a página atual é a que contem os nomes
+                                if (aux_nome_1[j]['pag'] == i):
+                                    if ((word[1] == aux_nome_1[j]['palavra'][1])):
+                                        aux_nome_3['nome' + str(j)] += " " + word[4] + " "
 
-                #Faz a separação de todos os fatos da ocorrência
-                if ('OUTROS DADOS:' in aux_fato):
-                    aux_fato = get_General_Data_Between("", "OUTROS DADOS:", aux_fato)
+                    #Faz a separação de todos os fatos da ocorrência
+                    if ('OUTROS DADOS:' in aux_fato):
+                        aux_fato = get_General_Data_Between("", "OUTROS DADOS:", aux_fato)
 
-                fatos = []
-                fatos = (aux_fato[19:].split(';'))
-                
-                #Faz a separação do nome dos envolvidos
-                for i in range(len(aux_nome_1)):
-                    nome_envolvido['nome' + str(i)]       = get_General_Data("", "(", aux_nome_3['nome' + str(i)]) 
-                    participacao['participacao' + str(i)] = get_General_Data(nome_envolvido['nome' + str(i)], "Mãe:", text)
+                    fatos = []
+                    fatos = (aux_fato[19:].split(';'))
+                    
+                    #Faz a separação do nome dos envolvidos
+                    for i in range(len(aux_nome_1)):
+                        nome_envolvido['nome' + str(i)] = " ".join((get_General_Data("", "(", aux_nome_3['nome' + str(i)])).split())
+                        participacao['participacao' + str(i)] = get_General_Data(nome_envolvido['nome' + str(i)], "Mãe:", text)
+
+                    #Extração do restante das informações dos envolvidos
+                    aux_envolvidos = get_General_Data("ENVOLVIDOS", "ATENDENTES", text)
+                    num_envolvidos = aux_envolvidos.count('Mãe:')
+
+                    for i in range(num_envolvidos):
+                        rg  = get_General_Data("RG:", "-", aux_envolvidos)
+                        cpf = get_General_Data("RG: Não informado", "CPF:", aux_envolvidos)
+                        naturalidade = get_General_Data("Naturalidade:", "BRASIL", aux_envolvidos)
+                        estado = naturalidade[len(naturalidade) - 3:].strip('/')
+
+                        if (len(rg) > 12):
+                            rg = "";
+                        if (len(cpf) > 15):
+                            cpf = ""
+                        if (len(estado) > 2):
+                            estado = ""
+                        
+                        rg  = rg.replace('.', '').replace('-', '')
+                        cpf = cpf.replace('.', '').replace('-', '')
+
+                        envolvidos.append({'nome': nome_envolvido['nome' + str(i)],
+                                        'participacao': participacao['participacao' + str(i)],
+                                        'data_nascimento' : get_General_Data("Data de Nascimento:", "Naturalidade:", aux_envolvidos),
+                                        'RG' : rg,
+                                        'CPF': cpf,
+                                        'estado': estado})
+
+                        aux_envolvidos_1 = get_General_Data_Strip("", "Individual:", aux_envolvidos)
+
+                        aux_envolvidos = aux_envolvidos.replace(aux_envolvidos_1, '') 
+                else:
+                    idx_bens_objetos = text.find("BENS/OBJETOS", 0, idx_atendente)
+
+                    if (idx_bens_objetos != -1):
+                        fatos = (get_General_Data("FATOS COMUNICADOS:", "BENS/OBJETOS", text)).split(";")
+                    else:
+                        fatos = (get_General_Data("FATOS COMUNICADOS:", "ATENDENTES", text)).split(";")
 
                 #Extração do endereço
                 endereco_extraido = get_General_Data("LOCAL", "FATOS COMUNICADOS:", text)
@@ -124,38 +170,7 @@ def main():
                 endereco['endereco_bairro'] = endereco_bairro.replace("\n", ' ')
                 endereco['endereco_cidade'] = endereco_cidade.replace("\n", ' ')
                 endereco['endereco_estado'] = endereco_estado
-                endereco['endereco_cep']    = endereco_cep 
-
-                #Extração do restante das informações dos envolvidos
-                aux_envolvidos = get_General_Data("ENVOLVIDOS", "ATENDENTES", text)
-                num_envolvidos = aux_envolvidos.count('Mãe:')
-
-                for i in range(num_envolvidos):
-                    rg  = get_General_Data("RG:", "-", aux_envolvidos)
-                    cpf = get_General_Data("RG: Não informado", "CPF:", aux_envolvidos)
-                    naturalidade = get_General_Data("Naturalidade:", "BRASIL", aux_envolvidos)
-                    estado = naturalidade[len(naturalidade) - 3:].strip('/')
-
-                    if (len(rg) > 12):
-                        rg = "";
-                    if (len(cpf) > 15):
-                        cpf = ""
-                    if (len(estado) > 2):
-                        estado = ""
-                    
-                    rg  = rg.replace('.', '').replace('-', '')
-                    cpf = cpf.replace('.', '').replace('-', '')
-
-                    envolvidos.append({'nome': nome_envolvido['nome' + str(i)],
-                                       'participacao': participacao['participacao' + str(i)],
-                                       'data_nascimento' : get_General_Data("Data de Nascimento:", "Naturalidade:", aux_envolvidos),
-                                       'RG' : rg,
-                                       'CPF': cpf,
-                                       'estado': estado})
-
-                    aux_envolvidos_1 = get_General_Data_Strip("", "Individual:", aux_envolvidos)
-
-                    aux_envolvidos = aux_envolvidos.replace(aux_envolvidos_1, '')     
+                endereco['endereco_cep']    = endereco_cep     
 
                 itens = get_General_Data("BENS/OBJETOS", "ATENDENTES", text)
 
@@ -164,7 +179,7 @@ def main():
                 for i in range(num_itens):
                     item = (get_General_Data("", "▪", itens[1:]))
 
-                    itens = (itens.replace("▪ " + item + '\n', ''))
+                    itens = (itens.replace("▪ " + item, '')).strip()
 
                     if (get_Items_Data("", "-", item) == "Objeto"): 
                         qtd_un_med_obj = get_General_Data('Quantidade:', '|', item)
@@ -260,8 +275,7 @@ def main():
                 else:
                     outras_info['animais'] = 'N'
 
-                num_protocol = get_General_Data("PROTOCOLO SADE", "REGISTROS RELACIONADOS", text)
-                num_protocol = get_Items_Data("No", "\n", num_protocol)
+                num_protocol = get_General_Data("PROTOCOLO SADE No", "B", text)
 
                 ocorrencia.append({'num_protocol'     : num_protocol,
                                    'data_hora'        : get_General_Data("DATA DO FATO:", "HORA DO FATO:", text) + " " + get_General_Data("HORA DO FATO:", "LOCAL", text) + ":00",
@@ -359,7 +373,7 @@ def main():
 
 def get_General_Data(str_Init_Word, str_End_Word, str_Text):
     Idx_Init = str_Text.find(str_Init_Word)
-    Idx_End  = str_Text.find(str_End_Word)
+    Idx_End  = str_Text.find(str_End_Word, Idx_Init)
 
     Data = str_Text[Idx_Init + len(str_Init_Word) + 1: Idx_End]
 
@@ -367,7 +381,7 @@ def get_General_Data(str_Init_Word, str_End_Word, str_Text):
 
 def get_General_Data_Between(str_Init_Word, str_End_Word, str_Text):
     Idx_Init = str_Text.find(str_Init_Word)
-    Idx_End  = str_Text.find(str_End_Word)
+    Idx_End  = str_Text.find(str_End_Word, Idx_Init)
 
     Data = str_Text[Idx_Init + len(str_Init_Word): Idx_End]
 
@@ -375,7 +389,7 @@ def get_General_Data_Between(str_Init_Word, str_End_Word, str_Text):
 
 def get_General_Data_Strip(str_Init_Word, str_End_Word, str_Text):
     Idx_Init = str_Text.find(str_Init_Word)
-    Idx_End  = str_Text.find(str_End_Word)
+    Idx_End  = str_Text.find(str_End_Word, Idx_Init)
 
     Data = str_Text[Idx_Init + len(str_Init_Word) + 1: Idx_End + len(str_End_Word)]
 
@@ -383,7 +397,7 @@ def get_General_Data_Strip(str_Init_Word, str_End_Word, str_Text):
 
 def get_Items_Data(str_Init_Word, str_End_Word, str_Text):
     Idx_Init = str_Text.find(str_Init_Word)
-    Idx_End  = str_Text.find(str_End_Word)
+    Idx_End  = str_Text.find(str_End_Word, Idx_Init)
 
     Data = str_Text[Idx_Init + len(str_Init_Word): Idx_End + len(str_End_Word) - 1]
 
