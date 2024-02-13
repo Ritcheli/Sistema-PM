@@ -14,31 +14,31 @@ class AnaliseOcorrenciaController extends Controller
 
     public function plot_SNA_Graph(Request $request){
         if ($request['tipo_rede'] == 'Pessoas'){ 
-            $data = $this->plot_SNA_Pessoas($request['participacao'], $request['grupo_ocorr']);
+            $data = $this->plot_SNA_Pessoas($request['participacao'], $request['grupo_ocorr'], $request['data_inicial'], $request['data_final']);
         }
         if ($request['tipo_rede'] == 'Pessoas_Fatos'){
-            $data = $this->plot_SNA_Pessoas_Fatos($request['participacao']);
+            $data = $this->plot_SNA_Pessoas_Fatos($request['participacao'], $request['data_inicial'], $request['data_final']);
         }
         if ($request['tipo_rede'] == 'Pessoas_Grupos'){
-            $data = $this->plot_SNA_Pessoas_Grupos($request['participacao']);
+            $data = $this->plot_SNA_Pessoas_Grupos($request['participacao'], $request['data_inicial'], $request['data_final']);
         } 
         if ($request['tipo_rede'] == 'Pessoas_Objetos'){
-            $data = $this->plot_SNA_Pessoas_Objetos($request['participacao']);
+            $data = $this->plot_SNA_Pessoas_Objetos($request['participacao'], $request['data_inicial'], $request['data_final']);
         } 
         if ($request['tipo_rede'] == 'Pessoas_Armas'){
-            $data = $this->plot_SNA_Pessoas_Armas($request['participacao']);
+            $data = $this->plot_SNA_Pessoas_Armas($request['participacao'], $request['data_inicial'], $request['data_final']);
         }
         if ($request['tipo_rede'] == 'Pessoas_Localizacao'){
-            $data = $this->plot_SNA_Pessoas_Localizacao($request['participacao']);
+            $data = $this->plot_SNA_Pessoas_Localizacao($request['participacao'], $request['data_inicial'], $request['data_final']);
         } 
         if ($request['tipo_rede'] == 'Pessoas_Drogas'){
-            $data = $this->plot_SNA_Pessoas_Drogas($request['participacao']);
+            $data = $this->plot_SNA_Pessoas_Drogas($request['participacao'], $request['data_inicial'], $request['data_final']);
         }
 
         return response()->json($data, 200);
     }
 
-    public function plot_SNA_Pessoas($participacao, $grupo){
+    public function plot_SNA_Pessoas($participacao, $grupo, $data_inicial, $data_final){
         $nodes  = collect();
         $links  = collect();
         $list_adicionados = array();
@@ -50,6 +50,7 @@ class AnaliseOcorrenciaController extends Controller
                    ->leftJoin('fatos_ocorrencias', 'participacao_pessoas_fatos.id_fato_ocorrencia', 'fatos_ocorrencias.id_fato_ocorrencia')
                    ->leftJoin('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
                    ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
+                   ->join('ocorrencias', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias.id_ocorrencia')
                    ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
                    ->orderBy('pessoas.nome');
 
@@ -59,6 +60,14 @@ class AnaliseOcorrenciaController extends Controller
         }
         if ($grupo == 'Substancias'){
             $query->where('grupos_fatos.nome', 'Drogas');
+        }
+        
+        // Aplicação dos filtros da data
+        if ($data_inicial != ""){
+            $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+        }
+        if ($data_final != ""){
+            $query->where('ocorrencias.data_hora', "<=", $data_final);
         }
 
         $ocorrencias = $query->groupBy('ocorrencias_pessoas.id_pessoa')
@@ -183,30 +192,50 @@ class AnaliseOcorrenciaController extends Controller
         return $data;
     }
 
-    public function plot_SNA_Pessoas_Fatos($participacao){
+    public function plot_SNA_Pessoas_Fatos($participacao, $data_inicial, $data_final){
         $nodes     = collect();
         $links     = collect();
 
         // Relação de pessoas e fatos_ocorrencias, a grossura da aresta é dada pela quantidade de vezes que uma pessoa está associada a um mesmo fato
-        $pessoas_fatos = DB::table('fatos_ocorrencias')
-                           ->select('fatos_ocorrencias.id_fato_ocorrencia', 'fatos_ocorrencias.natureza', 'ocorrencias_pessoas.id_ocorrencia', 'pessoas.id_pessoa',
-                                     'pessoas.nome', 'pessoas.RG_CPF', 'pessoas.data_nascimento', 'fotos_pessoas.caminho_servidor', DB::raw('count(*) as count_pessoa'))
-                           ->join('participacao_pessoas_fatos', 'fatos_ocorrencias.id_fato_ocorrencia', 'participacao_pessoas_fatos.id_fato_ocorrencia')
-                           ->join('ocorrencias_pessoas', 'participacao_pessoas_fatos.id_ocorrencia_pessoa', 'ocorrencias_pessoas.id_ocorrencia_pessoa')
-                           ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
-                           ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
-                           ->groupBy('fatos_ocorrencias.id_fato_ocorrencia', 'pessoas.id_pessoa')
-                           ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
-                           ->get();
+        $query = DB::table('fatos_ocorrencias')
+                   ->select('fatos_ocorrencias.id_fato_ocorrencia', 'fatos_ocorrencias.natureza', 'ocorrencias_pessoas.id_ocorrencia', 'pessoas.id_pessoa',
+                            'pessoas.nome', 'pessoas.RG_CPF', 'pessoas.data_nascimento', 'fotos_pessoas.caminho_servidor', DB::raw('count(*) as count_pessoa'))
+                   ->join('participacao_pessoas_fatos', 'fatos_ocorrencias.id_fato_ocorrencia', 'participacao_pessoas_fatos.id_fato_ocorrencia')
+                   ->join('ocorrencias_pessoas', 'participacao_pessoas_fatos.id_ocorrencia_pessoa', 'ocorrencias_pessoas.id_ocorrencia_pessoa')
+                   ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
+                   ->join('ocorrencias', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias.id_ocorrencia')
+                   ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
+                   ->groupBy('fatos_ocorrencias.id_fato_ocorrencia', 'pessoas.id_pessoa')
+                   ->whereIn('participacao_pessoas_fatos.participacao', $participacao);
+
+        // Aplicação dos filtros da data
+        if ($data_inicial != ""){
+            $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+        }
+        if ($data_final != ""){
+            $query->where('ocorrencias.data_hora', "<=", $data_final);
+        }
+        
+        $pessoas_fatos = $query->get();
 
         // Relação de fatos e a quantidade de vezes que aparecem
-        $fatos = DB::table('fatos_ocorrencias')
+        $query = DB::table('fatos_ocorrencias')
                    ->distinct()
                    ->select('fatos_ocorrencias.id_fato_ocorrencia', 'ocorrencias_pessoas.id_ocorrencia', 'fatos_ocorrencias.natureza')
                    ->join('participacao_pessoas_fatos', 'fatos_ocorrencias.id_fato_ocorrencia', 'participacao_pessoas_fatos.id_fato_ocorrencia')
                    ->join('ocorrencias_pessoas', 'participacao_pessoas_fatos.id_ocorrencia_pessoa', 'ocorrencias_pessoas.id_ocorrencia_pessoa')
-                   ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
-                   ->get();
+                   ->join('ocorrencias', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias.id_ocorrencia')
+                   ->whereIn('participacao_pessoas_fatos.participacao', $participacao);
+
+        // Aplicação dos filtros da data
+        if ($data_inicial != ""){
+            $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+        }
+        if ($data_final != ""){
+            $query->where('ocorrencias.data_hora', "<=", $data_final);
+        }
+
+        $fatos = $query->get();
 
         $count_fatos = $fatos->countBy('natureza');
 
@@ -226,13 +255,22 @@ class AnaliseOcorrenciaController extends Controller
                         ]);
 
             if ($nodes->doesntContain('data.id' ,strval($pessoa_fato->id_pessoa) . $pessoa_fato->nome)){
-                $recorrencias = DB::table("ocorrencias")
-                                  ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
-                                  ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
-                                  ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
-                                  ->where("pessoas.id_pessoa", $pessoa_fato->id_pessoa)
-                                  ->groupBy("pessoas.id_pessoa")
-                                  ->first();
+                $query = DB::table("ocorrencias")
+                           ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
+                           ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
+                           ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
+                           ->where("pessoas.id_pessoa", $pessoa_fato->id_pessoa)
+                           ->groupBy("pessoas.id_pessoa");
+                
+                // Aplicação dos filtros da data
+                if ($data_inicial != ""){
+                    $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+                }
+                if ($data_final != ""){
+                    $query->where('ocorrencias.data_hora', "<=", $data_final);
+                }
+
+                $recorrencias = $query->first();
 
                 $nodes->push(['data' => ['id'           => strval($pessoa_fato->id_pessoa) . $pessoa_fato->nome,
                                          'id_pessoa'    => $pessoa_fato->id_pessoa,
@@ -265,32 +303,52 @@ class AnaliseOcorrenciaController extends Controller
         return $data;
     }
 
-    public function plot_SNA_Pessoas_Grupos($participacao){
+    public function plot_SNA_Pessoas_Grupos($participacao, $data_inicial, $data_final){
         $nodes     = collect();
         $links     = collect();
 
         // Relação de pessoas e grupos_fatos, a grossura da aresta é dada pela quantidade de vezes que uma pessoa está associada a um mesmo fato
-        $pessoas_grupos =  DB::table('fatos_ocorrencias')
-                             ->select('grupos_fatos.id_grupo_fato', 'grupos_fatos.nome as grupo', 'ocorrencias_pessoas.id_ocorrencia', 'pessoas.id_pessoa',
-                                     'pessoas.nome as pessoa', 'pessoas.RG_CPF', 'pessoas.data_nascimento', 'fotos_pessoas.caminho_servidor', DB::raw('COUNT(*) as count_pessoa'))
-                             ->join('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
-                             ->join('participacao_pessoas_fatos', 'fatos_ocorrencias.id_fato_ocorrencia', 'participacao_pessoas_fatos.id_fato_ocorrencia')
-                             ->join('ocorrencias_pessoas', 'participacao_pessoas_fatos.id_ocorrencia_pessoa', 'ocorrencias_pessoas.id_ocorrencia_pessoa')
-                             ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
-                             ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
-                             ->groupBy('grupos_fatos.id_grupo_fato', 'pessoas.id_pessoa')
-                             ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
-                             ->get(); 
-        
-        // Relação de grupos e a quantidade de vezes que aparecem
-        $grupos = DB::table('fatos_ocorrencias')
-                    ->select('ocorrencias_pessoas.id_ocorrencia', 'grupos_fatos.id_grupo_fato', 'grupos_fatos.nome')
-                    ->distinct()
+        $query =  DB::table('fatos_ocorrencias')
+                    ->select('grupos_fatos.id_grupo_fato', 'grupos_fatos.nome as grupo', 'ocorrencias_pessoas.id_ocorrencia', 'pessoas.id_pessoa',
+                            'pessoas.nome as pessoa', 'pessoas.RG_CPF', 'pessoas.data_nascimento', 'fotos_pessoas.caminho_servidor', DB::raw('COUNT(*) as count_pessoa'))
                     ->join('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
                     ->join('participacao_pessoas_fatos', 'fatos_ocorrencias.id_fato_ocorrencia', 'participacao_pessoas_fatos.id_fato_ocorrencia')
                     ->join('ocorrencias_pessoas', 'participacao_pessoas_fatos.id_ocorrencia_pessoa', 'ocorrencias_pessoas.id_ocorrencia_pessoa')
-                    ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
-                    ->get(); 
+                    ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
+                    ->join('ocorrencias', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias.id_ocorrencia')
+                    ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
+                    ->groupBy('grupos_fatos.id_grupo_fato', 'pessoas.id_pessoa')
+                    ->whereIn('participacao_pessoas_fatos.participacao', $participacao);
+
+        // Aplicação dos filtros da data
+        if ($data_inicial != ""){
+            $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+        }
+        if ($data_final != ""){
+            $query->where('ocorrencias.data_hora', "<=", $data_final);
+        }
+
+        $pessoas_grupos = $query->get();
+        
+        // Relação de grupos e a quantidade de vezes que aparecem
+        $query = DB::table('fatos_ocorrencias')
+                   ->select('ocorrencias_pessoas.id_ocorrencia', 'grupos_fatos.id_grupo_fato', 'grupos_fatos.nome')
+                   ->distinct()
+                   ->join('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
+                   ->join('participacao_pessoas_fatos', 'fatos_ocorrencias.id_fato_ocorrencia', 'participacao_pessoas_fatos.id_fato_ocorrencia')
+                   ->join('ocorrencias_pessoas', 'participacao_pessoas_fatos.id_ocorrencia_pessoa', 'ocorrencias_pessoas.id_ocorrencia_pessoa')
+                   ->join('ocorrencias', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias.id_ocorrencia')
+                   ->whereIn('participacao_pessoas_fatos.participacao', $participacao);
+
+        // Aplicação dos filtros da data
+        if ($data_inicial != ""){
+            $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+        }
+        if ($data_final != ""){
+            $query->where('ocorrencias.data_hora', "<=", $data_final);
+        }
+
+        $grupos = $query->get();
 
         $count_grupos = $grupos->countBy('nome');
 
@@ -312,13 +370,22 @@ class AnaliseOcorrenciaController extends Controller
                         ]);
 
             if ($nodes->doesntContain('data.id' ,strval($pessoa_grupo->id_pessoa) . $pessoa_grupo->pessoa)){
-                $recorrencias = DB::table("ocorrencias")
-                                  ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
-                                  ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
-                                  ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
-                                  ->where("pessoas.id_pessoa", $pessoa_grupo->id_pessoa)
-                                  ->groupBy("pessoas.id_pessoa")
-                                  ->first();
+                $query = DB::table("ocorrencias")
+                           ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
+                           ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
+                           ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
+                           ->where("pessoas.id_pessoa", $pessoa_grupo->id_pessoa)
+                           ->groupBy("pessoas.id_pessoa");
+
+                // Aplicação dos filtros da data
+                if ($data_inicial != ""){
+                    $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+                }
+                if ($data_final != ""){
+                    $query->where('ocorrencias.data_hora', "<=", $data_final);
+                }
+
+                $recorrencias = $query->first();
 
                 $nodes->push(['data' => ['id'           => strval($pessoa_grupo->id_pessoa) . $pessoa_grupo->pessoa,
                                          'id_pessoa'    => $pessoa_grupo->id_pessoa,
@@ -351,7 +418,7 @@ class AnaliseOcorrenciaController extends Controller
         return $data;
     }
 
-    public function plot_SNA_Pessoas_Objetos($participacao){
+    public function plot_SNA_Pessoas_Objetos($participacao, $data_inicial, $data_final){
         $nodes     = collect();
         $links     = collect();
 
@@ -370,6 +437,14 @@ class AnaliseOcorrenciaController extends Controller
                    ->groupBy('objetos_diversos.id_objeto_diverso', 'ocorrencias.id_ocorrencia', 'pessoas.id_pessoa')
                    ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
                    ->whereIn('grupos_fatos.nome', ['Furto', 'Roubo']);
+
+        // Aplicação dos filtros da data
+        if ($data_inicial != ""){
+            $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+        }
+        if ($data_final != ""){
+            $query->where('ocorrencias.data_hora', "<=", $data_final);
+        }
         
         $subquery = $this->getEloquentSqlWithBindings($query);
 
@@ -401,17 +476,26 @@ class AnaliseOcorrenciaController extends Controller
                         ]);
         
             if ($nodes->doesntContain('data.id' ,strval($pessoa_objeto->id_pessoa) . $pessoa_objeto->nome)){
-                $recorrencias = DB::table("ocorrencias")
-                                  ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
-                                  ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
-                                  ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
-                                  ->join("ocorrencias_fatos_ocorrencias", "ocorrencias.id_ocorrencia", "ocorrencias_fatos_ocorrencias.id_ocorrencia")
-                                  ->join("fatos_ocorrencias", "ocorrencias_fatos_ocorrencias.id_fato_ocorrencia", "fatos_ocorrencias.id_fato_ocorrencia")
-                                  ->join("grupos_fatos", "fatos_ocorrencias.id_grupo_fato", "grupos_fatos.id_grupo_fato")
-                                  ->whereIn('grupos_fatos.nome', ['Furto', 'Roubo'])
-                                  ->where("pessoas.id_pessoa", $pessoa_objeto->id_pessoa)
-                                  ->groupBy("pessoas.id_pessoa")
-                                  ->first();
+                $query = DB::table("ocorrencias")
+                           ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
+                           ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
+                           ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
+                           ->join("ocorrencias_fatos_ocorrencias", "ocorrencias.id_ocorrencia", "ocorrencias_fatos_ocorrencias.id_ocorrencia")
+                           ->join("fatos_ocorrencias", "ocorrencias_fatos_ocorrencias.id_fato_ocorrencia", "fatos_ocorrencias.id_fato_ocorrencia")
+                           ->join("grupos_fatos", "fatos_ocorrencias.id_grupo_fato", "grupos_fatos.id_grupo_fato")
+                           ->whereIn('grupos_fatos.nome', ['Furto', 'Roubo'])
+                           ->where("pessoas.id_pessoa", $pessoa_objeto->id_pessoa)
+                           ->groupBy("pessoas.id_pessoa");
+
+                // Aplicação dos filtros da data
+                if ($data_inicial != ""){
+                    $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+                }
+                if ($data_final != ""){
+                    $query->where('ocorrencias.data_hora', "<=", $data_final);
+                }
+
+                $recorrencias = $query->first();
 
                 $nodes->push(['data' => ['id'           => strval($pessoa_objeto->id_pessoa) . $pessoa_objeto->nome,
                                          'id_pessoa'    => $pessoa_objeto->id_pessoa,
@@ -444,7 +528,7 @@ class AnaliseOcorrenciaController extends Controller
         return $data;
     }
 
-    public function plot_SNA_Pessoas_Armas($participacao){
+    public function plot_SNA_Pessoas_Armas($participacao, $data_inicial, $data_final){
         $nodes     = collect();
         $links     = collect();
 
@@ -455,10 +539,19 @@ class AnaliseOcorrenciaController extends Controller
                    ->join('ocorrencias_armas', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias_armas.id_ocorrencia')
                    ->join('armas', 'ocorrencias_armas.id_arma', 'armas.id_arma')
                    ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
+                   ->join('ocorrencias', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias.id_ocorrencia')
                    ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
                    ->groupBy('ocorrencias_pessoas.id_ocorrencia', 'pessoas.id_pessoa')
                    ->whereIn('participacao_pessoas_fatos.participacao', $participacao);
         
+        // Aplicação dos filtros da data
+        if ($data_inicial != ""){
+            $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+        }
+        if ($data_final != ""){
+            $query->where('ocorrencias.data_hora', "<=", $data_final);
+        }
+
         $subquery = $this->getEloquentSqlWithBindings($query);
 
         $pessoas_armas = collect(DB::select("select subquery.id_pessoa, subquery.nome, subquery.id_arma, subquery.tipo, subquery.caminho_servidor, subquery.RG_CPF,
@@ -489,13 +582,22 @@ class AnaliseOcorrenciaController extends Controller
                         ]);
 
             if ($nodes->doesntContain('data.id' , strval($pessoa_arma->id_pessoa) . $pessoa_arma->nome)){
-                $recorrencias = DB::table("ocorrencias")
-                                  ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
-                                  ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
-                                  ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
-                                  ->where("pessoas.id_pessoa", $pessoa_arma->id_pessoa)
-                                  ->groupBy("pessoas.id_pessoa")
-                                  ->first();
+                $query = DB::table("ocorrencias")
+                           ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
+                           ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
+                           ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
+                           ->where("pessoas.id_pessoa", $pessoa_arma->id_pessoa)
+                           ->groupBy("pessoas.id_pessoa");
+                
+                // Aplicação dos filtros da data
+                if ($data_inicial != ""){
+                    $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+                }
+                if ($data_final != ""){
+                    $query->where('ocorrencias.data_hora', "<=", $data_final);
+                }
+
+                $recorrencias = $query->first();
 
                 $nodes->push(['data' => ['id'           => strval($pessoa_arma->id_pessoa) . $pessoa_arma->nome,
                                          'id_pessoa'    => $pessoa_arma->id_pessoa,
@@ -528,7 +630,7 @@ class AnaliseOcorrenciaController extends Controller
         return $data;
     }
 
-    public function plot_SNA_Pessoas_Localizacao($participacao){
+    public function plot_SNA_Pessoas_Localizacao($participacao, $data_inicial, $data_final){
         $nodes     = collect();
         $links     = collect();
 
@@ -546,6 +648,14 @@ class AnaliseOcorrenciaController extends Controller
                    ->groupBy('ocorrencias.id_ocorrencia', 'pessoas.id_pessoa', 'bairros.id_bairro')
                    ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
                    ->whereIn('grupos_fatos.nome', ['Furto', 'Roubo']);
+
+        // Aplicação dos filtros da data
+        if ($data_inicial != ""){
+            $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+        }
+        if ($data_final != ""){
+            $query->where('ocorrencias.data_hora', "<=", $data_final);
+        }
 
         $subquery = $this->getEloquentSqlWithBindings($query);
         
@@ -577,17 +687,26 @@ class AnaliseOcorrenciaController extends Controller
                         ]);
 
             if ($nodes->doesntContain('data.id' , strval($pessoa_localizacao->id_pessoa) . $pessoa_localizacao->pessoa)){
-                $recorrencias = DB::table("ocorrencias")
-                                  ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
-                                  ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
-                                  ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
-                                  ->join("ocorrencias_fatos_ocorrencias", "ocorrencias.id_ocorrencia", "ocorrencias_fatos_ocorrencias.id_ocorrencia")
-                                  ->join("fatos_ocorrencias", "ocorrencias_fatos_ocorrencias.id_fato_ocorrencia", "fatos_ocorrencias.id_fato_ocorrencia")
-                                  ->join("grupos_fatos", "fatos_ocorrencias.id_grupo_fato", "grupos_fatos.id_grupo_fato")
-                                  ->whereIn('grupos_fatos.nome', ['Furto', 'Roubo'])
-                                  ->where("pessoas.id_pessoa", $pessoa_localizacao->id_pessoa)
-                                  ->groupBy("pessoas.id_pessoa")
-                                  ->first();
+                $query = DB::table("ocorrencias")
+                           ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
+                           ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
+                           ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
+                           ->join("ocorrencias_fatos_ocorrencias", "ocorrencias.id_ocorrencia", "ocorrencias_fatos_ocorrencias.id_ocorrencia")
+                           ->join("fatos_ocorrencias", "ocorrencias_fatos_ocorrencias.id_fato_ocorrencia", "fatos_ocorrencias.id_fato_ocorrencia")
+                           ->join("grupos_fatos", "fatos_ocorrencias.id_grupo_fato", "grupos_fatos.id_grupo_fato")
+                           ->whereIn('grupos_fatos.nome', ['Furto', 'Roubo'])
+                           ->where("pessoas.id_pessoa", $pessoa_localizacao->id_pessoa)
+                           ->groupBy("pessoas.id_pessoa");
+
+                // Aplicação dos filtros da data
+                if ($data_inicial != ""){
+                    $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+                }
+                if ($data_final != ""){
+                    $query->where('ocorrencias.data_hora', "<=", $data_final);
+                }
+
+                $recorrencias = $query->first();
 
                 $nodes->push(['data' => ['id'           => strval($pessoa_localizacao->id_pessoa) . $pessoa_localizacao->pessoa,
                                          'id_pessoa'    => $pessoa_localizacao->id_pessoa,
@@ -620,7 +739,7 @@ class AnaliseOcorrenciaController extends Controller
         return $data;
     }
 
-    public function plot_SNA_Pessoas_Drogas($participacao){
+    public function plot_SNA_Pessoas_Drogas($participacao, $data_inicial, $data_final){
         $nodes     = collect();
         $links     = collect();
 
@@ -633,10 +752,19 @@ class AnaliseOcorrenciaController extends Controller
                    ->join('pessoas', 'ocorrencias_pessoas.id_pessoa', 'pessoas.id_pessoa')
                    ->join('fatos_ocorrencias', 'participacao_pessoas_fatos.id_fato_ocorrencia', 'fatos_ocorrencias.id_fato_ocorrencia')
                    ->join('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
+                   ->join('ocorrencias', 'ocorrencias_pessoas.id_ocorrencia', 'ocorrencias.id_ocorrencia')
                    ->leftJoin('fotos_pessoas', 'pessoas.id_pessoa', 'fotos_pessoas.id_pessoa')
                    ->where('grupos_fatos.nome', 'Drogas')
                    ->whereIn('participacao_pessoas_fatos.participacao', $participacao)
                    ->groupBy('ocorrencias_pessoas.id_ocorrencia', 'drogas.id_droga', 'pessoas.id_pessoa');
+
+        // Aplicação dos filtros da data
+        if ($data_inicial != ""){
+            $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+        }
+        if ($data_final != ""){
+            $query->where('ocorrencias.data_hora', "<=", $data_final);
+        }
 
         $subquery = $this->getEloquentSqlWithBindings($query);
 
@@ -667,13 +795,22 @@ class AnaliseOcorrenciaController extends Controller
                         ]);
 
             if ($nodes->doesntContain('data.id' , strval($pessoa_droga->id_pessoa) . $pessoa_droga->nome)){
-                $recorrencias = DB::table("ocorrencias")
-                                  ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
-                                  ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
-                                  ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
-                                  ->where("pessoas.id_pessoa", $pessoa_droga->id_pessoa)
-                                  ->groupBy("pessoas.id_pessoa")
-                                  ->first();
+                $query = DB::table("ocorrencias")
+                           ->select("pessoas.id_pessoa", DB::raw('count(*) as count_pessoa'))
+                           ->join("ocorrencias_pessoas", "ocorrencias.id_ocorrencia", "ocorrencias_pessoas.id_ocorrencia")
+                           ->join("pessoas", "ocorrencias_pessoas.id_pessoa", "pessoas.id_pessoa")
+                           ->where("pessoas.id_pessoa", $pessoa_droga->id_pessoa)
+                           ->groupBy("pessoas.id_pessoa");
+
+                // Aplicação dos filtros da data
+                if ($data_inicial != ""){
+                    $query->where('ocorrencias.data_hora', ">=", $data_inicial);
+                }
+                if ($data_final != ""){
+                    $query->where('ocorrencias.data_hora', "<=", $data_final);
+                }
+
+                $recorrencias = $query->first();
 
                 $nodes->push(['data' => ['id'           => strval($pessoa_droga->id_pessoa) . $pessoa_droga->nome,
                                          'id_pessoa'    => $pessoa_droga->id_pessoa,

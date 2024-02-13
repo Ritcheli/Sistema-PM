@@ -24,17 +24,27 @@
                                 <div class="custom-selection rede-tipo" id="vs_rede_tipo"></div>
                                 <span class="invalid-feedback" role="alert" id="vs_rede_tipo-invalida"></span>
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
+                            <div class="form-group col">
                                 <label class="text-nowrap">Participação dos envolvidos</label>
                                 <div class="custom-selection rede-participacao" id="vs_rede_participacao" multiple></div>
                                 <span class="invalid-feedback" role="alert" id="vs_rede_participacao-invalida"></span>
                             </div>
+                        </div>
+                        <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label class="text-nowrap">Grupo das ocorrências</label>
                                 <div class="custom-selection grupo-ocorr" id="vs_grupo_ocorr" disabled></div>
                                 <span class="invalid-feedback" role="alert" id="vs_grupo_ocorr-invalido"></span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="text-nowrap">Intervalo</label>
+                                <div class="input-group input-daterange mb-3">
+                                    <input type="date" class="form-control CM initial-date" id="data_inicial_analise" name="data_inicial_analise" placeholder="Data inicial">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">até</span>
+                                    </div>
+                                    <input type="date" class="form-control CM final-date" id="data_final_analise" name="data_final_analise" placeholder="Data inicial">
+                                </div>
                             </div>
                         </div>
                         <div class="text-lg-right text-center mb-3">

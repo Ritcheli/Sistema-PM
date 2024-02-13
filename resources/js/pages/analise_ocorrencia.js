@@ -115,6 +115,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var tipo_rede               = $('#vs_rede_tipo').val();
         var participacao_envolvidos = $('#vs_rede_participacao').val();
         var grupo_ocorr             = $('#vs_grupo_ocorr').val();
+        var data_inicial            = $("#data_inicial_analise").val();
+        var data_final              = $("#data_final_analise").val();
         var error                   = false;
 
         $('#vs_rede_tipo').removeClass('is-invalid');
@@ -169,6 +171,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 tipo_rede : tipo_rede,
                 participacao : participacao_envolvidos,
                 grupo_ocorr : grupo_ocorr,
+                data_inicial : data_inicial,
+                data_final : data_final
             },
             success: function(result){
                 if (result != ""){
