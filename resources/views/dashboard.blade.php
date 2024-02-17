@@ -18,17 +18,25 @@
                 </div>
                 <div class="body">
                     <div class="value">
-                        {{ $total_drugs_current_month }}
+                        {{ $drugs_balance[2] }}
                     </div>
                     <div class="un_medida">
                         Kg
                     </div>
                 </div>
-                <div class="top-footer">
+                <div class="top-footer @if ($drugs_balance[1] == 'Aumento') inc @else dec @endif">
                     <div class="top-footer-arrow">
-                        <i class='bx bx-up-arrow-alt bx-fade-down' ></i>
+                        @if ($drugs_balance[1] == "Aumento")
+                            <i class='bx bx-up-arrow-alt bx-fade-down' ></i>
+                        @else
+                            <i class='bx bx-down-arrow-alt bx-fade-down' ></i>
+                        @endif
                     </div>
-                    Aumento de {{ $drugs_balance }}
+                    @if ($drugs_balance[1] == "Aumento")
+                        Aumento de {{ $drugs_balance[0] }}
+                    @else
+                        Diminuição de {{ $drugs_balance[0] }}
+                    @endif
                 </div>
                 <div class="footer">
                     * Comparação ao último mês
@@ -45,17 +53,25 @@
                 </div>
                 <div class="body">
                     <div class="value">
-                        10
+                        {{ $pessoas_balance[2] }}
                     </div>
                     <div class="un_medida">
                         Pes
                     </div>
                 </div>
-                <div class="top-footer">
+                <div class="top-footer @if ($pessoas_balance[1] == 'Aumento') inc @else dec @endif">
                     <div class="top-footer-arrow">
-                        <i class='bx bx-up-arrow-alt bx-fade-down' ></i>
+                        @if ($pessoas_balance[1] == "Aumento")
+                            <i class='bx bx-up-arrow-alt bx-fade-down' ></i>
+                        @else
+                            <i class='bx bx-down-arrow-alt bx-fade-down' ></i>
+                        @endif
                     </div>
-                    Aumento de 10%
+                    @if ($pessoas_balance[1] == "Aumento")
+                        Aumento de {{ $pessoas_balance[0] }}
+                    @else
+                        Diminuição de {{ $pessoas_balance[0] }}
+                    @endif
                 </div>
                 <div class="footer">
                     * Comparação ao último mês
@@ -72,17 +88,25 @@
                 </div>
                 <div class="body">
                     <div class="value">
-                        5
+                        {{ $armas_balance[2] }}
                     </div>
                     <div class="un_medida">
                         Un
                     </div>
                 </div>
-                <div class="top-footer">
+                <div class="top-footer @if ($armas_balance[1] == 'Aumento') inc @else dec @endif">
                     <div class="top-footer-arrow">
-                        <i class='bx bx-up-arrow-alt bx-fade-down' ></i>
+                        @if ($armas_balance[1] == "Aumento")
+                            <i class='bx bx-up-arrow-alt bx-fade-down' ></i>
+                        @else
+                            <i class='bx bx-down-arrow-alt bx-fade-down' ></i>
+                        @endif
                     </div>
-                    Aumento de 10%
+                    @if ($armas_balance[1] == "Aumento")
+                        Aumento de {{ $armas_balance[0] }}
+                    @else
+                        Diminuição de {{ $armas_balance[0] }}
+                    @endif
                 </div>
                 <div class="footer">
                     * Comparação ao último mês

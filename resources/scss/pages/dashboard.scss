@@ -60,11 +60,18 @@
 .container-card-data .top-footer{
     display: flex;
     justify-content: center;
-    color: #eb656c;
     font-size: calc((1vw + 1.5vh)/2);
     width: 100%;
     height: 13%;
     font-weight: 700;
+}
+
+.top-footer.inc{
+    color: #eb656c;
+}
+
+.top-footer.dec{
+    color: #65eb82;
 }
 
 .top-footer-arrow{
