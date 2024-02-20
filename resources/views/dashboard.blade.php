@@ -111,8 +111,15 @@
                 <div class="footer">
                     * Comparação ao último mês
                 </div>
-            </div> 
+            </div>
         </div>
-        
+        <div class="mastercontainer-dashboard mb-6"> 
+            <div class="container-charts">
+                <canvas id="chart"> </canvas>
+            </div> 
+            <div class="container-charts">
+                <canvas id="chart2"> </canvas>
+            </div>
+        </div>
     </x-slot:container_form>
 </x-layout>

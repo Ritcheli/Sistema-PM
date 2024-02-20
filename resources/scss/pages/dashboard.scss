@@ -88,3 +88,13 @@
     justify-content: end;
     align-items: end;
 }
+
+.mastercontainer-dashboard .container-charts{
+    margin-top: 20px;
+    padding: 1.5%;
+    background: white;
+    border-radius: $border_radius;
+    box-shadow: 5px 5px 8px -5px $shadow-color;
+    height: 47vh;
+    width: calc((100% - 20px)/2);
+}

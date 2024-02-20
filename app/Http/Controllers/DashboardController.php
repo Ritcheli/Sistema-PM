@@ -143,6 +143,79 @@ class DashboardController extends Controller
         $armas_balance[0] = number_format($armas_balance[0], 1, ',', '') . " %";
         $armas_balance[2] = $total_armas_current_month;
 
+
         return view('dashboard', compact('drugs_balance', 'pessoas_balance', 'armas_balance'));
     }
+
+    public function get_Ocorr_Chart_Data(){
+        $number_of_months = 5;
+        $j = 0;
+
+        $query_ocorrencias = DB::table("ocorrencias")
+                               ->select(DB::raw("concat(Year(ocorrencias.data_hora), '-', LPAD(Month(ocorrencias.data_hora), '2', '0'), '-01') as Date_filter"), DB::raw("Count(*) as Count_mes"))
+                               ->where('ocorrencias.data_hora', ">=", date("Y-m-01", strtotime("-" . strval($number_of_months) . " months")))
+                               ->groupBy(DB::raw("Month(ocorrencias.data_hora)"))
+                               ->orderBy(DB::raw("date(Date_filter)"))
+                               ->get();
+
+        for ($i = 0; $i <= 5; $i++){
+            if (date('n', strtotime($query_ocorrencias[$j]->Date_filter)) == (date('n', strtotime(date("Y-m-01", strtotime("-" . strval($number_of_months - $i) . " months")))))) {
+                $month = $this->get_Month_Portuguese(date('n', strtotime($query_ocorrencias[$j]->Date_filter)));
+                $qtd   = $query_ocorrencias[$j]->Count_mes;
+
+                $data_result[$month] = $qtd;
+
+                $j++;
+            } else {
+                $month = $this->get_Month_Portuguese(date('n', strtotime(date("Y-m-01", strtotime("-" . strval($number_of_months - $i) . " months")))));
+
+                $data_result[$month] = 0;
+            }
+        }
+
+        return $data_result;
+    }
+
+    public function get_Grupo_Chart_Data(){
+        $number_of_months = 1;
+
+        $query_Grupos = DB::table('ocorrencias')
+                         ->select('grupos_fatos.nome', DB::raw('COUNT(*) as count_grupo'))
+                         ->join('ocorrencias_fatos_ocorrencias', 'ocorrencias.id_ocorrencia', 'ocorrencias_fatos_ocorrencias.id_ocorrencia')
+                         ->join('fatos_ocorrencias', 'ocorrencias_fatos_ocorrencias.id_fato_ocorrencia', 'fatos_ocorrencias.id_fato_ocorrencia')
+                         ->join('grupos_fatos', 'fatos_ocorrencias.id_grupo_fato', 'grupos_fatos.id_grupo_fato')
+                         ->where('ocorrencias.data_hora', '>=', date("Y-m-01", strtotime("-" . strval($number_of_months) . " months")))
+                         ->groupBy('grupos_fatos.nome')
+                         ->orderByDesc('count_grupo')
+                         ->limit(5)
+                         ->get();
+        
+        foreach ($query_Grupos as $query_Grupo){
+            $data_result[$query_Grupo->nome] = $query_Grupo->count_grupo;
+        }
+
+        return $data_result;
+    }
+
+    public function get_Month_Portuguese ($month_number){
+        $month = array(
+            '',
+            'Janeiro',
+            'Fevereiro',
+            'Março',
+            'Abril',
+            'Maio',
+            'Junho',
+            'Julho',
+            'Agosto',
+            'Setembro',
+            'Outubro',
+            'Novembro',
+            'Dezembro'
+        );
+
+        return $month[$month_number];
+    }
 }
+
+

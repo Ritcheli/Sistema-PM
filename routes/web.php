@@ -96,6 +96,8 @@ Route::middleware('auth')->group(function(){
 
     Route::controller(DashboardController::class)->group(function () {
         Route::get("/dashboard", "show_Dashboard")->name("show_Dashboard");
+        Route::get("/dashboard/ocorr-chart-data", "get_Ocorr_Chart_Data")->name("get_Ocorr_Chart_Data");
+        Route::get("/dashboard/grupo-chart-data", "get_Grupo_Chart_Data")->name("get_Grupo_Chart_Data");
     });
 
     Route::controller(ConfiguracoesController::class)->group(function () {
