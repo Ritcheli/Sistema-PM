@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\usuarios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\DB;
 
 class UsuarioController extends Controller
 {
@@ -30,7 +32,12 @@ class UsuarioController extends Controller
     }
 
     public function show_Perfil(){
-        return view("usuario.perfil");
+        $query_usuarios = DB::table('usuarios')
+                            ->select('usuarios.nome_usuario', 'usuarios.nome_completo', 'usuarios.email', 'usuarios.data_nascimento', 'usuarios.CPF', 'usuarios.status')
+                            ->where('usuarios.id_usuario', Auth::id())
+                            ->first();
+
+        return view("usuario.perfil", compact('query_usuarios'));
     }
 
     public function create($data){

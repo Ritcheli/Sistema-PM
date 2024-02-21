@@ -1,5 +1,5 @@
 <div class="navbar-CM">
-    <a href=""> 
+    <a href={{ route("show_Perfil") }}> 
         <i class='bx bxs-user-circle icon-CM'></i>
         <span class="navbar-text-CM"> Perfil </span>
     </a>
