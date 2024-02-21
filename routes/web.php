@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function(){
     Route::controller(UsuarioController::class)->group(function () {
         Route::get("/cad-usuario", "show_Cad_Usuario")->name("show_Cad_Usuario");
         Route::post("/cad-usuario", "novo_Usuario")->name("novo_Usuario");
+        Route::get("/usuario/perfil", "show_Perfil")->name("show_Perfil");
     });
 
     Route::controller(OcorrenciaController::class)->group(function () {

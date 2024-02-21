@@ -29,6 +29,10 @@ class UsuarioController extends Controller
         return redirect('/dashboard');
     }
 
+    public function show_Perfil(){
+        return view("usuario.perfil");
+    }
+
     public function create($data){
         return usuarios::create([
             'nome_usuario'    => $data['nome_usuario'],

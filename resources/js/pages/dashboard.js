@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function(){
             const data_bar = {
                 labels: Object.keys(result),
                 datasets: [{
-                    label: 'Grupos de ocorrencias registradas',
+                    label: 'Grupos de ocorrencias registradas mês atual',
                     backgroundColor: '#007d36',
                     data: Object.values(result),
                 }]
