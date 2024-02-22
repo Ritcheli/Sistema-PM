@@ -32,7 +32,9 @@ Route::get("/logout", [AuthController::class, "logout"])->name("logout");
 Route::middleware('auth')->group(function(){
     Route::controller(UsuarioController::class)->group(function () {
         Route::get("/cad-usuario", "show_Cad_Usuario")->name("show_Cad_Usuario");
+        Route::get("/edit-usuario", "show_Edit_Usuario")->name("show_Edit_Usuario");
         Route::post("/cad-usuario", "novo_Usuario")->name("novo_Usuario");
+        Route::post("/edit-usuario", "edit_Usuario")->name("edit_Usuario");
         Route::get("/usuario/perfil", "show_Perfil")->name("show_Perfil");
     });
 

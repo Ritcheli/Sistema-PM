@@ -22,8 +22,13 @@
                     </div>
                 </div>
                 <div class="container-info-perfil">
-                    <div class="title-CM mb-4">
-                        Informações pessoais
+                    <div class="header">
+                        <div class="title-CM mb-4">
+                            Informações pessoais
+                        </div>
+                        <div class="pt-2">
+                            <a class="edit_button" href= "{{ route("show_Edit_Usuario") }}"> Editar </a>
+                        </div>
                     </div>
                     <div class="container-data">
                         <div class="data">
@@ -71,6 +76,9 @@
                             </div>
                         </div> 
                     </div>
+                </div>
+                <div class="container-opcoes mb-6">
+                    <div class="btn-opcoes"></div>
                 </div>
             </div>
         </div>
