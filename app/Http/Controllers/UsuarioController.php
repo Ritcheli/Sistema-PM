@@ -42,7 +42,7 @@ class UsuarioController extends Controller
         $data = $request->only('nome_usuario', 'nome_completo', 'email', 'CPF_RG', 'data_nasc', 'senha');
         $this->create($data);
 
-        return redirect('/dashboard');
+        return redirect('/usuario/perfil');
     }
 
     public function edit_Usuario(Request $request){

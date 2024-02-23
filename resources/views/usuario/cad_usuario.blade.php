@@ -113,7 +113,7 @@
                     </div> 
                 </div>
                 <div class="text-md-right text-center">
-                    <button type="reset" class="btn CM large cancel-CM ml-1 mr-1 mb-1 shadow-none">Cancelar</button>
+                    <button type="reset" class="btn CM large cancel-CM ml-1 mr-1 mb-1 shadow-none"> Cancelar </button>
                     <button type="submit" class="btn CM large save-CM ml-1 mb-1 shadow-none">Salvar</button>
                 </div>
             </form>

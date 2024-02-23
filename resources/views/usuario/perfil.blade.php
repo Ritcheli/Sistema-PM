@@ -78,7 +78,14 @@
                     </div>
                 </div>
                 <div class="container-opcoes mb-6">
-                    <div class="btn-opcoes"></div>
+                    <a class="btn-opcoes" href="{{ route('show_Cad_Usuario') }}">
+                        <div class="icon">
+                            <i class='bx bx-plus-circle'></i>
+                        </div>
+                        <div class="text">
+                            Novo Usuário
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
