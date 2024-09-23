@@ -6,12 +6,12 @@ Protótipo de um sistema desenvolvido através da parceria entre a Universidade 
 
 O sistema foi desenvolvido utilizando os frameworks **Laravel** e **Bootstrap** para a criação dos códigos de Frontend e Backend e para o desenvolvimento dos grafos referentes às redes sociais identificadas pelo sistema, foi utilizado a biblioteca **Cytoscape Js**. Abaixo serão listados todos as ferramentas utilizadas bem como suas versões.
 
-- **Composer:**
-- **Laravel:**
+- **Composer:** 2.6.6
+- **Laravel:** 10.6.2
 - **Bootstrap:** 4.6
-- **Python:**
-- **PyMuPDF:**
-- **MuSQL:**
+- **Python:** 3.12.1
+- **PyMuPDF:** 1.23.5
+- **MySQL:** 8.2.0 
 
 # Instruções executar o sistema
 
